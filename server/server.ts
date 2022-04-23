@@ -1,4 +1,4 @@
-const express = require("express");
+import express, { Request, Response } from "express";
 const dotenv = require("dotenv");
 const { chats } = require("./data/data");
 
@@ -6,18 +6,18 @@ dotenv.config();
 
 const app = express();
 
-const PORT: String = process.env.PORT;
+const PORT = process.env.PORT;
 
-app.get("/", (req, res) => {
+app.get("/", (req: Request, res: Response) => {
 	res.send("API is Running");
 });
 
-app.get("/api/chat", (req, res) => {
+app.get("/api/chat", (req: Request, res: Response) => {
 	res.send(chats);
 });
 
-app.get("/api/chat/:id", (req, res) => {
-	const singleChat: String = chats.find((chat) => chat._id === req.params.id);
+app.get("/api/chat/:id", (req: Request, res: Response) => {
+	const singleChat: String = chats.find((chat: any) => chat._id === req.params.id);
 	res.send(singleChat);
 });
 
