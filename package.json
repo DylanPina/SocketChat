@@ -24,13 +24,14 @@
 	"homepage": "https://github.com/DylanPina/SocketChat#readme",
 	"dependencies": {
 		"dotenv": "^16.0.0",
-		"express": "^4.17.3"
+		"express": "^4.17.3",
+		"mongoose": "^6.3.1"
 	},
 	"devDependencies": {
 		"@types/express": "^4.17.13",
 		"@types/node": "^17.0.25",
 		"ts-node": "^10.7.0",
-		"typescript": "^4.6.3",
-		"ts-node-dev": "^1.1.8"
+		"ts-node-dev": "^1.1.8",
+		"typescript": "^4.6.3"
 	}
 }
