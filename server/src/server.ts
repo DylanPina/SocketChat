@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 const dotenv = require("dotenv");
 
-const { chats } = require("./data/data");
+const { chats } = require("../data/data");
 
 dotenv.config();
 
