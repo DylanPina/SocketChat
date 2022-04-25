@@ -1,4 +1,4 @@
-.login_modal {
+.signup_modal {
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
@@ -22,6 +22,12 @@
 	margin-top: 5px;
 }
 
+.input_label {
+	font-family: "Montserrat";
+	font-size: 14px;
+	margin-bottom: -16px;
+}
+
 .password_field {
 	width: 300px;
 	height: 40px;
@@ -36,7 +42,34 @@
 	font-family: "Montserrat";
 }
 
-.submit_button {
+.upload_container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 300px;
+	height: 40px;
+	border-radius: 6px;
+	border: 1px solid var(--primary-black);
+	background-color: var(--primary-white);
+	padding: 10px;
+}
+
+.upload_img {
+	font-family: "Montserrat";
+	color: grey;
+	border: none;
+}
+
+.upload_img[type="file"]::file-selector-button {
+	font-family: "Montserrat";
+	border: none;
+	border-radius: 6px;
+	margin-right: 10px;
+	height: 25px;
+	background-color: var(--primary-orange);
+}
+
+.signup_button {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -55,11 +88,11 @@
 	transition-duration: 0.5s;
 }
 
-.submit_button:hover {
+.signup_button:hover {
 	box-shadow: 0px 0px 10px var(--primary-black);
 }
 
-.signup_button {
+.login_button {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -77,6 +110,6 @@
 	transition-duration: 0.5s;
 }
 
-.signup_button:hover {
+.login_button:hover {
 	box-shadow: 0px 0px 10px var(--primary-orange);
 }

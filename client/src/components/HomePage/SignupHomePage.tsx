@@ -12,15 +12,22 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	};
 
 	return (
-		<div className={styles.login_modal}>
+		<div className={styles.signup_modal}>
 			<h1 className={styles.title}>SIGN UP</h1>
 			<div className={styles.input_container}>
+				<label className={styles.input_label}>Enter your username</label>
 				<input type="text" placeholder="Username" className={styles.password_field} />
+				<label className={styles.input_label}>Enter your password</label>
 				<input type="text" placeholder="Password" className={styles.password_field} />
+				<label className={styles.input_label}>Confirm your password</label>
 				<input type="text" placeholder="Confirm password" className={styles.password_field} />
-				<button className={styles.submit_button}>Submit</button>
-				<button className={styles.signup_button} onClick={handleLoginAuthModal}>
-					Click here to sign up
+				<label className={styles.input_label}>Upload a profile picture</label>
+				<div className={styles.upload_container}>
+					<input type="file" id="avatar" name="profile picture" accept="image/png, image/jpeg" className={styles.upload_img} />
+				</div>
+				<button className={styles.signup_button}>Sign up</button>
+				<button className={styles.login_button} onClick={handleLoginAuthModal}>
+					Login
 				</button>
 			</div>
 		</div>
