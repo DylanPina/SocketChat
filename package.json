@@ -23,6 +23,7 @@
 	},
 	"homepage": "https://github.com/DylanPina/SocketChat#readme",
 	"dependencies": {
+		"colors.ts": "^1.0.20",
 		"dotenv": "^16.0.0",
 		"express": "^4.17.3",
 		"mongoose": "^6.3.1"
