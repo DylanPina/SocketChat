@@ -2,6 +2,7 @@ import express from "express";
 const dotenv = require("dotenv");
 const connectDB = require("../config/db");
 const userRoutes = require("../routes/user.routes");
+const { notFound, errorHandler } = require("../routes/middlewares/errorMiddleware");
 
 // Setting up .env file
 dotenv.config();
@@ -14,9 +15,13 @@ app.use(express.json());
 // Connecting to MongoDB
 connectDB();
 
-// API route
+// Routes
 app.get("/", (req, res) => res.send("API is Running"));
-// User routes for accessing users
 app.use("/api/user", userRoutes);
-// Listening on our port
+
+// Error handling for API
+app.use(notFound);
+app.use(errorHandler);
+
+// Listening on port
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
