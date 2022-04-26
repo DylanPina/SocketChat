@@ -23,12 +23,16 @@
 	},
 	"homepage": "https://github.com/DylanPina/SocketChat#readme",
 	"dependencies": {
+		"bcryptjs": "^2.4.3",
 		"colors.ts": "^1.0.20",
 		"dotenv": "^16.0.0",
 		"express": "^4.17.3",
+		"express-async-handler": "^1.2.0",
+		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^6.3.1"
 	},
 	"devDependencies": {
+		"@types/bcrypt": "^5.0.0",
 		"@types/express": "^4.17.13",
 		"@types/node": "^17.0.25",
 		"ts-node": "^10.7.0",

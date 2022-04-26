@@ -1,25 +1,22 @@
-import express, { Request, Response } from "express";
+import express from "express";
 const dotenv = require("dotenv");
-const { chats } = require("../data/data");
 const connectDB = require("../config/db");
+const userRoutes = require("../routes/user.routes");
 
-const app = express();
+// Setting up .env file
 dotenv.config();
+// Using PORT from .env
+const PORT = process.env.PORT;
+// Initializing our express app
+const app = express();
+// Accepting JSON data
+app.use(express.json());
+// Connecting to MongoDB
 connectDB();
 
-const PORT = process.env.PORT;
-
-app.get("/", (req: Request, res: Response) => {
-	res.send("API is Running");
-});
-
-app.get("/api/chat", (req: Request, res: Response) => {
-	res.send(chats);
-});
-
-app.get("/api/chat/:id", (req: Request, res: Response) => {
-	const singleChat: String = chats.find((chat: any) => chat._id === req.params.id);
-	res.send(singleChat);
-});
-
+// API route
+app.get("/", (req, res) => res.send("API is Running"));
+// User routes for accessing users
+app.use("/api/user", userRoutes);
+// Listening on our port
 app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
