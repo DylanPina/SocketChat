@@ -1,4 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import styles from "../../styles/HomePage/SignupHomePage.module.css";
 
@@ -11,10 +13,12 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [profilePic, setProfilePic] = useState<File | null>();
+	const [profilePic, setProfilePic] = useState("");
+	const [loading, setLoading] = useState(false);
+	const navigate = useNavigate();
 
-	const handleUsernameChange = (name: string) => {
-		setUsername(name);
+	const handleUsernameChange = (username: string) => {
+		setUsername(username);
 	};
 
 	const handleEmailChange = (email: string) => {
@@ -29,8 +33,71 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 		setConfirmPassword(confirmPassword);
 	};
 
-	const handlePicChange = (image: File) => {
-		setProfilePic(image);
+	const handleProfilePicUpload = (image: File) => {
+		// TODO: add loading spinner
+		setLoading(true);
+		if (image === undefined) {
+			// TODO: add popup
+			window.alert("Please select an image");
+			return;
+		}
+
+		if (image.type === "image/jpeg" || image.type === "image/png") {
+			const data = new FormData();
+			data.append("file", image);
+			data.append("upload_preset", "kiuxrcpz");
+
+			axios
+				.post("https://api.cloudinary.com/v1_1/dsp7595/image/upload", data)
+				.then((data) => {
+					setProfilePic(data.data.secure_url);
+					console.log(`Profile pic cloud URL: [${data.data.secure_url}]`);
+				})
+				// TODO: add popup
+				.catch((err) => window.alert(err.message));
+			setLoading(false);
+		} else {
+			window.alert("File must be .jpeg or .png");
+			setLoading(false);
+		}
+	};
+
+	const handleSignup = async () => {
+		// TODO: add loading spinner
+		setLoading(true);
+
+		if (!username || !email || !password || !confirmPassword) {
+			// TODO: add popup
+			window.alert("Please enter all required fields");
+			setLoading(false);
+			return;
+		}
+
+		if (password !== confirmPassword) {
+			// TODO: add popup
+			window.alert("Passwords do not match");
+			setLoading(false);
+			return;
+		}
+
+		try {
+			const config = {
+				headers: {
+					"Content-type": "application/json",
+				},
+			};
+
+			const { data } = await axios.post("/api/user", { username, email, password, profilePic }, config);
+			// TODO: add popup
+			window.alert("Registration successful");
+
+			localStorage.setItem("userInfo", JSON.stringify(data));
+
+			setLoading(false);
+		} catch (err) {
+			// TODO: add popup
+			window.alert(err);
+		}
 	};
 
 	const handleLoginAuthModal = () => {
@@ -61,7 +128,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 					required
 					onChange={(e) => handleConfirmPasswordChange(e.target.value)}
 				/>
-				<label className={styles.input_label}>Upload a profile picture</label>
+				<label className={styles.input_label}>Upload a profile picture </label>
 				<div className={styles.upload_container}>
 					<input
 						type="file"
@@ -70,10 +137,12 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 						accept="image/png, image/jpeg"
 						className={styles.upload_img}
 						required
-						onChange={(e) => handlePicChange(e.target["files"]![0])}
+						onChange={(e) => handleProfilePicUpload(e.target["files"]![0])}
 					/>
 				</div>
-				<button className={styles.signup_button}>Sign up</button>
+				<button className={styles.signup_button} onClick={handleSignup}>
+					Sign up
+				</button>
 				<button className={styles.login_button} onClick={handleLoginAuthModal}>
 					Login
 				</button>

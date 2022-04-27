@@ -2,7 +2,7 @@ import express from "express";
 const dotenv = require("dotenv");
 const connectDB = require("../config/db");
 const userRoutes = require("../routes/user.routes");
-const { notFound, errorHandler } = require("../routes/middlewares/errorMiddleware");
+const { notFound, errorHandler } = require("../middlewares/errorMiddleware");
 
 // Setting up .env file
 dotenv.config();

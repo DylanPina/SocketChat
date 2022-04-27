@@ -5,9 +5,9 @@ const generateToken = require("../config/generateToken");
 
 const registerUser = asyncHandler(async (req, res) => {
 	// Assigning values based off body
-	const { name, email, password, profilePic } = req.body;
+	const { username, email, password, profilePic } = req.body;
 	// Check to see if user credientals are passed in
-	if (!name || !email || !password) {
+	if (!username || !email || !password) {
 		res.status(400);
 		throw new Error("Please enter all of the fields");
 	}
@@ -20,7 +20,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	}
 	// If the user doesn't exist, create it
 	const user = await User.create({
-		name,
+		username,
 		email,
 		password,
 		profilePic,
@@ -29,7 +29,7 @@ const registerUser = asyncHandler(async (req, res) => {
 	if (user) {
 		res.status(201).json({
 			_id: user._id,
-			name: user.name,
+			username: user.username,
 			email: user.email,
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
@@ -52,7 +52,7 @@ const authUser = asyncHandler(async (req, res) => {
 		// Send back the user JSON
 		res.json({
 			_id: user._id,
-			name: user.name,
+			username: user.username,
 			email: user.email,
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
