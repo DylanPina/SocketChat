@@ -37,8 +37,9 @@ const registerUser = asyncHandler(async (req, res) => {
 	}
 	// If the user is NOT successfuly created, we throw an error
 	else {
-		res.status(400);
-		throw new Error("Failed to create the user");
+		res.status(400).json({
+			error: "Cannot create user",
+		});
 	}
 });
 
@@ -56,6 +57,10 @@ const authUser = asyncHandler(async (req, res) => {
 			email: user.email,
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
+		});
+	} else {
+		res.status(401).json({
+			error: "User does not exist",
 		});
 	}
 });

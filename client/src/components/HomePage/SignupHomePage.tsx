@@ -1,8 +1,12 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import styles from "../../styles/HomePage/SignupHomePage.module.css";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 
 interface IProps {
 	setAuthModal: Dispatch<SetStateAction<string>>;
@@ -36,9 +40,16 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	const handleProfilePicUpload = (image: File) => {
 		// TODO: add loading spinner
 		setLoading(true);
+
 		if (image === undefined) {
-			// TODO: add popup
-			window.alert("Please select an image");
+			toast.error("Please select an image", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 			return;
 		}
 
@@ -53,11 +64,26 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 					setProfilePic(data.data.secure_url);
 					console.log(`Profile pic cloud URL: [${data.data.secure_url}]`);
 				})
-				// TODO: add popup
-				.catch((err) => window.alert(err.message));
+				.catch((err) => {
+					toast.error(err.message, {
+						position: toast.POSITION.TOP_CENTER,
+						autoClose: 3000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+					});
+				});
 			setLoading(false);
 		} else {
-			window.alert("File must be .jpeg or .png");
+			toast.error("File must be .jpeg or .png", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 			setLoading(false);
 		}
 	};
@@ -67,15 +93,27 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 		setLoading(true);
 
 		if (!username || !email || !password || !confirmPassword) {
-			// TODO: add popup
-			window.alert("Please enter all required fields");
+			toast.error("Please enter all required fields", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 			setLoading(false);
 			return;
 		}
 
 		if (password !== confirmPassword) {
-			// TODO: add popup
-			window.alert("Passwords do not match");
+			toast.error("Passwords do not match", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 			setLoading(false);
 			return;
 		}
@@ -88,15 +126,31 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			};
 
 			const { data } = await axios.post("/api/user", { username, email, password, profilePic }, config);
-			// TODO: add popup
-			window.alert("Registration successful");
+
+			toast.success("Registration successful", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 
 			localStorage.setItem("userInfo", JSON.stringify(data));
 
 			setLoading(false);
+
+			// TODO: uncomment when chat page is completed
+			/* navigate("/chats"); */
 		} catch (err) {
-			// TODO: add popup
-			window.alert(err);
+			toast.error(err, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
 		}
 	};
 

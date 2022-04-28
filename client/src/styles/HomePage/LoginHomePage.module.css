@@ -28,6 +28,7 @@
 	margin-bottom: -16px;
 }
 
+.email_field,
 .password_field {
 	width: 300px;
 	height: 40px;
