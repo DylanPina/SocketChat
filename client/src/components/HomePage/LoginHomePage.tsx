@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import styles from "../../styles/HomePage/LoginHomePage.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import LoadingSpinner from "../Utils/LoadingSpinner";
 
 toast.configure();
 
@@ -27,7 +28,10 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	};
 
 	const handleLogin = async () => {
-		// TODO: add loading spinner
+		if (loading) {
+			return;
+		}
+
 		setLoading(true);
 
 		if (!email && !password) {
@@ -78,7 +82,6 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 			const { data } = await axios.post("/api/user/login", { email, password }, config);
 
-			// TODO: add popup
 			toast.success("Login successful", {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
@@ -93,7 +96,6 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			// TODO: uncomment when chats page is completed
 			// navigate("/chats");
 		} catch (error) {
-			// TODO: add popup
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
@@ -118,7 +120,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				<label className={styles.input_label}>Enter your password</label>
 				<input type="text" placeholder="Password" className={styles.password_field} onChange={(e) => handlePasswordChange(e.target.value)} required />
 				<button className={styles.submit_button} onClick={handleLogin}>
-					Login
+					{loading ? <LoadingSpinner size={"22px"} /> : "Login"}
 				</button>
 				<button className={styles.signup_button} onClick={handleSignupAuthModal}>
 					Click here to sign up

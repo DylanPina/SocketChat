@@ -1,7 +1,9 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast } from "react-toastify";
+import axios from "axios";
+
+import LoadingSpinner from "../Utils/LoadingSpinner";
 
 import styles from "../../styles/HomePage/SignupHomePage.module.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -89,7 +91,10 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	};
 
 	const handleSignup = async () => {
-		// TODO: add loading spinner
+		if (loading) {
+			return;
+		}
+
 		setLoading(true);
 
 		if (!username || !email || !password || !confirmPassword) {
@@ -195,7 +200,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 					/>
 				</div>
 				<button className={styles.signup_button} onClick={handleSignup}>
-					Sign up
+					{loading ? <LoadingSpinner size={"22px"} /> : "Sign up"}
 				</button>
 				<button className={styles.login_button} onClick={handleLoginAuthModal}>
 					Login
