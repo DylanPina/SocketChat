@@ -40,7 +40,6 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	};
 
 	const handleProfilePicUpload = (image: File) => {
-		// TODO: add loading spinner
 		setLoading(true);
 
 		if (image === undefined) {
