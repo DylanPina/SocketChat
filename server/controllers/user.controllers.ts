@@ -78,8 +78,10 @@ const allUsers = asyncHandler(async (req, res) => {
 		  }
 		: {};
 
-	// Fetch and send back all users with the keyword in their email OR username
-	const users = await User.find(keyword);
+	// Fetch and send back all users with the keyword in their email OR username,
+	// EXPECT the user making the request
+	// If the keyword is empty (no search query passed in URL), it will send back ALL users
+	const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
 	res.send(users);
 });
 
