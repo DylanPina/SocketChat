@@ -170,17 +170,23 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				<input type="text" placeholder="Username" className={styles.password_field} onChange={(e) => handleUsernameChange(e.target.value)} required />
 				<label className={styles.input_label}>Enter your email address</label>
 				<input
-					type="text"
+					type="email"
 					placeholder="Email address"
 					className={styles.password_field}
 					required
 					onChange={(e) => handleEmailChange(e.target.value)}
 				/>
 				<label className={styles.input_label}>Enter your password</label>
-				<input type="text" placeholder="Password" className={styles.password_field} required onChange={(e) => handlePasswordChange(e.target.value)} />
+				<input
+					type="password"
+					placeholder="Password"
+					className={styles.password_field}
+					required
+					onChange={(e) => handlePasswordChange(e.target.value)}
+				/>
 				<label className={styles.input_label}>Confirm your password</label>
 				<input
-					type="text"
+					type="password"
 					placeholder="Confirm password"
 					className={styles.password_field}
 					required

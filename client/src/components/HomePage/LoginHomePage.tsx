@@ -3,9 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+import LoadingSpinner from "../Utils/LoadingSpinner";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+
 import styles from "../../styles/HomePage/LoginHomePage.module.css";
 import "react-toastify/dist/ReactToastify.css";
-import LoadingSpinner from "../Utils/LoadingSpinner";
 
 toast.configure();
 
@@ -16,6 +18,7 @@ interface IProps {
 const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [passwordHidden, setPasswordHidden] = useState(false);
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 
@@ -25,6 +28,10 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 	const handlePasswordChange = (password: string) => {
 		setPassword(password);
+	};
+
+	const togglePasswordHidden = () => {
+		setPasswordHidden(!passwordHidden);
 	};
 
 	const handleLogin = async () => {
@@ -80,6 +87,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				},
 			};
 
+			// TODO: Fix error handling when user doesn't exist
 			const { data } = await axios.post("/api/user/login", { email, password }, config);
 
 			toast.success("Login successful", {
@@ -95,8 +103,8 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 			// TODO: uncomment when chats page is completed
 			// navigate("/chats");
-		} catch (error) {
-			toast.error(error, {
+		} catch (error: any) {
+			toast.error(error.response.data.error, {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
 				hideProgressBar: false,
@@ -104,6 +112,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				pauseOnHover: true,
 				draggable: true,
 			});
+			setLoading(false);
 		}
 	};
 
@@ -119,25 +128,32 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	return (
 		<div className={styles.login_modal}>
 			<h1 className={styles.title}>LOGIN</h1>
-			<div className={styles.input_container}>
-				<label className={styles.input_label}>Enter your email address</label>
-				<input
-					type="text"
-					placeholder="Email address"
-					className={styles.email_field}
-					value={email}
-					onChange={(e) => handleEmailChange(e.target.value)}
-					required
-				/>
-				<label className={styles.input_label}>Enter your password</label>
-				<input
-					type="text"
-					placeholder="Password"
-					className={styles.password_field}
-					value={password}
-					onChange={(e) => handlePasswordChange(e.target.value)}
-					required
-				/>
+			<div className={styles.input_section}>
+				<div className={styles.input_container}>
+					<label className={styles.input_label}>Enter your email address</label>
+					<input
+						type="email"
+						placeholder="Email address"
+						className={styles.email_field}
+						value={email}
+						onChange={(e) => handleEmailChange(e.target.value)}
+						required
+					/>
+				</div>
+				<div className={styles.input_container}>
+					<label className={styles.input_label}>Enter your password</label>
+					<input
+						type={passwordHidden ? "text" : "password"}
+						placeholder="Password"
+						className={styles.password_field}
+						value={password}
+						onChange={(e) => handlePasswordChange(e.target.value)}
+						required
+					/>
+					<div className={styles.hidden_icon} onClick={togglePasswordHidden}>
+						{passwordHidden ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+					</div>
+				</div>
 				<button className={styles.submit_button} onClick={handleLogin}>
 					{loading ? <LoadingSpinner size={"22px"} /> : "Login"}
 				</button>

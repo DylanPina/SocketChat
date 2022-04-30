@@ -67,6 +67,7 @@
 	margin-right: 10px;
 	height: 25px;
 	background-color: var(--primary-orange);
+	cursor: pointer;
 }
 
 .signup_button {
