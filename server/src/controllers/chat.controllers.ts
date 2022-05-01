@@ -43,11 +43,30 @@ const accessChat = asyncHandler(async (req, res) => {
 			// Send created chat to user and populate user array
 			const FullChat = await Chat.findOne({ _id: createdChat._id }).populate("users", "-password");
 			res.status(200).send(FullChat);
-		} catch (error: any) {
-			res.status(400);
-			throw new Error(error);
+		} catch (error) {
+			res.status(400).send({ error: error });
 		}
 	}
 });
 
-module.exports = { accessChat };
+const fetchChats = asyncHandler(async (req, res) => {
+	try {
+		// Fetch all user's chats then populate the chat model with user data
+		Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+			.populate("users", "-password")
+			.populate("groupAdmin", "-password")
+			.populate("latestMessage")
+			.sort({ updatedAt: -1 })
+			.then(async (results) => {
+				results = await User.populate(results, {
+					path: "latestMessage.sender",
+					select: "username profilePic email",
+				});
+				res.status(200).send(results);
+			});
+	} catch (error) {
+		res.status(400).send({ error: error });
+	}
+});
+
+module.exports = { accessChat, fetchChats };
