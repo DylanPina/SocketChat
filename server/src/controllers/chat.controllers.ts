@@ -69,4 +69,39 @@ const fetchChats = asyncHandler(async (req, res) => {
 	}
 });
 
-module.exports = { accessChat, fetchChats };
+const createGroupChat = asyncHandler(async (req, res) => {
+	// Check to see if users and groupchat name were passed in
+	if (!req.body.users || !req.body.name) {
+		return res.status(400).send({ message: "Please fill out the fields" });
+	}
+
+	// Parse incoming users into an object
+	var users = JSON.parse(req.body.users);
+
+	// Check if there are more than 2 users
+	if (users.length < 2) {
+		return res.status(400).send("More than 2 users are required to make a groupchat");
+	}
+
+	// Push the current user into the groupchat
+	users.push(req.user);
+
+	try {
+		// Make a new groupchat
+		const groupChat = await Chat.create({
+			chatName: req.body.name,
+			users: users,
+			isGroupChat: true,
+			groupAdmin: req.user, // The groupchat admin will be the user sending the request
+		});
+
+		// Populate the groupchat and send result back to user
+		const fullGroupChat = await Chat.findOne({ _id: groupChat._id }).populate("users", "-password").populate("groupAdmin", "-password");
+
+		res.status(200).json(fullGroupChat);
+	} catch (error) {
+		res.status(400).send({ error: error });
+	}
+});
+
+module.exports = { accessChat, fetchChats, createGroupChat };
