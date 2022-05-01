@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const asyncHandler = require("express-async-handler");
 
-const protectPassword = asyncHandler(async (req, res, next) => {
+const protect = asyncHandler(async (req, res, next) => {
 	let token;
 
 	// Checking if token is a "Bearer" token
@@ -31,4 +31,4 @@ const protectPassword = asyncHandler(async (req, res, next) => {
 	}
 });
 
-module.exports = { protectPassword };
+module.exports = { protect };
