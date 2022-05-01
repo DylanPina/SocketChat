@@ -129,4 +129,52 @@ const renameGroup = asyncHandler(async (req, res) => {
 	}
 });
 
-module.exports = { accessChat, fetchChats, createGroupChat, renameGroup };
+const addToGroup = asyncHandler(async (req, res) => {
+	// Extract chatID and userID from request body
+	const { chatId, userId } = req.body;
+
+	// Add the user who's ID was passed into body into the chat
+	const added = await Chat.findByIdAndUpdate(
+		chatId,
+		{
+			$push: { users: userId },
+		},
+		{ new: true }
+	)
+		.populate("users", "-password")
+		.populate("groupAdmin", "-password");
+
+	// Check if groupchat was found and send data back to client
+	if (!added) {
+		res.status(404);
+		throw new Error("Chat Not Found");
+	} else {
+		res.status(200).json(added);
+	}
+});
+
+const removeFromGroup = asyncHandler(async (req, res) => {
+	// Extract chatID and userID from request body
+	const { chatId, userId } = req.body;
+
+	// Add the user who's ID was passed into body into the chat
+	const removed = await Chat.findByIdAndUpdate(
+		chatId,
+		{
+			$pull: { users: userId },
+		},
+		{ new: true }
+	)
+		.populate("users", "-password")
+		.populate("groupAdmin", "-password");
+
+	// Check if groupchat was found and send data back to client
+	if (!removed) {
+		res.status(400);
+		throw new Error("Failed to remove user from group");
+	} else {
+		res.status(200).json(removed);
+	}
+});
+
+module.exports = { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup };
