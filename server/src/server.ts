@@ -1,10 +1,7 @@
-export {};
-const dotenv = require("dotenv");
-const connectDB = require("../src/config/db");
-const app = require("./app");
+require("dotenv").config();
+import { connectDB } from "../src/services/db";
+import app from "./app";
 
-// Setting up .env file
-dotenv.config();
 // Using PORT from .env
 const PORT = process.env.PORT;
 // Connecting to MongoDB

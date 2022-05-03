@@ -1,7 +1,6 @@
-export {};
 const asyncHandler = require("express-async-handler");
-const User = require("../models/user.model.ts");
-const generateToken = require("../config/generateToken");
+import User from "../models/user.model";
+import generateToken from "../services/generateToken";
 
 const registerUser = asyncHandler(async (req, res) => {
 	// Assigning values based off body
@@ -85,4 +84,4 @@ const allUsers = asyncHandler(async (req, res) => {
 	res.send(users);
 });
 
-module.exports = { registerUser, authUser, allUsers };
+export { registerUser, authUser, allUsers };

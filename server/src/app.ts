@@ -1,7 +1,7 @@
 import express from "express";
-const userRoutes = require("../src/routes/user.routes");
-const chatRoutes = require("../src/routes/chat.routes");
-const { notFound, errorHandler } = require("./middlewares/errorMiddleware");
+import userRoutes from "../src/routes/user.routes";
+import chatRoutes from "../src/routes/chat.routes";
+import { notFound, errorHandler } from "./middlewares/errorMiddleware";
 
 // Initializing our express app
 const app = express();
@@ -17,4 +17,4 @@ app.use("/api/chat", chatRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
