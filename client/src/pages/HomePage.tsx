@@ -1,8 +1,5 @@
-import { useDispatch } from "react-redux";
-import { bindActionCreators } from "redux";
-import { State } from "../redux/root-reducer";
-import * as authModalACs from "../redux/auth-modal/authModal.actions";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../redux/redux-hooks";
+import { loginModal, signupModal } from "../redux/auth-modal/authModal.slice";
 
 import LoginHomePage from "../components/Auth/LoginHomePage";
 import SignupHomePage from "../components/Auth/SignupHomePage";
@@ -10,9 +7,16 @@ import SignupHomePage from "../components/Auth/SignupHomePage";
 import styles from "../styles/HomePage/HomePage.module.css";
 
 const HomePage = () => {
-	const dispatch = useDispatch();
-	const { displayLoginModal, displaySignupModal } = bindActionCreators(authModalACs, dispatch);
-	const authModalState = useSelector((state: State) => state.authModal);
+	const authModalState = useAppSelector((state) => state.authModal.modal);
+	const dispatch = useAppDispatch();
+
+	const displayLoginModal = () => {
+		dispatch(loginModal());
+	};
+
+	const displaySignupModal = () => {
+		dispatch(signupModal());
+	};
 
 	return (
 		<div className={styles.page}>
@@ -22,9 +26,9 @@ const HomePage = () => {
 					<p className={styles.paragraph}>Real-time secure communication through web sockets</p>
 				</div>
 				<div className={styles.auth_container}>
-					{authModalState === "loginModal" ? (
+					{authModalState === "Login Modal" ? (
 						<LoginHomePage setAuthModal={displaySignupModal} />
-					) : authModalState === "signupModal" ? (
+					) : authModalState === "Signup Modal" ? (
 						<SignupHomePage setAuthModal={displayLoginModal} />
 					) : (
 						<></>
