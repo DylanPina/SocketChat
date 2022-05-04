@@ -144,8 +144,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 			setLoading(false);
 
-			// TODO: uncomment when chat page is completed
-			/* navigate("/chats"); */
+			navigate("/chats");
 		} catch (err) {
 			toast.error(err, {
 				position: toast.POSITION.TOP_CENTER,

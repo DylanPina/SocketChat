@@ -1,12 +1,18 @@
-import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { State } from "../redux/root-reducer";
+import * as authModalACs from "../redux/auth-modal/authModal.actions";
+import { useSelector } from "react-redux";
 
-import LoginHomePage from "../components/HomePage/LoginHomePage";
-import SignupHomePage from "../components/HomePage/SignupHomePage";
+import LoginHomePage from "../components/Auth/LoginHomePage";
+import SignupHomePage from "../components/Auth/SignupHomePage";
 
 import styles from "../styles/HomePage/HomePage.module.css";
 
 const HomePage = () => {
-	const [authModal, setAuthModal] = useState<string>("Login");
+	const dispatch = useDispatch();
+	const { displayLoginModal, displaySignupModal } = bindActionCreators(authModalACs, dispatch);
+	const authModalState = useSelector((state: State) => state.authModal);
 
 	return (
 		<div className={styles.page}>
@@ -16,10 +22,10 @@ const HomePage = () => {
 					<p className={styles.paragraph}>Real-time secure communication through web sockets</p>
 				</div>
 				<div className={styles.auth_container}>
-					{authModal === "Login" ? (
-						<LoginHomePage setAuthModal={setAuthModal} />
-					) : authModal === "Signup" ? (
-						<SignupHomePage setAuthModal={setAuthModal} />
+					{authModalState === "loginModal" ? (
+						<LoginHomePage setAuthModal={displaySignupModal} />
+					) : authModalState === "signupModal" ? (
+						<SignupHomePage setAuthModal={displayLoginModal} />
 					) : (
 						<></>
 					)}

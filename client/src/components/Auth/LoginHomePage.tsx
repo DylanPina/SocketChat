@@ -1,10 +1,10 @@
 import React, { SetStateAction, Dispatch, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import axios from "axios";
 import { toast } from "react-toastify";
 
 import LoadingSpinner from "../Utils/LoadingSpinner";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import styles from "../../styles/HomePage/LoginHomePage.module.css";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,7 +12,7 @@ import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
 interface IProps {
-	setAuthModal: Dispatch<SetStateAction<string>>;
+	setAuthModal: Dispatch<SetStateAction<void>>;
 }
 
 const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
@@ -20,6 +20,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	const [password, setPassword] = useState("");
 	const [passwordHidden, setPasswordHidden] = useState(false);
 	const [loading, setLoading] = useState(false);
+
 	const navigate = useNavigate();
 
 	const handleEmailChange = (name: string) => {
@@ -101,8 +102,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			localStorage.setItem("userInfo", JSON.stringify(data));
 			setLoading(false);
 
-			// TODO: uncomment when chats page is completed
-			// navigate("/chats");
+			navigate("/chats");
 		} catch (error: any) {
 			toast.error(error.response.data.error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -117,7 +117,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	};
 
 	const handleSignupAuthModal = () => {
-		setAuthModal("Signup");
+		setAuthModal();
 	};
 
 	const handleGuestUser = () => {
