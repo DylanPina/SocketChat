@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hooks";
 import { loginModal, signupModal } from "../redux/auth-modal/authModal.slice";
 
@@ -9,6 +11,13 @@ import styles from "../styles/HomePage/HomePage.module.css";
 const HomePage = () => {
 	const authModalState = useAppSelector((state) => state.authModal.modal);
 	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
+
+		if (userInfo) navigate("/chats");
+	}, [navigate]);
 
 	const displayLoginModal = () => {
 		dispatch(loginModal());

@@ -1,5 +1,7 @@
-import React from "react";
-import { Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "./redux/redux-hooks";
+import { setUserInfo } from "./redux/user-info/user.slice";
 
 import ChatPage from "./pages/ChatPage";
 import HomePage from "./pages/HomePage";
@@ -7,6 +9,18 @@ import HomePage from "./pages/HomePage";
 import styles from "./styles/App.module.css";
 
 function App() {
+	const dispatch = useAppDispatch();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
+		dispatch(setUserInfo(userInfo));
+
+		if (!userInfo) {
+			navigate("/");
+		}
+	}, [navigate]);
+
 	return (
 		<div className={styles.app}>
 			<Routes>

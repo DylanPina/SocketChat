@@ -1,25 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useAppSelector } from "../redux/redux-hooks";
 
 const ChatPage = () => {
-	const [chats, setChats] = useState<any>();
+	const { username } = useAppSelector((state) => state.userInfo);
 
-	const fetchChats = async () => {
-		const { data } = await axios.get("/api/chat");
-		setChats(data);
-	};
-
-	useEffect(() => {
-		fetchChats();
-	}, []);
-
-	return (
-		<div>
-			{chats.map((chat: any) => {
-				return <div key={chat._id}>{chat.chatName}</div>;
-			})}
-		</div>
-	);
+	return <div></div>;
 };
 
 export default ChatPage;
