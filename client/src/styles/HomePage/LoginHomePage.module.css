@@ -27,13 +27,16 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 	gap: 20px;
 }
 
 .input_label {
+	align-self: flex-start;
 	font-family: "Montserrat";
 	font-size: 14px;
 	margin-bottom: -16px;
+	margin-left: 5px;
 }
 
 .email_field,
@@ -128,4 +131,22 @@
 
 .guest_button:hover {
 	box-shadow: 0px 0px 10px var(--primary-orange);
+}
+
+@media screen and (max-width: 475px) {
+	.title {
+		font-size: 25px;
+	}
+
+	.email_field,
+	.password_field {
+		position: relative;
+		width: 225px;
+		height: 40px;
+		font-family: "Montserrat";
+		border-radius: 6px;
+		border: 1px solid var(--primary-black);
+		background-color: var(--primary-white);
+		padding: 10px;
+	}
 }

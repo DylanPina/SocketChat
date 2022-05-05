@@ -7,6 +7,7 @@ import LoginHomePage from "../components/Auth/LoginHomePage";
 import SignupHomePage from "../components/Auth/SignupHomePage";
 
 import styles from "../styles/HomePage/HomePage.module.css";
+import { createUnparsedSourceFile } from "typescript";
 
 const HomePage = () => {
 	const authModalState = useAppSelector((state) => state.authModal.modal);
@@ -15,8 +16,10 @@ const HomePage = () => {
 
 	useEffect(() => {
 		const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
+		console.log(userInfo);
 
-		if (userInfo) navigate("/chats");
+		// Uncomment when done with UI
+		// if (userInfo) navigate("/chats");
 	}, [navigate]);
 
 	const displayLoginModal = () => {
@@ -32,7 +35,7 @@ const HomePage = () => {
 			<div className={styles.content_container}>
 				<div className={styles.title_container}>
 					<h1 className={styles.title}>⚡SocketChat⚡</h1>
-					<p className={styles.paragraph}>Real-time secure communication through web sockets</p>
+					<p className={styles.subtitle}>Real-time secure communication through web sockets</p>
 				</div>
 				<div className={styles.auth_container}>
 					{authModalState === "Login Modal" ? (
