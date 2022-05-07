@@ -12,10 +12,11 @@
 	position: relative;
 	display: flex;
 	flex-direction: column;
-	background-color: var(--primary-white);
+	align-items: center;
 	width: 400px;
-	height: 600px;
-	padding: 20px;
+	height: 400px;
+	background-color: var(--primary-white);
+	padding: 20px 50px;
 	border-radius: 20px;
 	box-shadow: 0px 0px 5px var(--primary-white);
 }
@@ -31,4 +32,87 @@
 
 .close_button:hover {
 	color: rgb(255, 0, 0);
+}
+
+.profile_pic {
+	width: 150px;
+	height: 150px;
+	padding: 3px;
+	overflow: hidden;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 100%;
+	box-shadow: 0px 0px 3px var(--primary-black);
+	cursor: pointer;
+}
+
+.change_pic {
+	width: 200px;
+	outline: none;
+	border: none;
+	background-color: var(--primary-black);
+	color: var(--primary-white);
+	height: 30px;
+	margin-top: 15px;
+	border-radius: 20px;
+	font-family: "Montserrat";
+	cursor: pointer;
+}
+
+.change_pic:hover {
+	box-shadow: 0px 0px 3px var(--primary-black);
+}
+
+.info_section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-right: auto;
+	margin-top: 25px;
+	gap: 15px;
+}
+
+.info_container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.info_label {
+	font-family: "Montserrat";
+	font-size: 14px;
+}
+
+.username_container,
+.email_container {
+	display: flex;
+	justify-content: space-between;
+	width: 100%;
+}
+
+.username,
+.email {
+	font-family: "Montserrat";
+	font-size: 20px;
+	font-weight: 500;
+	width: 30px;
+	text-overflow: ellipsis;
+}
+
+.edit_username,
+.edit_email {
+	height: 30px;
+	width: 45px;
+	font-family: "Montserrat";
+	outline: none;
+	border: none;
+	background-color: var(--primary-black);
+	color: var(--primary-white);
+	border-radius: 5px;
+	cursor: pointer;
+	margin-left: auto;
+}
+
+.edit_username:hover,
+.edit_email:hover {
+	box-shadow: 0px 0px 3px var(--primary-black);
 }

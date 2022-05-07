@@ -1,4 +1,3 @@
-// @ts-ignore
 import { useAppSelector } from "../redux/redux-hooks";
 import SideDrawer from "../components/Chat/NavBar";
 import MyChats from "../components/Chat/MyChats";
