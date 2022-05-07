@@ -1,14 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hooks";
-import { loginModal, signupModal } from "../redux/auth-modal/authModal.slice";
+import { loginModal, signupModal } from "../redux/modals/auth-modal.slice";
 
 import LoginHomePage from "../components/Auth/LoginHomePage";
 import SignupHomePage from "../components/Auth/SignupHomePage";
 
 import styles from "../styles/HomePage/HomePage.module.css";
-import { createUnparsedSourceFile } from "typescript";
-
 const HomePage = () => {
 	const authModalState = useAppSelector((state) => state.authModal.modal);
 	const dispatch = useAppDispatch();
