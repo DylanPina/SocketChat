@@ -13,9 +13,10 @@ function App() {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
-		dispatch(setUserInfo(userInfo));
-
+		const userInfo = localStorage.getItem("userInfo");
+		if (userInfo) {
+			dispatch(setUserInfo(JSON.parse(userInfo)));
+		}
 		if (!userInfo) {
 			navigate("/");
 		}

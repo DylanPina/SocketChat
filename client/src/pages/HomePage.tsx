@@ -13,11 +13,14 @@ const HomePage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const userInfo = JSON.parse(localStorage.getItem("userInfo") || "");
-		console.log(userInfo);
+		const userInfo = localStorage.getItem("userInfo");
 
-		// Uncomment when done with UI
-		// if (userInfo) navigate("/chats");
+		if (userInfo) {
+			const userInfoJSON = JSON.parse(userInfo);
+			if (userInfoJSON) {
+				navigate("/chats");
+			}
+		}
 	}, [navigate]);
 
 	const displayLoginModal = () => {
