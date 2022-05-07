@@ -2,7 +2,6 @@ import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { toggleMyProfile } from "../../../redux/modals/my-profile.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
-import { AiOutlineEdit } from "react-icons/ai";
 
 import styles from "../../../styles/ChatPage/Modals/MyProfile.module.css";
 
