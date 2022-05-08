@@ -1,9 +1,8 @@
 import LoadingSpinner from "../../Utils/LoadingSpinner";
-import { Dispatch, SetStateAction, useState } from "react";
 import { setSelectedUser } from "../../../redux/modals/search.slice";
+import { useAppDispatch } from "../../../redux/redux-hooks";
 
 import styles from "../../../styles/ChatPage/Modals/SearchDrawer.module.css";
-import { useAppDispatch } from "../../../redux/redux-hooks";
 
 interface IProps {
 	searchResults: any;

@@ -5,6 +5,7 @@ import userInfoSlice from "./user-info/user.slice";
 import myProfileModalSlice from "./modals/my-profile.slice";
 import userSettingsModalSlice from "./modals/user-settings.slice";
 import searchSlice from "./modals/search.slice";
+import chatSlice from "./chats/chats.slice";
 
 export const store = configureStore({
 	reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
 		myProfileModal: myProfileModalSlice,
 		userSettingsModal: userSettingsModalSlice,
 		searchSlice: searchSlice,
+		chats: chatSlice,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

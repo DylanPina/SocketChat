@@ -6,4 +6,5 @@
 .chat_container {
 	display: flex;
 	justify-content: space-between;
+	padding: 25px;
 }

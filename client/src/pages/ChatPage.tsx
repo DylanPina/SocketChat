@@ -3,9 +3,9 @@ import SideDrawer from "../components/Chat/NavBar";
 import MyChats from "../components/Chat/MyChats";
 import ChatBox from "../components/Chat/ChatBox";
 import MyProfile from "../components/Chat/Modals/MyProfile";
+import UserProfile from "../components/Chat/Modals/UserProfile";
 
 import styles from "../styles/ChatPage/ChatPage.module.css";
-import UserProfile from "../components/Chat/Modals/UserProfile";
 
 const ChatPage = () => {
 	const myProfileModal = useAppSelector((state) => state.myProfileModal);

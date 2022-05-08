@@ -1,5 +1,7 @@
+import styles from "../../styles/ChatPage/ChatBox.module.css";
+
 const ChatBox = () => {
-	return <div>ChatBox</div>;
+	return <div className={styles.chat_box}></div>;
 };
 
 export default ChatBox;
