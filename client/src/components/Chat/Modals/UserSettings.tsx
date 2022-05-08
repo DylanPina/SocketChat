@@ -16,6 +16,7 @@ const UserSettings = () => {
 
 	const logoutHandler = () => {
 		localStorage.removeItem("userInfo");
+		dispatch(toggleUserSettings());
 		navigate("/");
 	};
 

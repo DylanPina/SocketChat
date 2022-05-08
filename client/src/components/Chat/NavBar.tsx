@@ -1,5 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
+import { toggleSearchDrawerOpen } from "../../redux/modals/search.slice";
 import axios from "axios";
 import { toggleUserSettings } from "../../redux/modals/user-settings.slice";
 import { IconContext } from "react-icons";
@@ -16,7 +17,6 @@ toast.configure();
 
 const NavBar = () => {
 	const [search, setSearch] = useState("");
-	const [searchFocused, setSearchFocused] = useState(false);
 	const [searchResult, setSearchResult] = useState([]);
 	const [loadingResults, setLoadingResults] = useState(false);
 	const [loadingChat, setLoadingChat] = useState(false);
@@ -26,6 +26,7 @@ const NavBar = () => {
 
 	const user = useAppSelector((state) => state.userInfo);
 	const userSettingsModal = useAppSelector((state) => state.userSettingsModal);
+	const searchSlice = useAppSelector((state) => state.searchSlice);
 
 	const toggleUserSettingsModal = () => {
 		dispatch(toggleUserSettings());
@@ -62,7 +63,7 @@ const NavBar = () => {
 	};
 
 	return (
-		<>
+		<React.Fragment>
 			<div className={styles.navbar}>
 				<h1 className={styles.title}>⚡SocketChat⚡</h1>
 				<div className={styles.search_bar}>
@@ -76,8 +77,12 @@ const NavBar = () => {
 						placeholder="Search for a user by name or email"
 						onChange={(e: any) => setSearch(e.target.value)}
 						onKeyDown={submitSearch}
-						onFocus={() => setSearchFocused(true)}
-						onBlur={() => setSearchFocused(false)}
+						onFocus={() => dispatch(toggleSearchDrawerOpen())}
+						onBlur={() => {
+							setTimeout(() => {
+								dispatch(toggleSearchDrawerOpen());
+							}, 100);
+						}}
 					/>
 				</div>
 				<div className={styles.user_features}>
@@ -91,8 +96,8 @@ const NavBar = () => {
 				</div>
 			</div>
 			{userSettingsModal.isOpen && <UserSettings />}
-			{searchFocused && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
-		</>
+			{searchSlice.searchDrawerOpen && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
+		</React.Fragment>
 	);
 };
 

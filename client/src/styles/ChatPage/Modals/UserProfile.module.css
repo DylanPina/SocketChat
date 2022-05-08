@@ -1,0 +1,108 @@
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	background-color: var(--modal-background);
+}
+
+.user_profile {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 400px;
+	height: 425px;
+	background-color: var(--primary-white);
+	padding: 30px 50px;
+	border-radius: 20px;
+	box-shadow: 0px 0px 5px var(--primary-white);
+}
+
+.close_button {
+	position: absolute;
+	height: 25px;
+	width: 20px;
+	right: 20px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.close_button:hover {
+	color: rgb(255, 0, 0);
+}
+
+.profile_pic {
+	width: 150px;
+	height: 150px;
+	padding: 3px;
+	overflow: hidden;
+	border: 1px solid rgba(0, 0, 0, 0.25);
+	border-radius: 100%;
+	box-shadow: 0px 0px 3px var(--primary-black);
+	cursor: pointer;
+}
+
+.info_section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	margin-top: 25px;
+	gap: 15px;
+}
+
+.info_container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+.info_label {
+	font-family: "Montserrat";
+	font-size: 14px;
+	color: grey;
+}
+
+.username,
+.email {
+	font-family: "Montserrat";
+	font-size: 20px;
+	font-weight: 500;
+	text-overflow: ellipsis;
+}
+
+.start_chatting {
+	width: 200px;
+	outline: none;
+	border: 1px solid var(--primary-black);
+	background-color: var(--primary-white);
+	color: var(--primary-black);
+	height: 30px;
+	margin-top: 25px;
+	border-radius: 20px;
+	font-family: "Montserrat";
+	cursor: pointer;
+}
+
+.start_chatting:hover {
+	box-shadow: 0px 0px 3px var(--primary-black);
+}
+
+.add_friend {
+	width: 200px;
+	outline: none;
+	border: none;
+	background-color: var(--primary-green);
+	color: var(--primary-white);
+	height: 30px;
+	margin-top: 10px;
+	border-radius: 20px;
+	font-family: "Montserrat";
+	cursor: pointer;
+}
+
+.add_friend:hover {
+	box-shadow: 0px 0px 3px var(--primary-green);
+}
