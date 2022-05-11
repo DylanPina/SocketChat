@@ -9,6 +9,7 @@ import axios from "axios";
 import styles from "../../styles/ChatPage/MyChats.module.css";
 import { IconContext } from "react-icons";
 import LoadingSpinner from "../Utils/LoadingSpinner";
+import { getSender } from "../../config/ChatLogic";
 
 toast.configure();
 
@@ -66,15 +67,20 @@ const MyChats = () => {
 				) : (
 					chats &&
 					chats.map((chat: any) => (
-						<div className={styles.chat} key={chat._id}>
+						<div className={styles.chat} key={chat._id} onClick={() => console.log(chat)}>
 							{chat.isGroupChat ? (
-								<IconContext.Provider value={{ className: styles.groupchat_icon }}>
-									<HiUserGroup />
-								</IconContext.Provider>
+								<>
+									<IconContext.Provider value={{ className: styles.groupchat_icon }}>
+										<HiUserGroup />
+									</IconContext.Provider>
+									<h1 className={styles.chat_name}>{chat.chatName}</h1>
+								</>
 							) : (
-								<img className={styles.chat_pic} src={chat.users[0].profilePic || ""} alt={chat.users[0].username} />
+								<>
+									<img className={styles.chat_pic} src={chat.users[0].profilePic || ""} alt={chat.users[0].username} />
+									<h1 className={styles.chat_name}>{getSender(currentUser, chat.users)}</h1>
+								</>
 							)}
-							<h1 className={styles.chat_name}>{chat.chatName}</h1>
 						</div>
 					))
 				)}

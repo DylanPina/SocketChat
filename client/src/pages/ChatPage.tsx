@@ -9,12 +9,12 @@ import styles from "../styles/ChatPage/ChatPage.module.css";
 
 const ChatPage = () => {
 	const myProfileModal = useAppSelector((state) => state.myProfileModal);
-	const searchState = useAppSelector((state) => state.searchSlice);
+	const { selectedUser } = useAppSelector((state) => state.searchSlice);
 
 	return (
 		<div className={styles.chat_page}>
 			{myProfileModal.isOpen && <MyProfile />}
-			{searchState.selectedUser && <UserProfile user={searchState.selectedUser} />}
+			{selectedUser && <UserProfile user={selectedUser} />}
 			<SideDrawer />
 			<div className={styles.chat_container}>
 				<MyChats />
