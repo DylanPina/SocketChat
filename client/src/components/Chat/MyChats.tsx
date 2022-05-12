@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setSelectedChat, setChats, setFetchChatsAgain } from "../../redux/chats/chats.slice";
+import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
+import { IconContext } from "react-icons";
+import LoadingSpinner from "../Utils/LoadingSpinner";
+import { getSender } from "../../config/ChatLogic";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 import styles from "../../styles/ChatPage/MyChats.module.css";
-import { IconContext } from "react-icons";
-import LoadingSpinner from "../Utils/LoadingSpinner";
-import { getSender } from "../../config/ChatLogic";
 
 toast.configure();
 
@@ -18,6 +18,7 @@ const MyChats = () => {
 	const [chatsLoading, setChatsLoading] = useState(false);
 
 	const chats = useAppSelector((state) => state.chats.chats);
+	const selectedChat = useAppSelector((state) => state.chats.selectedChat);
 	const fetchChatsAgain = useAppSelector((state) => state.chats.fetchChatsAgain);
 	const dispatch = useAppDispatch();
 
@@ -67,7 +68,11 @@ const MyChats = () => {
 				) : (
 					chats &&
 					chats.map((chat: any) => (
-						<div className={styles.chat} key={chat._id} onClick={() => console.log(chat)}>
+						<div
+							className={chat === selectedChat ? styles.chat_selected : styles.chat}
+							key={chat._id}
+							onClick={() => dispatch(setSelectedChat(chat))}
+						>
 							{chat.isGroupChat ? (
 								<>
 									<IconContext.Provider value={{ className: styles.groupchat_icon }}>
