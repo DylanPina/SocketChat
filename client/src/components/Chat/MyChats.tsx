@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
+import { toggleCreateGroupChatModal } from "../../redux/modals/modals.slice";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import { IconContext } from "react-icons";
@@ -55,8 +56,8 @@ const MyChats = () => {
 		<div className={styles.my_chats}>
 			<div className={styles.header}>
 				<h1 className={styles.title}>Chats</h1>
-				<button className={styles.create_groupchat}>
-					New groupchat
+				<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChatModal())}>
+					New Group Chat
 					<IconContext.Provider value={{ className: styles.groupchat__icon_header }}>
 						<MdOutlineGroupAdd />
 					</IconContext.Provider>

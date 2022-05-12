@@ -1,0 +1,88 @@
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100vw;
+	height: 100vh;
+	background-color: var(--modal-background);
+}
+
+.container {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	width: 450px;
+	background-color: var(--primary-white);
+	padding: 20px 50px;
+	border-radius: 20px;
+	box-shadow: 0px 0px 5px var(--primary-white);
+}
+
+.close_button {
+	position: absolute;
+	height: 25px;
+	width: 20px;
+	right: 20px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.close_button:hover {
+	color: rgb(255, 0, 0);
+}
+
+.title {
+	font-family: "Montserrat";
+	font-size: 25px;
+	margin-top: 20px;
+	text-align: center;
+}
+
+.input_section {
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	margin-top: 20px;
+}
+
+.input_container {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.label {
+	font-family: "Montserrat";
+	font-size: 14px;
+	color: grey;
+}
+
+.input {
+	height: 30px;
+	font-family: "Montserrat";
+	border-radius: 6px;
+	border: 1px solid var(--primary-black);
+	background-color: var(--primary-white);
+	padding: 10px;
+}
+
+.create_btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #f5f5f5;
+	background-color: #171717;
+	border-radius: 20px;
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 16px;
+	text-align: center;
+	margin: 50px auto 0px auto;
+	height: 40px;
+	width: 150px;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+}
