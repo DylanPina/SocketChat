@@ -47,7 +47,8 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 
 			dispatch(setSelectedChat(data));
 			dispatch(setSelectedUser(undefined));
-			dispatch(setFetchChatsAgain(true)); // Re-render the myChats component
+			// Re-render the myChats component
+			dispatch(setFetchChatsAgain(true));
 			setTimeout(() => {
 				dispatch(setFetchChatsAgain(false));
 			});
