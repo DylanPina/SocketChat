@@ -3,6 +3,7 @@ import Chat from "../models/chat.model";
 import Message from "../models/message.model";
 import User from "../models/user.model";
 
+// Sends a message
 const sendMessage = asyncHandler(async (req, res) => {
 	// Extracting content and ChatID from request body
 	const { content, chatId } = req.body;
@@ -33,11 +34,25 @@ const sendMessage = asyncHandler(async (req, res) => {
 		await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
 
 		// Return the message
-		res.json(message);
+		res.status(200).json(message);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 		throw new Error(error.message);
 	}
 });
 
-export { sendMessage };
+// Fetches all messages for a particular chat
+const allMessages = asyncHandler(async (req, res) => {
+	try {
+		// Fetching all messages based on ChatID
+		const messages = await Message.find({ chat: req.params.chatId }).populate("sender", "username profilePic email").populate("chat");
+
+		// Return the messages
+		res.status(200).json(messages);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+export { sendMessage, allMessages };
