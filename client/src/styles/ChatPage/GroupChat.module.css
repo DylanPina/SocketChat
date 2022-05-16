@@ -1,0 +1,84 @@
+.header_container {
+	display: flex;
+	justify-content: space-between;
+}
+
+.toggle_mychats {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--primary-black);
+	border: none;
+	background-color: var(--primary-white);
+	height: 35px;
+	width: 35px;
+	cursor: pointer;
+}
+
+.chat_title_container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+}
+
+.groupchat_icon {
+	width: 35px;
+	height: 35px;
+	padding: 3px;
+	cursor: pointer;
+}
+
+.chat_title {
+	font-family: "Montserrat";
+	font-weight: 500;
+	font-size: 30px;
+}
+
+.chat_settings {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--primary-black);
+	border: none;
+	background-color: var(--primary-white);
+	height: 35px;
+	width: 35px;
+	cursor: pointer;
+}
+
+.message_prompt {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 15px;
+	height: 100%;
+	margin: 0 auto;
+}
+
+.prompt_title {
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 40px;
+	color: var(--primary-black);
+}
+
+.prompt_subtitle {
+	font-family: "Montserrat";
+	font-weight: 400;
+	font-size: 30px;
+	color: var(--primary-black);
+}
+
+.chat_section {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	height: 95%;
+	margin-top: 15px;
+	padding: 10px;
+	border-radius: 5px;
+	background-color: var(--primary-grey);
+	box-shadow: 0px 0px 5px var(--primary-black);
+}

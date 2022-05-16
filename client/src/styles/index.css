@@ -8,9 +8,11 @@
 
 :root {
 	--primary-black: #171717;
-	--primary-white: #f7f7f7;
 	--primary-orange: #f09030;
 	--primary-orange-faded: rgba(240, 144, 48, 0.5);
+	--primary-grey: rgb(196, 196, 196, 0.25);
+	--primary-white: #f7f7f7;
 	--primary-green: #0e7700;
-	--modal-background: rgb(23, 23, 23, 0.75);
+	--primary-red: rgb(195, 0, 0);
+	--modal-background: rgb(23, 23, 23, 0.5);
 }

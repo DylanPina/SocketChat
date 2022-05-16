@@ -15,10 +15,10 @@ const ChatPage = () => {
 
 	return (
 		<div className={styles.chat_page}>
-			{myProfileModal.isOpen && <MyProfile />}
-			{selectedUser && <UserProfile user={selectedUser} />}
-			{createGroupChatIsOpen && <CreateGroupChat />}
 			<Navbar />
+			{selectedUser && <UserProfile user={selectedUser} />}
+			{myProfileModal.isOpen && <MyProfile />}
+			{createGroupChatIsOpen && <CreateGroupChat />}
 			<div className={styles.chat_container}>
 				<MyChats />
 				<ChatBox />

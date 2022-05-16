@@ -1,16 +1,16 @@
 // @ts-nocheck
 import { useState } from "react";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain } from "../../../redux/chats/chats.slice";
-import { IconContext } from "react-icons";
 import { toggleCreateGroupChatModal } from "../../../redux/modals/modals.slice";
-import { CgClose } from "react-icons/cg";
-import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
-import { toast } from "react-toastify";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
 
+import { IconContext } from "react-icons";
+import { toast } from "react-toastify";
+import { CgClose } from "react-icons/cg";
+import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import styles from "../../../styles/ChatPage/Modals/CreateGroupChat.module.css";
-import axios from "axios";
 
 toast.configure();
 
@@ -26,9 +26,9 @@ interface IUser {
 }
 
 const CreateGroupChat = () => {
-	const [groupChatName, setGroupChatName] = useState();
+	const [groupChatName, setGroupChatName] = useState<string>("");
 	const [selectedUsers, setSelectedUsers] = useState([]);
-	const [search, setSearch] = useState("");
+	const [search, setSearch] = useState<string>("");
 	const [searchResults, setSearchResults] = useState([]);
 	const [showSearchResults, setShowSearchResults] = useState(false);
 	const [loading, setLoading] = useState(false);
@@ -186,9 +186,9 @@ const CreateGroupChat = () => {
 		<div className={styles.modal}>
 			<div className={styles.container}>
 				<div onClick={closeCreateGroupChatModal}>
-					<IconContext.Provider value={{ className: styles.close_button }}>
-						<CgClose />
-					</IconContext.Provider>
+					<button className={styles.close_button} onClick={() => setSettingsOpen(false)}>
+						<CgClose size={"80%"} />
+					</button>
 				</div>
 				<h2 className={styles.title}>Create Group Chat</h2>
 				<div className={styles.input_section}>
@@ -218,7 +218,7 @@ const CreateGroupChat = () => {
 					</div>
 					{selectedUsers.length !== 0 && (
 						<div className={styles.selected_user_container}>
-							{selectedUsers.map((user) => (
+							{selectedUsers.map((user: IUser) => (
 								<div className={styles.selected_user} key={user._id}>
 									<h3 className={styles.user_name_selected}>{user.username}</h3>
 									<IconContext.Provider value={{ className: styles.close_button_selected }}>
