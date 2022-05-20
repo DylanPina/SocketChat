@@ -18,8 +18,9 @@ const ScrollableChat: React.FC<IProps> = ({ messages }) => {
 				{messages &&
 					messages.map((m: any, i: number) => (
 						<div className={styles.messages} key={m._id}>
-							{isSameSender(messages, m, i, user._id) ||
-								(isLastMessage(messages, i, user._id) && <img className={styles.profile_pic} src={m.sender.pic} alt={m.sender.name} />)}
+							{(isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id)) && (
+								<img className={styles.profile_pic} src={m.sender.profilePic} alt={m.sender.name} />
+							)}
 							<span
 								className={styles.single_message}
 								style={{
