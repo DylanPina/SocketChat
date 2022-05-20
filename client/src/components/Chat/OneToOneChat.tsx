@@ -1,32 +1,70 @@
 import { useEffect, useState } from "react";
+import io from "socket.io-client";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
 import { setSelectedUser } from "../../redux/modals/search.slice";
 import { getSender } from "../../config/ChatLogic";
 import ScrollableChat from "./ScrollableChat";
-import axios from "axios";
 
 import { toast } from "react-toastify";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { MdSettingsApplications } from "react-icons/md";
-import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import LoadingSpinner from "../Utils/LoadingSpinner";
+import Lottie from "react-lottie";
+import animationData from "../../animations/typing.json";
+import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 
 toast.configure();
+
+const ENDPOINT = "http://localhost:5000";
+var socket: any, selectedChatCompare: any;
 
 const OneToOneChat = () => {
 	const [messages, setMessages] = useState<any>([]);
 	const [loading, setLoading] = useState(true);
 	const [newMessage, setNewMessage] = useState<string>();
+	const [socketConnected, setSocketConnected] = useState(false);
+	const [typing, setTyping] = useState(false);
+	const [isTyping, setIsTyping] = useState(false);
 
 	const user = useAppSelector((state) => state.userInfo);
 	const { selectedChat } = useAppSelector((state) => state.chats);
 	const dispatch = useAppDispatch();
 
+	// For Lottie animations
+	const defaultOptions = {
+		loop: true,
+		autoplay: true,
+		animationData: animationData,
+		rendererSettings: {
+			preserveAspectRatio: "xMidYMid slice",
+		},
+	};
+
+	useEffect(() => {
+		socket = io(ENDPOINT);
+		socket.emit("setup", user);
+		socket.on("connected", () => setSocketConnected(true));
+		socket.on("typing", () => setIsTyping(true));
+		socket.on("stop typing", () => setIsTyping(false));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	useEffect(() => {
 		fetchMessages();
-		console.log("Re-rendered");
+		selectedChatCompare = selectedChat;
 	}, [selectedChat]);
+
+	useEffect(() => {
+		socket.on("message recieved", (newMessageRecieved: any) => {
+			// We're checking to see if the newly recieved message is in the current chat
+			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
+				// Give notification
+			} else {
+				setMessages([...messages, newMessageRecieved]);
+			}
+		});
+	});
 
 	const fetchMessages = async () => {
 		if (!selectedChat) return;
@@ -41,8 +79,9 @@ const OneToOneChat = () => {
 			setLoading(true);
 			const { data } = await axios.get(`/api/message/${selectedChat._id}`, config);
 			setMessages(data);
-			console.log(messages);
 			setLoading(false);
+
+			socket.emit("join chat", selectedChat._id);
 		} catch (error) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -57,12 +96,30 @@ const OneToOneChat = () => {
 
 	const typingHandler = (e: any) => {
 		setNewMessage(e.target.value);
+		// If the user is typing but no socket connection
+		if (!socketConnected) return;
+		// If the user is typing and the typing state is false
+		if (!typing) {
+			setTyping(true);
+			socket.emit("typing", selectedChat._id);
+		}
+		// Debounce the typing time by 3 seconds
+		let lastTypingTime: number = new Date().getTime();
+		var timerLength = 3000;
+		setTimeout(() => {
+			var timeNow: number = new Date().getTime();
+			var timeDifference = timeNow - lastTypingTime;
 
-		// Typing indicator logic
+			if (timeDifference >= timerLength && typing) {
+				socket.emit("stop typing", selectedChat._id);
+				setTyping(false);
+			}
+		}, timerLength);
 	};
 
 	const sendMessage = async (e: any) => {
 		if (e.key === "Enter" && newMessage) {
+			socket.emit("stop typing", selectedChat._id);
 			try {
 				const config = {
 					headers: {
@@ -81,7 +138,7 @@ const OneToOneChat = () => {
 				);
 
 				console.log(data);
-
+				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
 			} catch (error) {
@@ -127,6 +184,13 @@ const OneToOneChat = () => {
 							<div className={styles.messages_section}>
 								<ScrollableChat messages={messages} />
 							</div>
+						)}
+						{isTyping ? (
+							<div>
+								<Lottie options={defaultOptions} width={"100px"} height={"50px"} style={{ marginBottom: 0, marginLeft: 0 }} />
+							</div>
+						) : (
+							<></>
 						)}
 						<input
 							type="text"
