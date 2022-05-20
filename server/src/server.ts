@@ -8,4 +8,14 @@ const PORT = process.env.PORT;
 connectDB();
 
 // Listening on port
-app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+const server = app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
+// This is where the magic happens
+const io = require("socket.io")(server, {
+	pingTimeout: 60000,
+	cors: {
+		origin: "http://localhost:3000",
+	},
+});
+io.on("connection", (socket) => {
+	console.log(`Connected to socket.io`);
+});
