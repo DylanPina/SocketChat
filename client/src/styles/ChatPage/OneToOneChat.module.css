@@ -1,3 +1,10 @@
+.chat_area {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	width: 100%;
+}
+
 .header_container {
 	display: flex;
 	justify-content: space-between;
@@ -78,6 +85,8 @@
 .chat_section {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-end;
+	gap: 10px;
 	width: 100%;
 	height: calc(100% - 50px);
 	margin-top: 15px;
@@ -109,4 +118,11 @@
 	font-family: "Montserrat";
 	font-weight: 500;
 	font-size: 14px;
+}
+
+.message_section {
+	display: flex;
+	flex-direction: column;
+	overflow-y: scroll;
+	scrollbar-width: none;
 }

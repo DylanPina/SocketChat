@@ -100,7 +100,7 @@ const OneToOneChat = () => {
 	return (
 		<>
 			{selectedChat ? (
-				<>
+				<div className={styles.chat_area}>
 					<div className={styles.header_container}>
 						<button className={styles.toggle_mychats}>
 							<FaArrowAltCircleLeft size={"100%"} />
@@ -137,7 +137,7 @@ const OneToOneChat = () => {
 							value={newMessage}
 						/>
 					</div>
-				</>
+				</div>
 			) : (
 				<div className={styles.message_prompt}>
 					<h1 className={styles.prompt_title}>No chat selected</h1>
