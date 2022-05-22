@@ -1,12 +1,17 @@
+.messages_container {
+	overflow-y: auto;
+}
+
 .messages {
 	display: flex;
+	align-items: center;
 }
 
 .single_message {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 20px;
+	border-radius: 15px;
 	padding: 5px 15px;
 	max-width: 75%;
 	min-height: 40px;
@@ -19,10 +24,10 @@
 	padding: 3px;
 	border-radius: 100%;
 	box-shadow: 0px 0px 3px var(--primary-black);
-	width: 40px;
-	height: 40px;
-	margin-top: 10px;
-	margin-right: 10px;
-	overflow: hidden;
+	width: 30px;
+	height: 30px;
+	margin-right: 5px;
+	margin-top: 7.5px;
 	cursor: pointer;
+	overflow: hidden;
 }

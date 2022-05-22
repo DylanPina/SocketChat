@@ -16,3 +16,7 @@
 	--primary-red: rgb(195, 0, 0);
 	--modal-background: rgb(23, 23, 23, 0.5);
 }
+
+::-webkit-scrollbar {
+	width: 0px;
+}

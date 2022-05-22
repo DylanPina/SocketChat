@@ -120,9 +120,9 @@
 	font-size: 14px;
 }
 
-.message_section {
+.messages_section {
 	display: flex;
 	flex-direction: column;
-	overflow-y: scroll;
+	overflow-y: auto;
 	scrollbar-width: none;
 }

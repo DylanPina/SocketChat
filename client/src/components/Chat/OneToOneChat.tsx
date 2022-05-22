@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
+import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
 import { setSelectedUser } from "../../redux/modals/search.slice";
+import { pushNotification } from "../../redux/notifications/notifications.slice";
 import { getSender } from "../../config/ChatLogic";
 import ScrollableChat from "./ScrollableChat";
 
@@ -29,6 +31,7 @@ const OneToOneChat = () => {
 
 	const user = useAppSelector((state) => state.userInfo);
 	const { selectedChat } = useAppSelector((state) => state.chats);
+	const { notifications } = useAppSelector((state) => state.notifications);
 	const dispatch = useAppDispatch();
 
 	// For Lottie animations
@@ -53,13 +56,23 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
+		console.log(selectedChat._id);
 	}, [selectedChat]);
 
 	useEffect(() => {
 		socket.on("message recieved", (newMessageRecieved: any) => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-				// Give notification
+				// Checking to see if there's already a notification for the new message recieved
+				if (!notifications.includes(newMessageRecieved)) {
+					dispatch(pushNotification(newMessageRecieved));
+					// Re-render the myChats component
+					dispatch(setFetchChatsAgain(true));
+					setTimeout(() => {
+						dispatch(setFetchChatsAgain(false));
+					});
+					console.log("HIT");
+				}
 			} else {
 				setMessages([...messages, newMessageRecieved]);
 			}
@@ -137,7 +150,6 @@ const OneToOneChat = () => {
 					config
 				);
 
-				console.log(data);
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
