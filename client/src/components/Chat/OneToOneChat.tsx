@@ -15,6 +15,7 @@ import LoadingSpinner from "../Utils/LoadingSpinner";
 import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
+import { Message } from "../../types/message.types";
 
 toast.configure();
 
@@ -56,11 +57,10 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
-		console.log(selectedChat._id);
 	}, [selectedChat]);
 
 	useEffect(() => {
-		socket.on("message recieved", (newMessageRecieved: any) => {
+		socket.on("message recieved", (newMessageRecieved: Message) => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
 				// Checking to see if there's already a notification for the new message recieved

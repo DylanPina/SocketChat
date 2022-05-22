@@ -1,7 +1,8 @@
+import { Chat } from "./chat.types";
 import { User } from "./user.types";
 
 export interface Message {
-	chat: string;
+	chat: Chat;
 	content: string;
 	createdAt: string;
 	sender: User;

@@ -3,14 +3,15 @@ import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { toggleSearchDrawerOpen } from "../../redux/modals/search.slice";
 import axios from "axios";
 import { toggleUserSettings } from "../../redux/modals/user-settings.slice";
+import SearchDrawer from "./Modals/SearchDrawer";
+import UserSettings from "./Modals/UserSettings";
+import NotificationModal from "./Modals/NotificationModal";
+
+import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
 import { FaUserFriends } from "react-icons/fa";
 import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
-import { toast } from "react-toastify";
-import SearchDrawer from "./Modals/SearchDrawer";
-import UserSettings from "./Modals/UserSettings";
-
 import styles from "../../styles/ChatPage/NavBar.module.css";
 
 toast.configure();
@@ -21,6 +22,7 @@ const NavBar = () => {
 	const [loadingResults, setLoadingResults] = useState(false);
 	const [loadingChat, setLoadingChat] = useState(false);
 	const [userSettings, setUserSettings] = useState(false);
+	const [notificationModal, setNotificationModal] = useState(false);
 
 	const dispatch = useAppDispatch();
 
@@ -89,12 +91,13 @@ const NavBar = () => {
 					<IconContext.Provider value={{ className: styles.friends_icon }}>
 						<FaUserFriends />
 					</IconContext.Provider>
-					<IconContext.Provider value={{ className: styles.notifications_icon }}>
-						<MdNotifications />
-					</IconContext.Provider>
+					<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
+						<MdNotifications size={"100%"} />
+					</button>
 					<img className={styles.profile_pic} src={user.profilePic} alt="Profile" onClick={toggleUserSettingsModal} />
 				</div>
 			</div>
+			{notificationModal && <NotificationModal />}
 			{userSettingsModal.isOpen && <UserSettings />}
 			{searchSlice.searchDrawerOpen && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
 		</React.Fragment>

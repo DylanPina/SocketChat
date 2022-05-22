@@ -68,6 +68,8 @@
 }
 
 .notifications_icon {
+	border: none;
+	background-color: transparent;
 	height: 30px;
 	width: 30px;
 	cursor: pointer;
