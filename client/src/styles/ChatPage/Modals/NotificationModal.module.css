@@ -51,7 +51,7 @@
 }
 
 .single_noti_container:hover {
-	background-color: var(--primary-orange);
+	background-color: var(--primary-orange-faded);
 }
 
 .single_noti {

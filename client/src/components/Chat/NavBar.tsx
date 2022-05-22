@@ -29,6 +29,7 @@ const NavBar = () => {
 	const user = useAppSelector((state) => state.userInfo);
 	const userSettingsModal = useAppSelector((state) => state.userSettingsModal);
 	const searchSlice = useAppSelector((state) => state.searchSlice);
+	const { notifications } = useAppSelector((state) => state.notifications);
 
 	const toggleUserSettingsModal = () => {
 		dispatch(toggleUserSettings());
@@ -94,6 +95,11 @@ const NavBar = () => {
 					<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
 						<MdNotifications size={"100%"} />
 					</button>
+					{notifications.length > 0 && (
+						<div className={styles.notifications_badge}>
+							<h1 className={styles.notifications_badge_number}>!</h1>
+						</div>
+					)}
 					<img className={styles.profile_pic} src={user.profilePic} alt="Profile" onClick={toggleUserSettingsModal} />
 				</div>
 			</div>
