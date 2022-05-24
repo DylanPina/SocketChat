@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Message } from "../../types/message.types";
-import { Chat } from "../../types/chat.types";
+import { User } from "../../types/user.types";
 
 interface notificationState {
 	notifications: Message[];
@@ -29,11 +29,14 @@ export const notificationsSlice = createSlice({
 		removeNotification: (state: any, action: PayloadAction<Message>) => {
 			state.notifications = state.notifications.filter((noti: Message) => noti._id !== action.payload._id);
 		},
+		removeNotificationsByUser: (state: any, action: PayloadAction<User>) => {
+			state.notifications = state.notifications.filter((noti: Message) => noti.sender.username !== action.payload.username);
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { pushNotification, removeNotification } = notificationsSlice.actions;
+export const { pushNotification, removeNotification, removeNotificationsByUser } = notificationsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectNotifications = (state: RootState) => state.notifications;

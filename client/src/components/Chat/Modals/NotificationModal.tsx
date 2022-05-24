@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { removeNotification } from "../../../redux/notifications/notifications.slice";
+import { removeNotificationsByUser } from "../../../redux/notifications/notifications.slice";
 import { setSelectedChat } from "../../../redux/chats/chats.slice";
 import { getSender } from "../../../config/ChatLogic";
 import { Message } from "../../../types/message.types";
@@ -20,7 +20,7 @@ const NotificationModal = () => {
 	}, [notifications]);
 
 	const handleNotiClick = (noti: Message) => {
-		dispatch(removeNotification(noti));
+		dispatch(removeNotificationsByUser(noti.sender));
 		if (selectedChat._id !== noti.chat._id) dispatch(setSelectedChat(noti.chat));
 	};
 
