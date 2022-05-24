@@ -84,7 +84,15 @@ const MyChats = () => {
 							) : (
 								<>
 									<img className={styles.chat_pic} src={chat.users[0].profilePic || ""} alt={chat.users[0].username} />
-									<h1 className={styles.chat_name}>{getSender(currentUser, chat.users).username}</h1>
+									<div className={styles.chat_info_container}>
+										<h1 className={styles.chat_sender_username}>{getSender(currentUser, chat.users).username}</h1>
+										{chat.latestMessage && (
+											<p className={styles.chat_latest_msg_sender}>
+												{`${chat.latestMessage.sender.username}: `}
+												<span className={styles.chat_latest_msg}>{chat.latestMessage.content}</span>
+											</p>
+										)}
+									</div>
 								</>
 							)}
 						</div>

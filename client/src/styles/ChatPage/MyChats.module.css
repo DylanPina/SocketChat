@@ -75,7 +75,7 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	height: 50px;
+	height: 65px;
 	padding: 10px;
 	background-color: var(--primary-white);
 	box-shadow: 0px 0px 1px var(--primary-black);
@@ -92,7 +92,7 @@
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	height: 50px;
+	height: 65px;
 	padding: 10px;
 	background-color: var(--primary-orange);
 	border-radius: 10px;
@@ -100,8 +100,13 @@
 }
 
 .groupchat_icon {
-	height: 20px;
-	width: 20px;
+	height: 40px;
+	width: 40px;
+}
+
+.chat_info_container {
+	display: flex;
+	flex-direction: column;
 }
 
 .chat_name {
@@ -109,9 +114,27 @@
 	font-size: 15px;
 }
 
+.chat_sender_username {
+	font-family: "Montserrat";
+	font-weight: 400;
+	font-size: 17px;
+}
+
+.chat_latest_msg_sender {
+	font-family: "Montserrat";
+	font-size: 11px;
+	font-weight: 700;
+}
+
+.chat_latest_msg {
+	font-family: "Montserrat";
+	font-size: 11px;
+	font-weight: 400;
+}
+
 .chat_pic {
-	width: 20px;
-	height: 20px;
+	width: 40px;
+	height: 40px;
 	padding: 3px;
 	overflow: hidden;
 	border: 1px solid rgba(0, 0, 0, 0.25);
