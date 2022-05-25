@@ -58,12 +58,12 @@ const MyChats = () => {
 				<h1 className={styles.title}>Chats</h1>
 				<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChatModal())}>
 					New Group Chat
-					<IconContext.Provider value={{ className: styles.groupchat__icon_header }}>
+					<IconContext.Provider value={{ className: styles.groupchat_icon_header }}>
 						<MdOutlineGroupAdd />
 					</IconContext.Provider>
 				</button>
 			</div>
-			<div className={chatsLoading ? styles.chats__box_centered : styles.chats_box}>
+			<div className={chatsLoading ? styles.chats_box_centered : styles.chats_box}>
 				{chatsLoading ? (
 					<LoadingSpinner size="100px" />
 				) : (
@@ -79,7 +79,15 @@ const MyChats = () => {
 									<IconContext.Provider value={{ className: styles.groupchat_icon }}>
 										<HiUserGroup />
 									</IconContext.Provider>
-									<h1 className={styles.chat_name}>{chat.chatName}</h1>
+									<div className={styles.chat_info_container}>
+										<h1 className={styles.chat_name}>{chat.chatName}</h1>
+										{chat.latestMessage && (
+											<p className={styles.chat_latest_msg_sender}>
+												{`${chat.latestMessage.sender.username}: `}
+												<span className={styles.chat_latest_msg}>{chat.latestMessage.content}</span>
+											</p>
+										)}
+									</div>
 								</>
 							) : (
 								<>
