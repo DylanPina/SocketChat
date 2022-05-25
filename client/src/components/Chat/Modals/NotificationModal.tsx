@@ -40,7 +40,10 @@ const NotificationModal = () => {
 									<IconContext.Provider value={{ className: styles.groupchat_icon }}>
 										<HiUserGroup />
 									</IconContext.Provider>
-									<h1 className={styles.single_noti}>{`New message in ${noti.chat.chatName}`}</h1>
+									<div className={styles.single_noti_content_container}>
+										<h1 className={styles.single_noti_sender_name}>{noti.chat.chatName}</h1>
+										<p className={styles.single_noti_msg_content}>{noti.content}</p>
+									</div>
 								</div>
 							) : (
 								<div className={styles.single_noti_container} key={noti._id} onClick={() => handleNotiClick(noti)}>
