@@ -8,13 +8,12 @@
 }
 
 .single_message {
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	display: inline-block;
 	border-radius: 15px;
-	padding: 5px 15px;
+	padding: 10px 15px;
+	text-justify: start;
 	max-width: 75%;
-	min-height: 40px;
+	word-wrap: break-word;
 	font-family: "Montserrat";
 	box-shadow: 0px 0px 1.5px var(--primary-black);
 }

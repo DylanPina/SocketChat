@@ -3,7 +3,7 @@ import ScrollableFeed from "react-scrollable-feed";
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from "../../config/ChatLogic";
 import { useAppSelector } from "../../redux/redux-hooks";
 
-import styles from "../../styles/ChatPage/ScrollableChat.module.css";
+import styles from "../../styles/ChatPage/Chat.module.css";
 
 interface IProps {
 	messages: any;
