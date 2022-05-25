@@ -90,19 +90,11 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 			// TODO: Fix error handling when user doesn't exist
 			const { data } = await axios.post("/api/user/login", { email, password }, config);
-
-			toast.success("Login successful", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
 			localStorage.setItem("userInfo", JSON.stringify(data));
 			setLoading(false);
 
 			navigate("/chats");
+			window.location.reload();
 		} catch (error: any) {
 			toast.error(error.response.data.error, {
 				position: toast.POSITION.TOP_CENTER,
