@@ -9,7 +9,7 @@ interface IProps {
 	messages: any;
 }
 
-const ScrollableChat: React.FC<IProps> = ({ messages }) => {
+const Chat: React.FC<IProps> = ({ messages }) => {
 	const user = useAppSelector((state) => state.userInfo);
 
 	return (
@@ -36,4 +36,4 @@ const ScrollableChat: React.FC<IProps> = ({ messages }) => {
 	);
 };
 
-export default ScrollableChat;
+export default Chat;

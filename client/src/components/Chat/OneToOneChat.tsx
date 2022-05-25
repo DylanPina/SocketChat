@@ -6,7 +6,8 @@ import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
 import { setSelectedUser } from "../../redux/modals/search.slice";
 import { pushNotification } from "../../redux/notifications/notifications.slice";
 import { getSender } from "../../config/ChatLogic";
-import ScrollableChat from "./ScrollableChat";
+import { Message } from "../../types/message.types";
+import Chat from "./Chat";
 
 import { toast } from "react-toastify";
 import { FaArrowAltCircleLeft } from "react-icons/fa";
@@ -15,7 +16,6 @@ import LoadingSpinner from "../Utils/LoadingSpinner";
 import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
-import { Message } from "../../types/message.types";
 
 toast.configure();
 
@@ -71,7 +71,6 @@ const OneToOneChat = () => {
 					setTimeout(() => {
 						dispatch(setFetchChatsAgain(false));
 					});
-					console.log("HIT");
 				}
 			} else {
 				setMessages([...messages, newMessageRecieved]);
@@ -194,7 +193,7 @@ const OneToOneChat = () => {
 							</div>
 						) : (
 							<div className={styles.messages_section}>
-								<ScrollableChat messages={messages} />
+								<Chat messages={messages} />
 							</div>
 						)}
 						{isTyping ? (
