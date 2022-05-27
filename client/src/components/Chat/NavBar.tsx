@@ -36,33 +36,32 @@ const NavBar = () => {
 		dispatch(toggleUserSettings());
 	};
 
-	const submitSearch = async (e: any) => {
-		if (e.key === "Enter") {
-			try {
-				setLoadingResults(true);
+	const handleSearch = async (searchQuery: string) => {
+		setSearch(searchQuery);
+		try {
+			setLoadingResults(true);
 
-				const config = {
-					headers: {
-						Authorization: `Bearer ${user.token}`,
-					},
-				};
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
 
-				const { data } = await axios.get(`/api/user?search=${search}`, config);
-				console.log(data);
+			const { data } = await axios.get(`/api/user?search=${searchQuery}`, config);
+			console.log(data);
 
-				setLoadingResults(false);
-				setSearchResult(data);
-			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_LEFT,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-				setLoadingResults(false);
-			}
+			setLoadingResults(false);
+			setSearchResult(data);
+		} catch (error) {
+			toast.error(error, {
+				position: toast.POSITION.TOP_LEFT,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+			setLoadingResults(false);
 		}
 	};
 
@@ -79,8 +78,9 @@ const NavBar = () => {
 						type="text"
 						value={search}
 						placeholder="Search for a user by name or email"
-						onChange={(e: any) => setSearch(e.target.value)}
-						onKeyDown={submitSearch}
+						onChange={(e: any) => {
+							handleSearch(e.target.value);
+						}}
 						onFocus={() => dispatch(toggleSearchDrawerOpen())}
 						onBlur={() => {
 							setTimeout(() => {
