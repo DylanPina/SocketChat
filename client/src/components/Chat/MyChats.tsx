@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
 import { toggleCreateGroupChatModal } from "../../redux/modals/modals.slice";
-import { MdOutlineGroupAdd } from "react-icons/md";
-import { HiUserGroup } from "react-icons/hi";
-import { IconContext } from "react-icons";
-import LoadingSpinner from "../Utils/LoadingSpinner";
 import { getSender } from "../../config/ChatLogic";
-import { toast } from "react-toastify";
 import axios from "axios";
 
+import { toast } from "react-toastify";
+import { IconContext } from "react-icons";
+import { Tooltip } from "@mui/material";
+import { HiUserGroup } from "react-icons/hi";
+import { MdOutlineGroupAdd } from "react-icons/md";
+import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/MyChats.module.css";
 
 toast.configure();
@@ -56,12 +57,13 @@ const MyChats = () => {
 		<div className={styles.my_chats}>
 			<div className={styles.header}>
 				<h1 className={styles.title}>Chats</h1>
-				<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChatModal())}>
-					New Group Chat
-					<IconContext.Provider value={{ className: styles.groupchat_icon_header }}>
-						<MdOutlineGroupAdd />
-					</IconContext.Provider>
-				</button>
+				<Tooltip title="Create a new groupchat" arrow>
+					<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChatModal())}>
+						<IconContext.Provider value={{ className: styles.groupchat_icon_header }}>
+							<MdOutlineGroupAdd />
+						</IconContext.Provider>
+					</button>
+				</Tooltip>
 			</div>
 			<div className={chatsLoading ? styles.chats_box_centered : styles.chats_box}>
 				{chatsLoading ? (

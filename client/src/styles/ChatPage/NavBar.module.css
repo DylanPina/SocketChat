@@ -63,6 +63,9 @@
 }
 
 .friends_icon {
+	border: none;
+	outline: none;
+	background-color: transparent;
 	height: 30px;
 	width: 30px;
 	cursor: pointer;
@@ -70,6 +73,7 @@
 
 .notifications_icon {
 	border: none;
+	outline: none;
 	background-color: transparent;
 	height: 30px;
 	width: 30px;
@@ -94,6 +98,12 @@
 	font-weight: 600;
 	font-size: 10px;
 	color: var(--primary-white);
+}
+
+.profile_pic_btn {
+	border: none;
+	outline: none;
+	background-color: transparent;
 }
 
 .profile_pic {

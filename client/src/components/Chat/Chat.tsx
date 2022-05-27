@@ -1,8 +1,9 @@
 import React from "react";
-import ScrollableFeed from "react-scrollable-feed";
-import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from "../../config/ChatLogic";
 import { useAppSelector } from "../../redux/redux-hooks";
+import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from "../../config/ChatLogic";
+import ScrollableFeed from "react-scrollable-feed";
 
+import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/Chat.module.css";
 
 interface IProps {
@@ -18,7 +19,9 @@ const Chat: React.FC<IProps> = ({ messages }) => {
 				messages.map((m: any, i: number) => (
 					<div className={styles.messages} key={m._id}>
 						{(isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id)) && (
-							<img className={styles.profile_pic} src={m.sender.profilePic} alt={m.sender.name} />
+							<Tooltip title={`${m.sender.username}`} arrow>
+								<img className={styles.profile_pic} src={m.sender.profilePic} alt={m.sender.username} />
+							</Tooltip>
 						)}
 						<span
 							className={styles.single_message}

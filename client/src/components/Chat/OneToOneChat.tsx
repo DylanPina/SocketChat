@@ -15,6 +15,7 @@ import { MdSettingsApplications } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
+import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 
 toast.configure();
@@ -170,9 +171,11 @@ const OneToOneChat = () => {
 			{selectedChat ? (
 				<div className={styles.chat_area}>
 					<div className={styles.header_container}>
-						<button className={styles.toggle_mychats}>
-							<FaArrowAltCircleLeft size={"100%"} />
-						</button>
+						<Tooltip title="Toggle chats menu" arrow>
+							<button className={styles.toggle_mychats}>
+								<FaArrowAltCircleLeft size={"100%"} />
+							</button>
+						</Tooltip>
 						<div className={styles.chat_title_container}>
 							<img
 								className={styles.chat_image}
@@ -182,9 +185,11 @@ const OneToOneChat = () => {
 							/>
 							<h1 className={styles.chat_title}>{getSender(user, selectedChat.users).username}</h1>
 						</div>
-						<button className={styles.chat_settings}>
-							<MdSettingsApplications size={"100%"} />
-						</button>
+						<Tooltip title="Chat settings" arrow>
+							<button className={styles.chat_settings}>
+								<MdSettingsApplications size={"100%"} />
+							</button>
+						</Tooltip>
 					</div>
 					<div className={styles.chat_section}>
 						{loading ? (

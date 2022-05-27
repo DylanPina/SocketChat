@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { toggleSearchDrawerOpen } from "../../redux/modals/search.slice";
-import axios from "axios";
 import { toggleUserSettings } from "../../redux/modals/user-settings.slice";
 import SearchDrawer from "./Modals/SearchDrawer";
 import UserSettings from "./Modals/UserSettings";
@@ -12,6 +12,7 @@ import { IconContext } from "react-icons";
 import { FaUserFriends } from "react-icons/fa";
 import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
+import Tooltip from "@mui/material/Tooltip";
 import styles from "../../styles/ChatPage/NavBar.module.css";
 
 toast.configure();
@@ -89,18 +90,26 @@ const NavBar = () => {
 					/>
 				</div>
 				<div className={styles.user_features}>
-					<IconContext.Provider value={{ className: styles.friends_icon }}>
-						<FaUserFriends />
-					</IconContext.Provider>
-					<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
-						<MdNotifications size={"100%"} />
-					</button>
+					<Tooltip title="Friends" arrow>
+						<button className={styles.friends_icon}>
+							<FaUserFriends size={"100%"} />
+						</button>
+					</Tooltip>
+					<Tooltip title="Notifications" arrow>
+						<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
+							<MdNotifications size={"100%"} />
+						</button>
+					</Tooltip>
 					{notifications.length > 0 && (
 						<div className={styles.notifications_badge}>
 							<h1 className={styles.notifications_badge_number}>!</h1>
 						</div>
 					)}
-					<img className={styles.profile_pic} src={user.profilePic} alt="Profile" onClick={toggleUserSettingsModal} />
+					<Tooltip title="Profile" arrow>
+						<button className={styles.profile_pic_btn}>
+							<img className={styles.profile_pic} src={user.profilePic} alt="Profile" onClick={toggleUserSettingsModal} />
+						</button>
+					</Tooltip>
 				</div>
 			</div>
 			{notificationModal && <NotificationModal />}
