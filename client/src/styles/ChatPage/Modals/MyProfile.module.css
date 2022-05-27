@@ -6,6 +6,7 @@
 	width: 100vw;
 	height: 100vh;
 	background-color: var(--modal-background);
+	z-index: 1;
 }
 
 .my_profile {
@@ -13,6 +14,7 @@
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	margin-bottom: 10vh;
 	width: 400px;
 	height: 400px;
 	background-color: var(--primary-white);
