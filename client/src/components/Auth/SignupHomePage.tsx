@@ -19,7 +19,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-	const [profilePic, setProfilePic] = useState("");
+	const [profilePic, setProfilePic] = useState("https://static.thenounproject.com/png/363633-200.png");
 	const [loading, setLoading] = useState(false);
 	const navigate = useNavigate();
 
@@ -145,6 +145,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			setLoading(false);
 
 			navigate("/chats");
+			window.location.reload();
 		} catch (err) {
 			toast.error(err, {
 				position: toast.POSITION.TOP_CENTER,
