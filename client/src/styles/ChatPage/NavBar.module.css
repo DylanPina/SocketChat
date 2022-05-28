@@ -2,9 +2,10 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	height: 5vh;
+	gap: 20px;
+	height: 60px;
 	width: 100vw;
-	padding: 0px 25px;
+	padding: 0px 25px 0px 15px;
 	background-color: var(--primary-white);
 }
 
@@ -20,17 +21,20 @@
 	display: flex;
 	align-items: center;
 	gap: 15px;
-	width: 500px;
+	width: 45%;
 	height: 35px;
-	padding: 0px 25px;
+	padding: 0px 15px;
 	background-color: var(--primary-white);
 	box-shadow: 0px 0px 3px var(--primary-black);
 	border-radius: 20px;
 }
 
 .search_icon {
-	height: 20px;
-	width: 20px;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	height: 25px;
+	width: 25px;
 	cursor: pointer;
 }
 
@@ -115,4 +119,39 @@
 	height: 40px;
 	overflow: hidden;
 	cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+	.navbar {
+		padding: 0px 10px 0px 5px;
+	}
+
+	.search_bar {
+		width: 80%;
+	}
+}
+
+@media screen and (max-width: 475px) {
+	.title {
+		font-size: 20px;
+	}
+
+	.user_features {
+		gap: 20px;
+	}
+
+	.search_icon {
+		height: 25px;
+		width: 25px;
+	}
+
+	.friends_icon {
+		height: 25px;
+		width: 25px;
+	}
+
+	.notifications_icon {
+		height: 25px;
+		width: 25px;
+	}
 }
