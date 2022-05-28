@@ -109,22 +109,21 @@
 	box-shadow: 0px 0px 10px var(--primary-black);
 }
 
-.login_button {
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.already_have_account {
 	color: var(--primary-black);
-	background-color: var(--primary-orange);
-	border-radius: 20px;
 	font-family: "Montserrat";
 	font-weight: 600;
 	font-size: 16px;
 	text-align: center;
-	height: 40px;
-	border: none;
-	padding: 10px;
+}
+
+.already_have_account_login {
+	color: var(--primary-orange);
+	font-family: "Montserrat";
+	font-weight: 700;
+	font-size: 16px;
+	text-align: center;
 	cursor: pointer;
-	transition-duration: 0.5s;
 }
 
 .login_button:hover {

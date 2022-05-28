@@ -223,9 +223,12 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				<button className={styles.signup_button} onClick={handleSignup}>
 					{loading ? <LoadingSpinner size={"22px"} /> : "Sign up"}
 				</button>
-				<button className={styles.login_button} onClick={handleLoginAuthModal}>
-					Login
-				</button>
+				<h3 className={styles.already_have_account}>
+					Already have an account?{" "}
+					<span className={styles.already_have_account_login} onClick={handleLoginAuthModal}>
+						Login
+					</span>
+				</h3>
 			</div>
 		</div>
 	);
