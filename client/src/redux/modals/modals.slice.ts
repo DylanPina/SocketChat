@@ -9,6 +9,7 @@ export const modalsSlice = createSlice({
 		myProfile: false,
 		userSettings: false,
 		searchDrawer: false,
+		myChats: true,
 	},
 	reducers: {
 		toggleCreateGroupChat: (state) => {
@@ -29,11 +30,15 @@ export const modalsSlice = createSlice({
 		toggleSearchDrawer: (state) => {
 			state.searchDrawer = !state.searchDrawer;
 		},
+		toggleMyChats: (state) => {
+			state.myChats = !state.myChats;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleCreateGroupChat, loginModal, signupModal, toggleMyProfile, toggleUserSettings, toggleSearchDrawer } = modalsSlice.actions;
+export const { toggleCreateGroupChat, loginModal, signupModal, toggleMyProfile, toggleUserSettings, toggleSearchDrawer, toggleMyChats } =
+	modalsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectModals = (state: RootState) => state.modals;

@@ -171,7 +171,7 @@ const GroupChat = () => {
 		<div className={styles.chat_area}>
 			<div className={styles.header_container}>
 				<button className={styles.toggle_mychats}>
-					<FaArrowAltCircleLeft size={"100%"} />
+					<FaArrowAltCircleLeft size={"85%"} />
 				</button>
 				<div className={styles.chat_title_container}>
 					<IconContext.Provider value={{ className: styles.groupchat_icon }}>

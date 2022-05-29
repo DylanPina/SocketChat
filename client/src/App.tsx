@@ -1,16 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./redux/redux-hooks";
+import { useAppDispatch } from "./redux/redux-hooks";
+import { setScreenWidth, setScreenHeight, setSmallScreen } from "./redux/screen/screen.slice";
 import { setUserInfo } from "./redux/user/user.slice";
 
 import ChatPage from "./pages/ChatPage";
 import HomePage from "./pages/HomePage";
 
 import styles from "./styles/App.module.css";
+import useWindowDimensions from "./config/hooks/useWindowDimensions";
 
 function App() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
+	const { height, width } = useWindowDimensions();
 
 	useEffect(() => {
 		const userInfo = localStorage.getItem("userInfo");
@@ -22,6 +25,18 @@ function App() {
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [navigate]);
+
+	// FOR SCREEN WIDTH < 1050px
+	useEffect(() => {
+		dispatch(setScreenWidth(width));
+		dispatch(setScreenHeight(height));
+
+		if (width < 1050) {
+			dispatch(setSmallScreen(true));
+		} else {
+			dispatch(setSmallScreen(false));
+		}
+	}, [height, width, []]);
 
 	return (
 		<div className={styles.app}>

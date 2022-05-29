@@ -5,6 +5,7 @@ import searchSlice from "./user/selected-user.slice";
 import chatSlice from "./chats/chats.slice";
 import modalsSlice from "./modals/modals.slice";
 import notificationsSlice from "./notifications/notifications.slice";
+import screenDimensionsSlice from "./screen/screen.slice";
 
 export const store = configureStore({
 	reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
 		selectedUser: searchSlice,
 		chats: chatSlice,
 		notifications: notificationsSlice,
+		screenDimensions: screenDimensionsSlice,
 	},
 	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });

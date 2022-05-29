@@ -21,8 +21,6 @@ const NavBar = () => {
 	const [search, setSearch] = useState("");
 	const [searchResult, setSearchResult] = useState([]);
 	const [loadingResults, setLoadingResults] = useState(false);
-	const [loadingChat, setLoadingChat] = useState(false);
-	const [userSettings, setUserSettings] = useState(false);
 	const [notificationModal, setNotificationModal] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 	const [mobileSearch, setMobileSearch] = useState(false);

@@ -1,25 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useAppSelector } from "../../redux/redux-hooks";
-import useWindowDimensions from "../../config/hooks/useWindowDimensions";
 import OneToOneChat from "./OneToOneChat";
 import GroupChat from "./GroupChat";
 
 import styles from "../../styles/ChatPage/ChatBox.module.css";
 
 const ChatBox = () => {
-	const [smallScreen, setSmallScreen] = useState(false);
 	const { selectedChat } = useAppSelector((state) => state.chats);
-
-	// FOR SCREEN WIDTH < 1050px
-	const { height, width } = useWindowDimensions();
-
-	useEffect(() => {
-		if (width < 1050) {
-			setSmallScreen(true);
-		} else {
-			setSmallScreen(false);
-		}
-	}, [height, width]);
+	const { smallScreen } = useAppSelector((state) => state.screenDimensions);
 
 	return (
 		<React.Fragment>

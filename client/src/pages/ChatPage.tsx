@@ -10,8 +10,6 @@ import CreateGroupChat from "../components/Chat/Modals/CreateGroupChat";
 import styles from "../styles/ChatPage/ChatPage.module.css";
 
 const ChatPage = () => {
-	const [smallScreen, setSmallScreen] = useState(false);
-
 	const { myProfile } = useAppSelector((state) => state.modals);
 	const { selectedUser } = useAppSelector((state) => state.selectedUser);
 	const { createGroupChat } = useAppSelector((state) => state.modals);
