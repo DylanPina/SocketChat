@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { toggleSearchDrawerOpen } from "../../redux/modals/search.slice";
@@ -9,7 +9,6 @@ import NotificationModal from "./Modals/NotificationModal";
 import useWindowDimensions from "../../config/hooks/useWindowDimensions";
 
 import { toast } from "react-toastify";
-import { IconContext } from "react-icons";
 import { FaUserFriends } from "react-icons/fa";
 import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
@@ -27,6 +26,7 @@ const NavBar = () => {
 	const [notificationModal, setNotificationModal] = useState(false);
 	const [isMobile, setIsMobile] = useState(false);
 	const [mobileSearch, setMobileSearch] = useState(false);
+	const mobileSearchFocus = useRef<HTMLInputElement>(null);
 
 	const dispatch = useAppDispatch();
 
@@ -81,6 +81,13 @@ const NavBar = () => {
 		}
 	};
 
+	const handleMobileSearchIcon = () => {
+		setMobileSearch(!mobileSearch);
+		setTimeout(() => {
+			mobileSearchFocus.current?.focus();
+		});
+	};
+
 	return (
 		<React.Fragment>
 			<div className={styles.navbar} style={{ justifyContent: isMobile && mobileSearch ? "center" : "space-between" }}>
@@ -94,6 +101,7 @@ const NavBar = () => {
 							className={styles.search_input}
 							type="text"
 							value={search}
+							ref={mobileSearchFocus}
 							placeholder="Search"
 							onChange={(e: any) => {
 								handleSearch(e.target.value);
@@ -102,6 +110,7 @@ const NavBar = () => {
 							onBlur={() => {
 								setTimeout(() => {
 									dispatch(toggleSearchDrawerOpen());
+									setMobileSearch(!mobileSearch);
 								}, 100);
 							}}
 						/>
@@ -110,7 +119,7 @@ const NavBar = () => {
 				{((isMobile && !mobileSearch) || !isMobile) && (
 					<div className={styles.user_features}>
 						{isMobile && (
-							<button className={styles.search_icon} onClick={() => setMobileSearch(!mobileSearch)}>
+							<button className={styles.search_icon} onClick={handleMobileSearchIcon}>
 								<FaSearchengin size={"100%"} />
 							</button>
 						)}
