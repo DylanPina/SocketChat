@@ -44,8 +44,6 @@ const NavBar = () => {
 		} else {
 			setIsMobile(false);
 		}
-		console.log(isMobile);
-		console.log(`Mobile search: ${mobileSearch}`);
 	}, [height, width]);
 
 	const toggleUserSettingsModal = () => {

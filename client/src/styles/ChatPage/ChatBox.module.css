@@ -1,6 +1,6 @@
 .chat_box {
 	width: calc(70vw - 20px);
-	height: calc(95vh - 50px);
+	height: calc(100vh - 110px);
 	background-color: var(--primary-white);
 	border-radius: 5px;
 	padding: 20px;
