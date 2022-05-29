@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "./redux/redux-hooks";
-import { setUserInfo } from "./redux/user-info/user.slice";
+import { setUserInfo } from "./redux/user/user.slice";
 
 import ChatPage from "./pages/ChatPage";
 import HomePage from "./pages/HomePage";

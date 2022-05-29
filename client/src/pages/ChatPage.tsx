@@ -9,16 +9,16 @@ import styles from "../styles/ChatPage/ChatPage.module.css";
 import CreateGroupChat from "../components/Chat/Modals/CreateGroupChat";
 
 const ChatPage = () => {
-	const myProfileModal = useAppSelector((state) => state.myProfileModal);
-	const { selectedUser } = useAppSelector((state) => state.searchSlice);
-	const { createGroupChatIsOpen } = useAppSelector((state) => state.modals);
+	const { myProfile } = useAppSelector((state) => state.modals);
+	const { selectedUser } = useAppSelector((state) => state.selectedUser);
+	const { createGroupChat } = useAppSelector((state) => state.modals);
 
 	return (
 		<div className={styles.chat_page}>
 			<Navbar />
 			{selectedUser && <UserProfile user={selectedUser} />}
-			{myProfileModal.isOpen && <MyProfile />}
-			{createGroupChatIsOpen && <CreateGroupChat />}
+			{myProfile && <MyProfile />}
+			{createGroupChat && <CreateGroupChat />}
 			<div className={styles.chat_container}>
 				<MyChats />
 				<ChatBox />

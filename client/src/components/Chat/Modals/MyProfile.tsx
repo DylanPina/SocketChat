@@ -1,5 +1,5 @@
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { toggleMyProfile } from "../../../redux/modals/my-profile.slice";
+import { toggleMyProfile } from "../../../redux/modals/modals.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
 

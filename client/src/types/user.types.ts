@@ -4,6 +4,7 @@ export interface User {
 	profilePic: string;
 	updatedAt: string;
 	username: string;
+	token?: string;
 	__v: number;
 	_id: string;
 }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
-import { toggleCreateGroupChatModal } from "../../redux/modals/modals.slice";
+import { toggleCreateGroupChat } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import axios from "axios";
 
@@ -58,7 +58,7 @@ const MyChats = () => {
 			<div className={styles.header}>
 				<h1 className={styles.title}>Chats</h1>
 				<Tooltip title="Create a new groupchat" arrow>
-					<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChatModal())}>
+					<button className={styles.create_groupchat} onClick={() => dispatch(toggleCreateGroupChat())}>
 						<IconContext.Provider value={{ className: styles.groupchat_icon_header }}>
 							<MdOutlineGroupAdd />
 						</IconContext.Provider>

@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { toggleSearchDrawerOpen } from "../../redux/modals/search.slice";
-import { toggleUserSettings } from "../../redux/modals/user-settings.slice";
+import { toggleSearchDrawer } from "../../redux/modals/modals.slice";
+import { toggleUserSettings } from "../../redux/modals/modals.slice";
 import SearchDrawer from "./Modals/SearchDrawer";
 import UserSettings from "./Modals/UserSettings";
 import NotificationModal from "./Modals/NotificationModal";
@@ -31,8 +31,8 @@ const NavBar = () => {
 	const dispatch = useAppDispatch();
 
 	const user = useAppSelector((state) => state.userInfo);
-	const userSettingsModal = useAppSelector((state) => state.userSettingsModal);
-	const searchSlice = useAppSelector((state) => state.searchSlice);
+	const userSettingsModal = useAppSelector((state) => state.modals.userSettings);
+	const { searchDrawer } = useAppSelector((state) => state.modals);
 	const { notifications } = useAppSelector((state) => state.notifications);
 
 	// FOR MOBILE SCREENS
@@ -106,10 +106,10 @@ const NavBar = () => {
 							onChange={(e: any) => {
 								handleSearch(e.target.value);
 							}}
-							onFocus={() => dispatch(toggleSearchDrawerOpen())}
+							onFocus={() => dispatch(toggleSearchDrawer())}
 							onBlur={() => {
 								setTimeout(() => {
-									dispatch(toggleSearchDrawerOpen());
+									dispatch(toggleSearchDrawer());
 									setMobileSearch(!mobileSearch);
 								}, 100);
 							}}
@@ -147,10 +147,10 @@ const NavBar = () => {
 						</>
 					</div>
 				)}
-				{searchSlice.searchDrawerOpen && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
+				{searchDrawer && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
 			</div>
 			{notificationModal && <NotificationModal />}
-			{userSettingsModal.isOpen && <UserSettings />}
+			{userSettingsModal && <UserSettings />}
 		</React.Fragment>
 	);
 };

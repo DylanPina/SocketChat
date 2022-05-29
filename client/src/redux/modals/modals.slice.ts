@@ -4,17 +4,36 @@ import type { RootState } from "../store";
 export const modalsSlice = createSlice({
 	name: "modals",
 	initialState: {
-		createGroupChatIsOpen: false,
+		createGroupChat: false,
+		authModal: "Login Modal",
+		myProfile: false,
+		userSettings: false,
+		searchDrawer: false,
 	},
 	reducers: {
-		toggleCreateGroupChatModal: (state) => {
-			state.createGroupChatIsOpen = !state.createGroupChatIsOpen;
+		toggleCreateGroupChat: (state) => {
+			state.createGroupChat = !state.createGroupChat;
+		},
+		loginModal: (state) => {
+			state.authModal = "Login Modal";
+		},
+		signupModal: (state) => {
+			state.authModal = "Signup Modal";
+		},
+		toggleMyProfile: (state) => {
+			state.myProfile = !state.myProfile;
+		},
+		toggleUserSettings: (state) => {
+			state.userSettings = !state.userSettings;
+		},
+		toggleSearchDrawer: (state) => {
+			state.searchDrawer = !state.searchDrawer;
 		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleCreateGroupChatModal } = modalsSlice.actions;
+export const { toggleCreateGroupChat, loginModal, signupModal, toggleMyProfile, toggleUserSettings, toggleSearchDrawer } = modalsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectModals = (state: RootState) => state.modals;

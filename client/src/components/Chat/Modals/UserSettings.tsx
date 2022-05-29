@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch } from "../../../redux/redux-hooks";
-import { toggleMyProfile } from "../../../redux/modals/my-profile.slice";
-import { toggleUserSettings } from "../../../redux/modals/user-settings.slice";
+import { toggleMyProfile } from "../../../redux/modals/modals.slice";
+import { toggleUserSettings } from "../../../redux/modals/modals.slice";
 
 import styles from "../../../styles/ChatPage/Modals/UserSettings.module.css";
 

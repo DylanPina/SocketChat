@@ -1,5 +1,5 @@
 import LoadingSpinner from "../../Utils/LoadingSpinner";
-import { setSelectedUser } from "../../../redux/modals/search.slice";
+import { setSelectedUser } from "../../../redux/user/selected-user.slice";
 import { useAppDispatch } from "../../../redux/redux-hooks";
 
 import styles from "../../../styles/ChatPage/Modals/SearchDrawer.module.css";

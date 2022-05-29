@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux/redux-hooks";
-import { loginModal, signupModal } from "../redux/modals/auth-modal.slice";
+import { loginModal, signupModal } from "../redux/modals/modals.slice";
 
 import LoginHomePage from "../components/Auth/LoginHomePage";
 import SignupHomePage from "../components/Auth/SignupHomePage";
 
 import styles from "../styles/HomePage/HomePage.module.css";
 const HomePage = () => {
-	const authModalState = useAppSelector((state) => state.authModal.modal);
+	const { authModal } = useAppSelector((state) => state.modals);
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 
@@ -39,9 +39,9 @@ const HomePage = () => {
 					<p className={styles.subtitle}>Real-time secure communication through web sockets</p>
 				</div>
 				<div className={styles.auth_container}>
-					{authModalState === "Login Modal" ? (
+					{authModal === "Login Modal" ? (
 						<LoginHomePage setAuthModal={displaySignupModal} />
-					) : authModalState === "Signup Modal" ? (
+					) : authModal === "Signup Modal" ? (
 						<SignupHomePage setAuthModal={displayLoginModal} />
 					) : (
 						<></>

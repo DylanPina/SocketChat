@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain } from "../../../redux/chats/chats.slice";
-import { toggleCreateGroupChatModal } from "../../../redux/modals/modals.slice";
+import { toggleCreateGroupChat } from "../../../redux/modals/modals.slice";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
 
 import { IconContext } from "react-icons";
@@ -74,7 +74,7 @@ const CreateGroupChat = () => {
 	};
 
 	const closeCreateGroupChatModal = () => {
-		dispatch(toggleCreateGroupChatModal());
+		dispatch(toggleCreateGroupChat());
 	};
 
 	const toggleSearchResultsShown = () => {

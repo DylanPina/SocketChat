@@ -4,7 +4,7 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
 import { pushNotification } from "../../redux/notifications/notifications.slice";
-import { setSelectedUser } from "../../redux/modals/search.slice";
+import { setSelectedUser } from "../../redux/user/selected-user.slice";
 import { getSender } from "../../config/ChatLogic";
 import Chat from "./Chat";
 import GroupChatSettings from "./Modals/GroupChatSettings";

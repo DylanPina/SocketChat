@@ -3,7 +3,7 @@ import io from "socket.io-client";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
-import { setSelectedUser } from "../../redux/modals/search.slice";
+import { setSelectedUser } from "../../redux/user/selected-user.slice";
 import { pushNotification } from "../../redux/notifications/notifications.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";

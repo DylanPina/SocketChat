@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { setSelectedUser } from "../../../redux/modals/search.slice";
+import { setSelectedUser } from "../../../redux/user/selected-user.slice";
 import { setSelectedChat, setFetchChatsAgain, setChats } from "../../../redux/chats/chats.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
