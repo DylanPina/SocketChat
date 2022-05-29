@@ -24,7 +24,7 @@ const ChatBox = () => {
 	return (
 		<React.Fragment>
 			{((selectedChat && smallScreen) || !smallScreen) && (
-				<div className={styles.chat_box}>{selectedChat?.isGroupChat ? <GroupChat /> : <OneToOneChat />}</div>
+				<div className={smallScreen ? styles.chat_box_full : styles.chat_box}>{selectedChat?.isGroupChat ? <GroupChat /> : <OneToOneChat />}</div>
 			)}
 		</React.Fragment>
 	);

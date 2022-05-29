@@ -173,7 +173,7 @@ const OneToOneChat = () => {
 					<div className={styles.header_container}>
 						<Tooltip title="Toggle chats menu" arrow>
 							<button className={styles.toggle_mychats}>
-								<FaArrowAltCircleLeft size={"100%"} />
+								<FaArrowAltCircleLeft size={"85%"} />
 							</button>
 						</Tooltip>
 						<div className={styles.chat_title_container}>

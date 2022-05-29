@@ -122,3 +122,9 @@
 	overflow-y: auto;
 	scrollbar-width: none;
 }
+
+@media screen and (max-width: 500px) {
+	.chat_title {
+		font-size: 20px;
+	}
+}

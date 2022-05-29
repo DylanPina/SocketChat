@@ -30,3 +30,11 @@
 	cursor: pointer;
 	overflow: hidden;
 }
+
+@media screen and (max-width: 600px) {
+	.single_message {
+		font-size: 14px;
+		padding: 8px 12px;
+		border-radius: 15px;
+	}
+}
