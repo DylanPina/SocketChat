@@ -101,3 +101,10 @@
 	box-shadow: 0px 0px 3px var(--primary-black);
 	overflow: hidden;
 }
+
+@media screen and (max-width: 600px) {
+	.noti_modal {
+		width: 300px;
+		margin-left: calc(100vw - 310px);
+	}
+}

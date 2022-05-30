@@ -194,24 +194,12 @@ const CreateGroupChat = () => {
 				<div className={styles.input_section}>
 					<div className={styles.input_container}>
 						<label className={styles.label}>Chat Name</label>
-						<input
-							type="text"
-							placeholder="Name of the group chat"
-							className={styles.input}
-							value={groupChatName}
-							onChange={(e) => handleGroupChatName(e.target.value)}
-						/>
+						<input type="text" className={styles.input} value={groupChatName} onChange={(e) => handleGroupChatName(e.target.value)} />
 					</div>
 					<div className={styles.input_container}>
 						<label className={styles.label}>Users</label>
 
-						<input
-							type="text"
-							placeholder="Add Users eg: Dylan, Emilija, John"
-							className={styles.input}
-							value={search}
-							onChange={(e) => handleSearch(e.target.value)}
-						/>
+						<input type="text" className={styles.input} value={search} onChange={(e) => handleSearch(e.target.value)} />
 						<div className={styles.triangle_icon} onClick={toggleSearchResultsShown}>
 							{showSearchResults ? <VscTriangleUp /> : <VscTriangleDown />}
 						</div>
@@ -221,7 +209,7 @@ const CreateGroupChat = () => {
 							{selectedUsers.map((user: IUser) => (
 								<div className={styles.selected_user} key={user._id}>
 									<h3 className={styles.user_name_selected}>{user.username}</h3>
-									<IconContext.Provider value={{ className: styles.close_button_selected }}>
+									<IconContext.Provider value={{ className: styles.remove_user }}>
 										<CgClose onClick={() => removeFromSelected(user)} />
 									</IconContext.Provider>
 								</div>

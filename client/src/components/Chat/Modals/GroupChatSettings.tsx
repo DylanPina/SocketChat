@@ -276,13 +276,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				<div className={styles.input_section}>
 					<div className={styles.input_container}>
 						<label className={styles.label}>Update Chat Name</label>
-						<input
-							type="text"
-							placeholder="Name of the group chat"
-							className={styles.input}
-							value={groupChatName}
-							onChange={(e) => setGroupChatName(e.target.value)}
-						/>
+						<input type="text" placeholder="" className={styles.input} value={groupChatName} onChange={(e) => setGroupChatName(e.target.value)} />
 						<button className={styles.rename_button} onClick={() => handleRename()}>
 							<MdOutlineDriveFileRenameOutline size={"80%"} />
 						</button>
@@ -290,13 +284,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 					<div className={styles.input_container}>
 						<label className={styles.label}>Add or Remove Users</label>
 
-						<input
-							type="text"
-							placeholder="Add Users eg: Dylan, Emilija, John"
-							className={styles.input}
-							value={search}
-							onChange={(e) => handleSearch(e.target.value)}
-						/>
+						<input type="text" placeholder="" className={styles.input} value={search} onChange={(e) => handleSearch(e.target.value)} />
 						<div className={styles.triangle_icon} onClick={toggleSearchResultsShown}>
 							{showSearchResults ? <VscTriangleUp /> : <VscTriangleDown />}
 						</div>
