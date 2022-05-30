@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
 import { toggleCreateGroupChat } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
-import useWindowDimensions from "../../config/hooks/useWindowDimensions";
 
 import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
