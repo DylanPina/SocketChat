@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setFetchChatsAgain } from "../../redux/chats/chats.slice";
+import { setFetchChatsAgain, setSelectedChat } from "../../redux/chats/chats.slice";
+import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { pushNotification } from "../../redux/notifications/notifications.slice";
 import Chat from "./Chat";
 import GroupChatSettings from "./Modals/GroupChatSettings";
@@ -35,6 +36,7 @@ const GroupChat = () => {
 	const user = useAppSelector((state) => state.userInfo);
 	const { selectedChat } = useAppSelector((state) => state.chats);
 	const { notifications } = useAppSelector((state) => state.notifications);
+	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 
 	// For Lottie animations
@@ -167,10 +169,20 @@ const GroupChat = () => {
 		}
 	};
 
+	const handleToggleMyChats = () => {
+		if (!mediumScreen && !mobileScreen) {
+			dispatch(toggleMyChats());
+		}
+
+		if (mediumScreen || mobileScreen) {
+			dispatch(setSelectedChat(null));
+		}
+	};
+
 	return (
 		<div className={styles.chat_area}>
 			<div className={styles.header_container}>
-				<button className={styles.toggle_mychats}>
+				<button className={styles.toggle_mychats} onClick={handleToggleMyChats}>
 					<FaArrowAltCircleLeft size={"85%"} />
 				</button>
 				<div className={styles.chat_title_container}>

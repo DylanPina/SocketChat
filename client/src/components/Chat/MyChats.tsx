@@ -19,31 +19,31 @@ toast.configure();
 const MyChats = () => {
 	const [currentUser, setCurrentUser] = useState();
 	const [chatsLoading, setChatsLoading] = useState(false);
-	const [smallScreen, setSmallScreen] = useState(false);
 	const [smallScreenView, setSmallScreenView] = useState(false);
+	const [largeScreenView, setLargeScreenView] = useState(false);
 
 	const chats = useAppSelector((state) => state.chats.chats);
 	const selectedChat = useAppSelector((state) => state.chats.selectedChat);
 	const fetchChatsAgain = useAppSelector((state) => state.chats.fetchChatsAgain);
+	const { myChats } = useAppSelector((state) => state.modals);
+	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 
 	const userInfo = localStorage.getItem("userInfo");
 
-	// FOR SCREEN WIDTH < 1050px
-	const { height, width } = useWindowDimensions();
-
 	useEffect(() => {
-		if (width < 1050) {
-			setSmallScreen(true);
-		} else {
-			setSmallScreen(false);
-		}
-		if (!selectedChat && smallScreen) {
+		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) {
 			setSmallScreenView(true);
 		} else {
 			setSmallScreenView(false);
 		}
-	}, [width, height, []]);
+
+		if (!mediumScreen && !mobileScreen) {
+			setLargeScreenView(true);
+		} else {
+			setLargeScreenView(false);
+		}
+	}, [mediumScreen, mobileScreen, []]);
 
 	useEffect(() => {
 		if (userInfo) setCurrentUser(JSON.parse(userInfo));
@@ -75,8 +75,8 @@ const MyChats = () => {
 
 	return (
 		<React.Fragment>
-			{((!selectedChat && smallScreen) || !smallScreen) && (
-				<div className={!smallScreenView ? styles.my_chats : styles.my_chats_small} style={{}}>
+			{((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen) || (largeScreenView && myChats)) && (
+				<div className={!smallScreenView ? styles.my_chats : styles.my_chats_small}>
 					<div className={styles.header}>
 						<h1 className={styles.title}>Chats</h1>
 						<Tooltip title="Create a new groupchat" arrow>

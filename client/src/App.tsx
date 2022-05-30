@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "./redux/redux-hooks";
-import { setScreenWidth, setScreenHeight, setSmallScreen } from "./redux/screen/screen.slice";
+import { setScreenWidth, setScreenHeight, setMediumScreen, setMobileScreen } from "./redux/screen/screen.slice";
 import { setUserInfo } from "./redux/user/user.slice";
 
 import ChatPage from "./pages/ChatPage";
@@ -31,12 +31,18 @@ function App() {
 		dispatch(setScreenWidth(width));
 		dispatch(setScreenHeight(height));
 
-		if (width < 1050) {
-			dispatch(setSmallScreen(true));
+		if (width <= 1050) {
+			dispatch(setMediumScreen(true));
 		} else {
-			dispatch(setSmallScreen(false));
+			dispatch(setMediumScreen(false));
 		}
-	}, [height, width, []]);
+
+		if (width <= 600) {
+			dispatch(setMobileScreen(true));
+		} else {
+			dispatch(setMobileScreen(false));
+		}
+	}, [width, []]);
 
 	return (
 		<div className={styles.app}>
