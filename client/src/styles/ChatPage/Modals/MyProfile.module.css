@@ -97,8 +97,10 @@
 	font-family: "Montserrat";
 	font-size: 20px;
 	font-weight: 500;
-	width: 30px;
+	width: 75%;
+	overflow: hidden;
 	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .edit_username,
@@ -122,6 +124,6 @@
 
 @media screen and (max-width: 600px) {
 	.my_profile {
-		width: fit-content;
+		width: 325px;
 	}
 }
