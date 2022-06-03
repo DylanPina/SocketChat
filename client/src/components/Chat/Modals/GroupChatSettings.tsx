@@ -1,5 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
+import { setFetchChatsAgain, setSelectedChat } from "../../../redux/chats/chats.slice";
 import axios from "axios";
 
 import { toast } from "react-toastify";
@@ -8,7 +9,6 @@ import { CgClose } from "react-icons/cg";
 import { VscTriangleDown, VscTriangleUp } from "react-icons/vsc";
 import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
 import styles from "../../../styles/ChatPage/Modals/GroupChatSettings.module.css";
-import { setFetchChatsAgain, setSelectedChat } from "../../../redux/chats/chats.slice";
 
 interface IProps {
 	setSettingsOpen: Dispatch<SetStateAction<boolean>>;

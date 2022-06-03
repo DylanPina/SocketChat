@@ -70,7 +70,9 @@
 	font-family: "Montserrat";
 	font-size: 20px;
 	font-weight: 500;
+	white-space: nowrap;
 	text-overflow: ellipsis;
+	overflow: hidden;
 }
 
 .start_chatting {
@@ -105,4 +107,15 @@
 
 .add_friend:hover {
 	box-shadow: 0px 0px 3px var(--primary-green);
+}
+
+@media screen and (max-width: 600px) {
+	.user_profile {
+		max-width: 300px;
+	}
+
+	.username,
+	.email {
+		font-size: 15px;
+	}
 }

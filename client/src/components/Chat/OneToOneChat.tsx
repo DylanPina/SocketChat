@@ -8,6 +8,7 @@ import { pushNotification } from "../../redux/notifications/notifications.slice"
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";
+import OneToOneChatSettings from "./Modals/OneToOneChatSettings";
 import Chat from "./Chat";
 
 import { toast } from "react-toastify";
@@ -25,6 +26,7 @@ const ENDPOINT = "http://localhost:5000";
 var socket: any, selectedChatCompare: any;
 
 const OneToOneChat = () => {
+	const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 	const [messages, setMessages] = useState<any>([]);
 	const [loading, setLoading] = useState(true);
 	const [newMessage, setNewMessage] = useState<string>();
@@ -198,11 +200,12 @@ const OneToOneChat = () => {
 							<h1 className={styles.chat_title}>{getSender(user, selectedChat.users).username}</h1>
 						</div>
 						<Tooltip title="Chat settings" arrow>
-							<button className={styles.chat_settings}>
+							<button className={styles.chat_settings} onClick={() => setSettingsOpen(true)}>
 								<MdSettingsApplications size={"100%"} />
 							</button>
 						</Tooltip>
 					</div>
+					{settingsOpen && <OneToOneChatSettings setSettingsOpen={setSettingsOpen} />}
 					<div className={styles.chat_section}>
 						{loading ? (
 							<div className={styles.loading_container}>
