@@ -99,4 +99,19 @@ const fetchNotifications = asyncHandler(async (req, res) => {
 	}
 });
 
-export { sendMessage, allMessages, sendNotification, fetchNotifications };
+const removeNotification = asyncHandler(async (req, res) => {
+	// Extracting notificationID from the request body
+	const { notificationId, userId } = req.body;
+	// Finding the User who sent the request and removing the notification
+	const removed = await User.findByIdAndUpdate(userId, { $pull: { notifications: notificationId } });
+
+	// Check if the notification was removed
+	if (!removed) {
+		res.status(400).json({ error: "Falled to remove notification" });
+		throw new Error("Falled to remove notification");
+	} else {
+		res.status(200).json(removed.notifications);
+	}
+});
+
+export { sendMessage, allMessages, sendNotification, fetchNotifications, removeNotification };
