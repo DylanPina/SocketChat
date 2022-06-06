@@ -55,6 +55,7 @@ const allMessages = asyncHandler(async (req, res) => {
 	}
 });
 
+// Sends a notification to a user
 const sendNotification = asyncHandler(async (req, res) => {
 	// Extracting message from the request body
 	const { messageId, chatId } = req.body;
@@ -85,13 +86,11 @@ const sendNotification = asyncHandler(async (req, res) => {
 	}
 });
 
+// Fetches all notifications for a single user
 const fetchNotifications = asyncHandler(async (req, res) => {
-	// Extracting the userID from the request body
-	const { userId } = req.body;
-
 	try {
 		// Retrieve user by userID, populate and return user's notifications
-		const user = await User.findById(userId).populate({ path: "notifications", populate: { path: "sender chat" } });
+		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat" } });
 		res.status(200).json(user.notifications);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -99,11 +98,12 @@ const fetchNotifications = asyncHandler(async (req, res) => {
 	}
 });
 
+// Removes a single notification from the user's notification array
 const removeNotification = asyncHandler(async (req, res) => {
 	// Extracting notificationID from the request body
-	const { notificationId, userId } = req.body;
+	const { notificationId } = req.body;
 	// Finding the User who sent the request and removing the notification
-	const removed = await User.findByIdAndUpdate(userId, { $pull: { notifications: notificationId } });
+	const removed = await User.findByIdAndUpdate(req.user._id, { $pull: { notifications: notificationId } });
 
 	// Check if the notification was removed
 	if (!removed) {
@@ -114,4 +114,18 @@ const removeNotification = asyncHandler(async (req, res) => {
 	}
 });
 
-export { sendMessage, allMessages, sendNotification, fetchNotifications, removeNotification };
+// Removes all notifications from the user's notification array
+const removeAllNotifications = asyncHandler(async (req, res) => {
+	// Finding the user who sent the request and removing all notifications
+	const removed = await User.findByIdAndUpdate(req.user._id, { $set: { notifications: [] } });
+
+	// Check if the notifications were removed
+	if (!removed) {
+		res.status(400).json({ error: "Falled to remove notification" });
+		throw new Error("Falled to remove notification");
+	} else {
+		res.status(200).json(removed.notifications);
+	}
+});
+
+export { sendMessage, allMessages, sendNotification, fetchNotifications, removeNotification, removeAllNotifications };
