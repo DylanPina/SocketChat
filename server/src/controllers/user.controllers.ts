@@ -23,6 +23,7 @@ const registerUser = asyncHandler(async (req, res) => {
 		email,
 		password,
 		profilePic,
+		notifications: [],
 	});
 	// If the user is successfully created, we send back this JSON
 	if (user) {
@@ -32,6 +33,7 @@ const registerUser = asyncHandler(async (req, res) => {
 			email: user.email,
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
+			notifications: [],
 		});
 	}
 	// If the user is NOT successfuly created, we throw an error
@@ -56,6 +58,7 @@ const authUser = asyncHandler(async (req, res) => {
 			email: user.email,
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
+			notifications: user.notifications,
 		});
 	} else {
 		res.status(401).json({

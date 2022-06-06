@@ -10,6 +10,7 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			default: "https://static.thenounproject.com/png/363633-200.png",
 		},
+		notifications: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }] },
 	},
 	{ timestamps: true }
 );

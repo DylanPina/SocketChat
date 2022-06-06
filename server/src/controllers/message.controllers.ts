@@ -55,4 +55,48 @@ const allMessages = asyncHandler(async (req, res) => {
 	}
 });
 
-export { sendMessage, allMessages };
+const sendNotification = asyncHandler(async (req, res) => {
+	// Extracting message from the request body
+	const { messageId, chatId } = req.body;
+	try {
+		// Fetching the message & chat based on IDs passed in
+		const message = await Message.findOne({ _id: messageId }).populate("sender", "username profilePic email").populate("chat");
+		const chat = await Chat.findOne({ _id: chatId });
+		// Constructing our response
+		const notification = {
+			message,
+			chat,
+		};
+		// Mapping over users in the chat
+		chat.users.forEach(async (user) => {
+			// We obviously don't want to send the notification to the sender
+			if (user.toString() !== req.user._id.toString()) {
+				// Pushing the notification to the user
+				await User.findByIdAndUpdate(user, {
+					$push: { notifications: message },
+				});
+			}
+		});
+		// Return the notification
+		res.status(200).json(notification);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+const fetchNotifications = asyncHandler(async (req, res) => {
+	// Extracting the userID from the request body
+	const { userId } = req.body;
+
+	try {
+		// Retrieve user by userID, populate and return user's notifications
+		const user = await User.findById(userId).populate({ path: "notifications", populate: { path: "sender chat" } });
+		res.status(200).json(user.notifications);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+export { sendMessage, allMessages, sendNotification, fetchNotifications };
