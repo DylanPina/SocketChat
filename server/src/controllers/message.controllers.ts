@@ -7,7 +7,7 @@ import User from "../models/user.model";
 const sendMessage = asyncHandler(async (req, res) => {
 	// Extracting content and ChatID from request body
 	const { content, chatId } = req.body;
-
+	// Return an error if there is no content or chatID
 	if (!content || !chatId) {
 		console.error("Invalid data passed into request");
 		return res.sendStatus(400).json({ error: "Invalid data passed into request" });
@@ -29,10 +29,8 @@ const sendMessage = asyncHandler(async (req, res) => {
 			path: "chat.users",
 			select: "username profilePic email",
 		});
-
 		// Updating the most latest message
 		await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
-
 		// Return the message
 		res.status(200).json(message);
 	} catch (error: any) {
@@ -46,7 +44,6 @@ const allMessages = asyncHandler(async (req, res) => {
 	try {
 		// Fetching all messages based on ChatID
 		const messages = await Message.find({ chat: req.params.chatId }).populate("sender", "username profilePic email").populate("chat");
-
 		// Return the messages
 		res.status(200).json(messages);
 	} catch (error: any) {
@@ -107,8 +104,8 @@ const removeNotification = asyncHandler(async (req, res) => {
 
 	// Check if the notification was removed
 	if (!removed) {
-		res.status(400).json({ error: "Falled to remove notification" });
-		throw new Error("Falled to remove notification");
+		res.status(400).json({ error: "Failed to remove notification" });
+		throw new Error("Failed to remove notification");
 	} else {
 		res.status(200).json(removed.notifications);
 	}
@@ -118,15 +115,32 @@ const removeNotification = asyncHandler(async (req, res) => {
 const removeNotificationsByChat = asyncHandler(async (req, res) => {
 	// Extracting chatID from the request body
 	const { chatId } = req.body;
-	// Finding the User who sent the request and removing all notifications belong to the chat
-	const removed = await User.findByIdAndUpdate(req.user._id, { notifications: {} });
+	try {
+		// Fetch the user making the request
+		const user = await User.findById(req.user._id);
+		const usersNotifications = user.notifications;
+		// Fetching all messages based on ChatID
+		const messages = await Message.find({ chat: chatId }).populate("sender", "username profilePic email").populate("chat");
+		// Iterate through all messages in the chat, remove all notifications
+		messages.forEach(async (message) => {
+			if (usersNotifications.includes(message._id)) {
+				await User.findByIdAndUpdate(user, {
+					$pull: { notifications: message._id },
+				});
+			}
+		});
+		// Return the notifications back
+		res.status(200).json(user.notifications);
+	} catch (error: any) {
+		res.status(400).json({ error: error });
+		throw new Error(error.message);
+	}
 });
 
 // Removes all notifications from the user's notification array
 const removeAllNotifications = asyncHandler(async (req, res) => {
 	// Finding the user who sent the request and removing all notifications
 	const removed = await User.findByIdAndUpdate(req.user._id, { $set: { notifications: [] } });
-
 	// Check if the notifications were removed
 	if (!removed) {
 		res.status(400).json({ error: "Falled to remove notification" });
@@ -136,4 +150,4 @@ const removeAllNotifications = asyncHandler(async (req, res) => {
 	}
 });
 
-export { sendMessage, allMessages, sendNotification, fetchNotifications, removeNotification, removeAllNotifications };
+export { sendMessage, allMessages, sendNotification, fetchNotifications, removeNotification, removeNotificationsByChat, removeAllNotifications };

@@ -6,6 +6,7 @@ import {
 	fetchNotifications,
 	removeNotification,
 	removeAllNotifications,
+	removeNotificationsByChat,
 } from "../controllers/message.controllers";
 import { protect } from "../middlewares/authMiddleware";
 
@@ -16,6 +17,7 @@ router.route("/:chatId").get(protect, allMessages);
 router.route("/notifications/send").post(protect, sendNotification);
 router.route("/notifications/fetch").get(protect, fetchNotifications);
 router.route("/notifications/removeOne").post(protect, removeNotification);
+router.route("/notifications/removeByChat").post(protect, removeNotificationsByChat);
 router.route("/notifications/removeAll").post(protect, removeAllNotifications);
 
 export default router;
