@@ -90,7 +90,7 @@ const sendNotification = asyncHandler(async (req, res) => {
 const fetchNotifications = asyncHandler(async (req, res) => {
 	try {
 		// Retrieve user by userID, populate and return user's notifications
-		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat" } });
+		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat users" } });
 		res.status(200).json(user.notifications);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });

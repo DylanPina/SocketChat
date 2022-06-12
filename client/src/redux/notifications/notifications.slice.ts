@@ -15,6 +15,9 @@ export const notificationsSlice = createSlice({
 	name: "userInfo",
 	initialState,
 	reducers: {
+		setNotifications: (state: any, action: PayloadAction<Message[] | Message | []>) => {
+			state.notifications = action.payload;
+		},
 		pushNotification: (state: any, action: PayloadAction<Message>) => {
 			let alreadySent = false;
 			state.notifications.forEach((noti: Message) => {
@@ -36,7 +39,7 @@ export const notificationsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { pushNotification, removeNotification, removeNotificationsByUser } = notificationsSlice.actions;
+export const { setNotifications, pushNotification, removeNotification, removeNotificationsByUser } = notificationsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectNotifications = (state: RootState) => state.notifications;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
+import { setNotifications } from "../../redux/notifications/notifications.slice";
 import { toggleCreateGroupChat } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 
@@ -69,7 +70,28 @@ const MyChats = () => {
 			}
 			setChatsLoading(false);
 		};
+		const fetchNotifications = async () => {
+			try {
+				const config = {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.get("/api/message/notifications/fetch", config);
+				dispatch(setNotifications(data));
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		};
 		fetchChats();
+		fetchNotifications();
 	}, [fetchChatsAgain]);
 
 	return (

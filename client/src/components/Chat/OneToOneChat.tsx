@@ -4,7 +4,6 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setFetchChatsAgain, setSelectedChat } from "../../redux/chats/chats.slice";
 import { setSelectedUser } from "../../redux/user/selected-user.slice";
-import { pushNotification } from "../../redux/notifications/notifications.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";
@@ -70,7 +69,7 @@ const OneToOneChat = () => {
 			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
 				// Checking to see if there's already a notification for the new message recieved
 				if (!notifications.includes(newMessageRecieved)) {
-					dispatch(pushNotification(newMessageRecieved));
+					// dispatch(pushNotification(newMessageRecieved));
 					// Re-render the myChats component
 					dispatch(setFetchChatsAgain(true));
 					setTimeout(() => {
@@ -157,6 +156,15 @@ const OneToOneChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
+
+				await axios.post(
+					"/api/message/notifications/send",
+					{
+						messageId: data._id,
+						chatId: selectedChat._id,
+					},
+					config
+				);
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,

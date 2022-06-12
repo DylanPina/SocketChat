@@ -1,10 +1,11 @@
 import { useEffect } from "react";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { removeNotificationsByUser } from "../../../redux/notifications/notifications.slice";
+import { removeNotification } from "../../../redux/notifications/notifications.slice";
 import { setSelectedChat } from "../../../redux/chats/chats.slice";
-import { getSender } from "../../../config/ChatLogic";
 import { Message } from "../../../types/message.types";
 
+import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
 import { HiUserGroup } from "react-icons/hi";
 import styles from "../../../styles/ChatPage/Modals/NotificationModal.module.css";
@@ -19,9 +20,31 @@ const NotificationModal = () => {
 		console.log(notifications);
 	}, [notifications]);
 
-	const handleNotiClick = (noti: Message) => {
-		dispatch(removeNotificationsByUser(noti.sender));
-		if (selectedChat._id !== noti.chat._id) dispatch(setSelectedChat(noti.chat));
+	const handleNotiClick = async (noti: Message) => {
+		console.log(noti);
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
+			console.log(user.token);
+			const { data } = await axios.post("/api/message/notifications/removeOne", { notificationId: noti._id }, config);
+			console.log(data);
+		} catch (error: any) {
+			toast.error(error, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		}
+		if (!selectedChat || selectedChat._id.toString() !== noti.chat._id.toString()) {
+			dispatch(setSelectedChat(noti.chat));
+		}
+		dispatch(removeNotification(noti));
 	};
 
 	return (
@@ -35,7 +58,7 @@ const NotificationModal = () => {
 				) : (
 					notifications.map((noti: Message) => (
 						<>
-							{noti.chat.isGroupChat ? (
+							{noti.chat?.isGroupChat ? (
 								<div className={styles.single_noti_container} key={noti._id} onClick={() => handleNotiClick(noti)}>
 									<IconContext.Provider value={{ className: styles.groupchat_icon }}>
 										<HiUserGroup />
@@ -47,9 +70,9 @@ const NotificationModal = () => {
 								</div>
 							) : (
 								<div className={styles.single_noti_container} key={noti._id} onClick={() => handleNotiClick(noti)}>
-									<img src={`${noti.sender.profilePic}`} alt={`${noti.sender.username}`} className={styles.sender_profile_pic} />
+									<img src={`${noti.sender?.profilePic}`} alt={`${noti.sender?.username}`} className={styles.sender_profile_pic} />
 									<div className={styles.single_noti_content_container}>
-										<h3 className={styles.single_noti_sender_name}>{`${getSender(user, noti.chat.users).username}`}</h3>
+										<h3 className={styles.single_noti_sender_name}>{noti.sender.username}</h3>
 										<p className={styles.single_noti_msg_content}>{noti.content}</p>
 									</div>
 								</div>
