@@ -69,6 +69,26 @@ const fetchChats = asyncHandler(async (req, res) => {
 	}
 });
 
+const fetchChatById = asyncHandler(async (req, res) => {
+	try {
+		// Fetch all user's from the chat then populate the chat model with user data
+		Chat.find({ _id: req.params.chatId })
+			.populate("users", "-password")
+			.populate("groupAdmin", "-password")
+			.populate("latestMessage")
+			.sort({ updatedAt: -1 })
+			.then(async (results) => {
+				results = await User.populate(results, {
+					path: "latestMessage.sender",
+					select: "username profilePic email",
+				});
+				res.status(200).send(results);
+			});
+	} catch (error) {
+		res.status(400).send({ error: error });
+	}
+});
+
 const createGroupChat = asyncHandler(async (req, res) => {
 	// Check to see if users and groupchat name were passed in
 	if (!req.body.users || !req.body.name) {
@@ -177,4 +197,4 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 	}
 });
 
-export { accessChat, fetchChats, createGroupChat, renameGroup, addToGroup, removeFromGroup };
+export { accessChat, fetchChats, fetchChatById, createGroupChat, renameGroup, addToGroup, removeFromGroup };

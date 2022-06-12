@@ -16,21 +16,35 @@ const NotificationModal = () => {
 	const { selectedChat } = useAppSelector((state) => state.chats);
 	const dispatch = useAppDispatch();
 
-	useEffect(() => {
-		console.log(notifications);
-	}, [notifications]);
-
 	const handleNotiClick = async (noti: Message) => {
-		console.log(noti);
+		if (!selectedChat || selectedChat._id.toString() !== noti.chat._id.toString()) {
+			try {
+				const config = {
+					headers: {
+						Authorization: `Bearer ${user.token}`,
+					},
+				};
+				const { data } = await axios.get(`/api/chat/${noti.chat._id}`, config);
+				dispatch(setSelectedChat(data[0]));
+				console.log(data);
+			} catch (error: any) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		}
 		try {
 			const config = {
 				headers: {
 					Authorization: `Bearer ${user.token}`,
 				},
 			};
-			console.log(user.token);
-			const { data } = await axios.post("/api/message/notifications/removeOne", { notificationId: noti._id }, config);
-			console.log(data);
+			await axios.post("/api/message/notifications/removeOne", { notificationId: noti._id }, config);
 		} catch (error: any) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -40,9 +54,6 @@ const NotificationModal = () => {
 				pauseOnHover: true,
 				draggable: true,
 			});
-		}
-		if (!selectedChat || selectedChat._id.toString() !== noti.chat._id.toString()) {
-			dispatch(setSelectedChat(noti.chat));
 		}
 		dispatch(removeNotification(noti));
 	};

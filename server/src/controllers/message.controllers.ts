@@ -90,7 +90,7 @@ const sendNotification = asyncHandler(async (req, res) => {
 const fetchNotifications = asyncHandler(async (req, res) => {
 	try {
 		// Retrieve user by userID, populate and return user's notifications
-		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat users" } });
+		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat" } });
 		res.status(200).json(user.notifications);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -112,6 +112,14 @@ const removeNotification = asyncHandler(async (req, res) => {
 	} else {
 		res.status(200).json(removed.notifications);
 	}
+});
+
+// Removes all notifications for a specific chat
+const removeNotificationsByChat = asyncHandler(async (req, res) => {
+	// Extracting chatID from the request body
+	const { chatId } = req.body;
+	// Finding the User who sent the request and removing all notifications belong to the chat
+	const removed = await User.findByIdAndUpdate(req.user._id, { notifications: {} });
 });
 
 // Removes all notifications from the user's notification array
