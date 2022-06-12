@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { removeNotification } from "../../../redux/notifications/notifications.slice";

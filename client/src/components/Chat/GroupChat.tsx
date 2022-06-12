@@ -156,6 +156,15 @@ const GroupChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
+
+				await axios.post(
+					"/api/message/notifications/send",
+					{
+						messageId: data._id,
+						chatId: selectedChat._id,
+					},
+					config
+				);
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,
