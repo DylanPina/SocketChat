@@ -87,4 +87,20 @@ const allUsers = asyncHandler(async (req, res) => {
 	res.send(users);
 });
 
-export { registerUser, authUser, allUsers };
+// Updates a user's profile picture
+const changeProfilePicture = asyncHandler(async (req, res) => {
+	// Extracting user and new profile picture from request body
+	const { newProfilePic, userId } = req.body;
+
+	try {
+		// Find the user and update profile picture to new profile picture
+		await User.findByIdAndUpdate(userId, { $set: { profilePic: newProfilePic } });
+		// Return the new profile picture
+		res.status(200).json(newProfilePic);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error);
+	}
+});
+
+export { registerUser, authUser, allUsers, changeProfilePicture };
