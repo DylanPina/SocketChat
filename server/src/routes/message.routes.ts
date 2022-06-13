@@ -18,6 +18,6 @@ router.route("/notifications/send").post(protect, sendNotification);
 router.route("/notifications/fetch").get(protect, fetchNotifications);
 router.route("/notifications/removeOne").post(protect, removeNotification);
 router.route("/notifications/removeByChat").post(protect, removeNotificationsByChat);
-router.route("/notifications/removeAll").post(protect, removeAllNotifications);
+router.route("/notifications/removeAll").delete(protect, removeAllNotifications);
 
 export default router;

@@ -4,7 +4,6 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { setFetchChatsAgain, setSelectedChat } from "../../redux/chats/chats.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
-import { pushNotification } from "../../redux/notifications/notifications.slice";
 import Chat from "./Chat";
 import GroupChatSettings from "./Modals/GroupChatSettings";
 import { Message } from "../../types/message.types";
@@ -35,7 +34,6 @@ const GroupChat = () => {
 
 	const user = useAppSelector((state) => state.userInfo);
 	const { selectedChat } = useAppSelector((state) => state.chats);
-	const { notifications } = useAppSelector((state) => state.notifications);
 	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 

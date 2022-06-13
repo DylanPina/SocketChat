@@ -57,10 +57,33 @@ const NotificationModal = () => {
 		dispatch(removeNotification(noti));
 	};
 
+	const clearNotifications = async () => {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
+			await axios.delete("/api/message/notifications/removeAll", config);
+		} catch (error: any) {
+			toast.error(error, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		}
+	};
+
 	return (
 		<div className={styles.noti_modal}>
 			<div className={styles.noti_header_container}>
 				<h1 className={styles.noti_header}>{`Notifications: ${notifications.length}`}</h1>
+				<button className={styles.clear_all_btn} onClick={() => clearNotifications()}>
+					Clear All
+				</button>
 			</div>
 			<div className={styles.noti_container}>
 				{!notifications.length ? (
