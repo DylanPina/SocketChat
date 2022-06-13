@@ -143,8 +143,8 @@ const removeAllNotifications = asyncHandler(async (req, res) => {
 	const removed = await User.findByIdAndUpdate(req.user._id, { $set: { notifications: [] } });
 	// Check if the notifications were removed
 	if (!removed) {
-		res.status(400).json({ error: "Falled to remove notification" });
-		throw new Error("Falled to remove notification");
+		res.status(400).json({ error: "Failed to remove notification" });
+		throw new Error("Failed to remove notification");
 	} else {
 		res.status(200).json(removed.notifications);
 	}

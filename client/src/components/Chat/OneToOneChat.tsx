@@ -61,21 +61,22 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
+		clearNotifications();
+		// Re-render the myChats component
+		dispatch(setFetchChatsAgain(true));
+		setTimeout(() => {
+			dispatch(setFetchChatsAgain(false));
+		});
 	}, [selectedChat]);
 
 	useEffect(() => {
 		socket.on("message recieved", (newMessageRecieved: Message) => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-				// Checking to see if there's already a notification for the new message recieved
-				if (!notifications.includes(newMessageRecieved)) {
-					// dispatch(pushNotification(newMessageRecieved));
-					// Re-render the myChats component
-					dispatch(setFetchChatsAgain(true));
-					setTimeout(() => {
-						dispatch(setFetchChatsAgain(false));
-					});
-				}
+				dispatch(setFetchChatsAgain(true));
+				setTimeout(() => {
+					dispatch(setFetchChatsAgain(false));
+				});
 			} else {
 				setMessages([...messages, newMessageRecieved]);
 			}
@@ -100,6 +101,26 @@ const OneToOneChat = () => {
 			socket.emit("join chat", selectedChat._id);
 		} catch (error) {
 			toast.error(error, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		}
+	};
+
+	const clearNotifications = async () => {
+		try {
+			const config = {
+				headers: {
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
+			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
+		} catch (error: any) {
+			toast.error(error.response.data.error, {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
 				hideProgressBar: false,
