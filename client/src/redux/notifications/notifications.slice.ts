@@ -35,11 +35,15 @@ export const notificationsSlice = createSlice({
 		removeNotificationsByUser: (state: any, action: PayloadAction<User>) => {
 			state.notifications = state.notifications.filter((noti: Message) => noti.sender.username !== action.payload.username);
 		},
+		removeAllNotifications: (state: any) => {
+			state.notifications = [];
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { setNotifications, pushNotification, removeNotification, removeNotificationsByUser } = notificationsSlice.actions;
+export const { setNotifications, pushNotification, removeNotification, removeNotificationsByUser, removeAllNotifications } =
+	notificationsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectNotifications = (state: RootState) => state.notifications;

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { removeNotification } from "../../../redux/notifications/notifications.slice";
+import { removeNotification, removeAllNotifications } from "../../../redux/notifications/notifications.slice";
 import { setSelectedChat } from "../../../redux/chats/chats.slice";
 import { Message } from "../../../types/message.types";
 
@@ -65,6 +65,7 @@ const NotificationModal = () => {
 				},
 			};
 			await axios.delete("/api/message/notifications/removeAll", config);
+			dispatch(removeAllNotifications());
 		} catch (error: any) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
