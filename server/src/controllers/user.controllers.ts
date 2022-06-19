@@ -87,20 +87,36 @@ const allUsers = asyncHandler(async (req, res) => {
 	res.send(users);
 });
 
-// Updates a user's profile picture
-const changeProfilePicture = asyncHandler(async (req, res) => {
-	// Extracting user and new profile picture from request body
-	const { newProfilePic, userId } = req.body;
+// Updates a user's username
+const changeUsername = asyncHandler(async (req, res) => {
+	// Extracting the new username from request body
+	const { newUsername } = req.body;
 
 	try {
-		// Find the user and update profile picture to new profile picture
-		await User.findByIdAndUpdate(userId, { $set: { profilePic: newProfilePic } });
-		// Return the new profile picture
-		res.status(200).json(newProfilePic);
+		// Find the user and update the username to the new username
+		const user = await User.findByIdAndUpdate(req.user._id, { $set: { username: newUsername } }, { returnOriginal: false });
+		// Return the updated user object
+		res.status(200).json(user);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
-		throw new Error(error);
+		throw new Error(error.message);
 	}
 });
 
-export { registerUser, authUser, allUsers, changeProfilePicture };
+// Updates a user's profile picture
+const changeProfilePicture = asyncHandler(async (req, res) => {
+	// Extracting new profile picture from request body
+	const { newProfilePic } = req.body;
+
+	try {
+		// Find the user and update profile picture to new profile picture
+		const user = await User.findByIdAndUpdate(req.user._id, { $set: { profilePic: newProfilePic } }, { returnOriginal: false });
+		// Return the updated user object
+		res.status(200).json(user);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+export { registerUser, authUser, allUsers, changeProfilePicture, changeUsername };

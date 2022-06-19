@@ -17,7 +17,6 @@ import styles from "../../styles/ChatPage/MyChats.module.css";
 toast.configure();
 
 const MyChats = () => {
-	const [currentUser, setCurrentUser] = useState();
 	const [chatsLoading, setChatsLoading] = useState(false);
 	const [smallScreenView, setSmallScreenView] = useState(false);
 	const [largeScreenView, setLargeScreenView] = useState(false);
@@ -48,7 +47,6 @@ const MyChats = () => {
 	}, [mediumScreen, mobileScreen, []]);
 
 	useEffect(() => {
-		if (userInfo) setCurrentUser(JSON.parse(userInfo));
 		const { token } = JSON.parse(userInfo || "");
 		const fetchChats = async () => {
 			setChatsLoading(true);
