@@ -141,9 +141,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			});
 
 			localStorage.setItem("userInfo", JSON.stringify(data));
-
 			setLoading(false);
-
 			navigate("/chats");
 			window.location.reload();
 		} catch (err) {

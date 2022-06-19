@@ -42,7 +42,7 @@ const NavBar = () => {
 		} else {
 			setIsMobile(false);
 		}
-	}, [height, width]);
+	}, [height, width, user]);
 
 	const toggleUserSettingsModal = () => {
 		dispatch(toggleUserSettings());

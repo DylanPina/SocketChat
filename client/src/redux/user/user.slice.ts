@@ -20,11 +20,14 @@ export const userInfoSlice = createSlice({
 		setUserInfo: (state: User, action: PayloadAction<User>) => {
 			Object.assign(state, action.payload);
 		},
+		setUserProfilePic: (state: User, action: PayloadAction<string>) => {
+			state.profilePic = action.payload;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserInfo } = userInfoSlice.actions;
+export const { setUserInfo, setUserProfilePic } = userInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectAuthModal = (state: RootState) => state.userInfo;
