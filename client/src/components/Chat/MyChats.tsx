@@ -22,6 +22,7 @@ const MyChats = () => {
 	const [smallScreenView, setSmallScreenView] = useState(false);
 	const [largeScreenView, setLargeScreenView] = useState(false);
 
+	const user = useAppSelector((state) => state.userInfo);
 	const chats = useAppSelector((state) => state.chats.chats);
 	const selectedChat = useAppSelector((state) => state.chats.selectedChat);
 	const fetchChatsAgain = useAppSelector((state) => state.chats.fetchChatsAgain);
@@ -32,6 +33,7 @@ const MyChats = () => {
 	const userInfo = localStorage.getItem("userInfo");
 
 	useEffect(() => {
+		console.log(chats);
 		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) {
 			setSmallScreenView(true);
 		} else {
@@ -136,9 +138,9 @@ const MyChats = () => {
 										</>
 									) : (
 										<>
-											<img className={styles.chat_pic} src={chat.users[0].profilePic || ""} alt={chat.users[0].username} />
+											<img className={styles.chat_pic} src={chat.latestMessage.sender.profilePic} alt={chat.users[0].username} />
 											<div className={styles.chat_info_container}>
-												<h1 className={styles.chat_sender_username}>{getSender(currentUser, chat.users).username}</h1>
+												<h1 className={styles.chat_sender_username}>{getSender(user._id, chat.users).username}</h1>
 												{chat.latestMessage && (
 													<p className={styles.chat_latest_msg_sender}>
 														{`${chat.latestMessage.sender.username}: `}
