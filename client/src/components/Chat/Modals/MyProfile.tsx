@@ -1,4 +1,4 @@
-import { MutableRefObject, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { toggleMyProfile } from "../../../redux/modals/modals.slice";
@@ -6,20 +6,24 @@ import { setUserProfilePic } from "../../../redux/user/user.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
 
-import styles from "../../../styles/ChatPage/Modals/MyProfile.module.css";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
+import styles from "../../../styles/ChatPage/Modals/MyProfile.module.css";
 
 const MyProfile = () => {
 	const [newProfilePic, setNewProfilePic] = useState<string>("");
 	const [profilePicLoading, setProfilePicLoading] = useState<boolean>(false);
 	const [disableUpdate, setDisableUpdate] = useState<boolean>(true);
+	const [editingUsername, setEditingUsername] = useState<boolean>(true);
 	const fileInput = useRef<any>(null);
 
-	const user = useAppSelector((state) => state.userInfo);
 	const dispatch = useAppDispatch();
+	const user = useAppSelector((state) => state.userInfo);
+	const [username, setUsername] = useState<string>(user.username);
 
-	useEffect(() => {}, []);
+	useEffect(() => {
+		setUsername(user.username);
+	}, []);
 
 	const toggleMyProfileModal = () => {
 		dispatch(toggleMyProfile());
@@ -72,36 +76,87 @@ const MyProfile = () => {
 		}
 	};
 
+	const updateProfilePic = async () => {
+		try {
+			const config = {
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
+			await axios.post("/api/user/changePic", { userId: user._id, newProfilePic }, config);
+			dispatch(setUserProfilePic(newProfilePic));
+			toast.success("Profile picture has been updated", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		} catch (error: any) {
+			toast.error(error.message, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		}
+	};
+
+	const handleUsernameChange = (newUsername: string) => {
+		if (newUsername.length < 3) {
+			toast.warn("Username must contain atleast 3 characters", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+			return;
+		}
+		setUsername(newUsername);
+	};
+
+	const updateUsername = async () => {
+		try {
+			const config = {
+				headers: {
+					"Content-type": "application/json",
+					Authorization: `Bearer ${user.token}`,
+				},
+			};
+			await axios.post("/api/user/changeUsername", { newUsername: username }, config);
+			toast.success("Profile picture has been updated", {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		} catch (error: any) {
+			toast.error(error.message, {
+				position: toast.POSITION.TOP_CENTER,
+				autoClose: 3000,
+				hideProgressBar: false,
+				closeOnClick: true,
+				pauseOnHover: true,
+				draggable: true,
+			});
+		}
+	};
+
 	const handleUpdateInfo = async () => {
 		if (!disableUpdate) {
 			if (newProfilePic !== "") {
-				try {
-					const config = {
-						headers: {
-							"Content-type": "application/json",
-							Authorization: `Bearer ${user.token}`,
-						},
-					};
-					await axios.post("/api/user/changePic", { userId: user._id, newProfilePic }, config);
-					dispatch(setUserProfilePic(newProfilePic));
-					toast.success("Profile picture has been updated", {
-						position: toast.POSITION.TOP_CENTER,
-						autoClose: 3000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-					});
-				} catch (error: any) {
-					toast.error(error.message, {
-						position: toast.POSITION.TOP_CENTER,
-						autoClose: 3000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-					});
-				}
+				updateProfilePic();
+			}
+			if (username !== user.username) {
+				updateUsername();
 			}
 		}
 	};
@@ -139,15 +194,21 @@ const MyProfile = () => {
 					<div className={styles.info_container}>
 						<label className={styles.info_label}>USERNAME</label>
 						<div className={styles.username_container}>
-							<h2 className={styles.username}>{user.username}</h2>
-							<button className={styles.edit_username}>Edit</button>
+							{editingUsername ? (
+								<input type="text" value={username} className={styles.editing_username} onChange={(e) => handleUsernameChange(e.target.value)} />
+							) : (
+								<h2 className={styles.username}>{username}</h2>
+							)}
+							<button className={styles.edit_username_btn} onClick={() => setEditingUsername(!editingUsername)}>
+								Edit
+							</button>
 						</div>
 					</div>
 					<div className={styles.info_container}>
 						<label className={styles.info_label}>EMAIL</label>
 						<div className={styles.email_container}>
 							<h2 className={styles.email}>{user.email}</h2>
-							<button className={styles.edit_email}>Edit</button>
+							<button className={styles.edit_email_btn}>Edit</button>
 						</div>
 					</div>
 				</div>

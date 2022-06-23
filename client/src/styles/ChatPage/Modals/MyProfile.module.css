@@ -117,8 +117,16 @@
 	white-space: nowrap;
 }
 
-.edit_username,
-.edit_email {
+.editing_username {
+	height: 80%;
+	width: 80%;
+	font-family: "Montserrat";
+	font-size: 14px;
+	font-weight: 500;
+}
+
+.edit_username_btn,
+.edit_email_btn {
 	height: 30px;
 	width: 45px;
 	font-family: "Montserrat";
@@ -131,8 +139,8 @@
 	margin-left: auto;
 }
 
-.edit_username:hover,
-.edit_email:hover {
+.edit_username_btn:hover,
+.edit_email_btn:hover {
 	box-shadow: 0px 0px 3px var(--primary-black);
 }
 
