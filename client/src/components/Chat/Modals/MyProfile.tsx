@@ -14,7 +14,7 @@ const MyProfile = () => {
 	const [newProfilePic, setNewProfilePic] = useState<string>("");
 	const [profilePicLoading, setProfilePicLoading] = useState<boolean>(false);
 	const [disableUpdate, setDisableUpdate] = useState<boolean>(true);
-	const [editingUsername, setEditingUsername] = useState<boolean>(true);
+	const [editingUsername, setEditingUsername] = useState<boolean>(false);
 	const fileInput = useRef<any>(null);
 
 	const dispatch = useAppDispatch();
@@ -107,6 +107,11 @@ const MyProfile = () => {
 	};
 
 	const handleUsernameChange = (newUsername: string) => {
+		if (newUsername !== user.username) {
+			setDisableUpdate(false);
+		} else {
+			setDisableUpdate(true);
+		}
 		if (newUsername.length < 3) {
 			toast.warn("Username must contain atleast 3 characters", {
 				position: toast.POSITION.TOP_CENTER,
@@ -119,6 +124,7 @@ const MyProfile = () => {
 			return;
 		}
 		setUsername(newUsername);
+		setEditingUsername(false);
 	};
 
 	const updateUsername = async () => {
@@ -130,7 +136,7 @@ const MyProfile = () => {
 				},
 			};
 			await axios.post("/api/user/changeUsername", { newUsername: username }, config);
-			toast.success("Profile picture has been updated", {
+			toast.success("Username has been updated", {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
 				hideProgressBar: false,
@@ -159,6 +165,7 @@ const MyProfile = () => {
 				updateUsername();
 			}
 		}
+		setDisableUpdate(true);
 	};
 
 	return (
