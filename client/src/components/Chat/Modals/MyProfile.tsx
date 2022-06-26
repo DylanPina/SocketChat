@@ -9,6 +9,7 @@ import { CgClose } from "react-icons/cg";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
 import styles from "../../../styles/ChatPage/Modals/MyProfile.module.css";
+import { setFetchChatsAgain } from "../../../redux/chats/chats.slice";
 
 const MyProfile = () => {
 	const [newProfilePic, setNewProfilePic] = useState<string>("");
@@ -104,10 +105,13 @@ const MyProfile = () => {
 				draggable: true,
 			});
 		}
+		// Update local storage with new user information
 		const userInfo: any = localStorage.getItem("userInfo");
 		const updatedUserInfo = JSON.parse(userInfo);
 		updatedUserInfo.profilePic = newProfilePic;
 		localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+		// Update redux state with new user information
+		dispatch(setUserInfo(updatedUserInfo));
 	};
 
 	const handleUsernameChange = (newUsername: string) => {
@@ -128,7 +132,6 @@ const MyProfile = () => {
 			return;
 		}
 		setUsername(newUsername);
-		setEditingUsername(false);
 	};
 
 	const updateUsername = async () => {
@@ -158,10 +161,13 @@ const MyProfile = () => {
 				draggable: true,
 			});
 		}
+		// Update local storage with new user information
 		const userInfo: any = localStorage.getItem("userInfo");
 		const updatedUserInfo = JSON.parse(userInfo);
 		updatedUserInfo.username = username;
 		localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
+		// Update redux state with new user information
+		dispatch(setUserInfo(updatedUserInfo));
 	};
 
 	const handleUpdateInfo = async () => {
@@ -172,8 +178,14 @@ const MyProfile = () => {
 			if (username !== user.username) {
 				updateUsername();
 			}
+			// Re-render the myChats component
+			dispatch(setFetchChatsAgain(true));
+			setTimeout(() => {
+				dispatch(setFetchChatsAgain(false));
+			});
 		}
 		setDisableUpdate(true);
+		setEditingUsername(false);
 	};
 
 	return (
