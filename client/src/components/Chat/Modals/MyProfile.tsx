@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { toggleMyProfile } from "../../../redux/modals/modals.slice";
-import { setUserProfilePic } from "../../../redux/user/user.slice";
+import { setUserInfo, setUserProfilePic } from "../../../redux/user/user.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
 
@@ -104,6 +104,10 @@ const MyProfile = () => {
 				draggable: true,
 			});
 		}
+		const userInfo: any = localStorage.getItem("userInfo");
+		const updatedUserInfo = JSON.parse(userInfo);
+		updatedUserInfo.profilePic = newProfilePic;
+		localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 	};
 
 	const handleUsernameChange = (newUsername: string) => {
@@ -154,6 +158,10 @@ const MyProfile = () => {
 				draggable: true,
 			});
 		}
+		const userInfo: any = localStorage.getItem("userInfo");
+		const updatedUserInfo = JSON.parse(userInfo);
+		updatedUserInfo.username = username;
+		localStorage.setItem("userInfo", JSON.stringify(updatedUserInfo));
 	};
 
 	const handleUpdateInfo = async () => {

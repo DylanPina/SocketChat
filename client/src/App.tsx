@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "./redux/redux-hooks";
+import { useAppDispatch } from "./redux/redux-hooks";
 import { setScreenWidth, setScreenHeight, setMediumScreen, setMobileScreen } from "./redux/screen/screen.slice";
 import { setUserInfo } from "./redux/user/user.slice";
 
