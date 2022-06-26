@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import userRoutes from "../src/routes/user.routes";
 import chatRoutes from "../src/routes/chat.routes";
@@ -18,5 +19,15 @@ app.use("/api/message", messageRoutes);
 // Error handling for API
 app.use(notFound);
 app.use(errorHandler);
+
+/* -----------------------------------DEPLOYMENT-------------------------------------------- */
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname1, "/client/build")));
+	app.get("*", (req, res) => res.sendFile(path.resolve(__dirname1, "client", "build", "index.html")));
+} else {
+	app.get("/", (req, res) => res.send("API is Running"));
+}
+/* ----------------------------------------------------------------------------------------- */
 
 export default app;
