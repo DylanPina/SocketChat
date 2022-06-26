@@ -235,7 +235,6 @@ const MyProfile = () => {
 						<label className={styles.info_label}>EMAIL</label>
 						<div className={styles.email_container}>
 							<h2 className={styles.email}>{user.email}</h2>
-							<button className={styles.edit_email_btn}>Edit</button>
 						</div>
 					</div>
 				</div>
