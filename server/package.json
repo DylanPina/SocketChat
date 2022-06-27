@@ -9,8 +9,5 @@
 	},
 	"keywords": [],
 	"author": "",
-	"license": "ISC",
-	"dependencies": {
-		"socketchat": "file:.."
-	}
+	"license": "ISC"
 }
