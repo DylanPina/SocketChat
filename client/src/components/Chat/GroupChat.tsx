@@ -20,7 +20,7 @@ import styles from "../../styles/ChatPage/GroupChat.module.css";
 
 toast.configure();
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "https://socket-chat-dsp.herokuapp.com/";
 var socket: any, selectedChatCompare: any;
 
 const GroupChat = () => {
