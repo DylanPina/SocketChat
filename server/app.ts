@@ -1,11 +1,11 @@
 import path from "path";
 import express from "express";
-import userRoutes from "../src/routes/user.routes";
-import chatRoutes from "../src/routes/chat.routes";
+import userRoutes from "./routes/user.routes";
+import chatRoutes from "./routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
 require("dotenv").config();
-
+console.log(process.env);
 // Initializing our express app
 const app = express();
 // Accepting JSON data

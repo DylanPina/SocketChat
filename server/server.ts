@@ -1,7 +1,5 @@
-import express from "express";
 import app from "./app";
-import { connectDB } from "../src/services/db";
-import path from "path";
+import { connectDB } from "./services/db";
 require("dotenv").config();
 
 // Using PORT from .env
