@@ -10,8 +10,7 @@
 		"server": "npm run start --prefix server",
 		"server-watch": "npm run watch --prefix server",
 		"client": "npm run start --prefix client",
-		"dev": "npm run server & npm run client",
-		"build": "npm run build --prefix client && npm start --prefix server"
+		"dev": "npm run server & npm run client"
 	},
 	"engines": {
 		"node": "16.3.0",
