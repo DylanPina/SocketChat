@@ -4,8 +4,8 @@ import userRoutes from "./routes/user.routes";
 import chatRoutes from "./routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
-require("dotenv").config();
-console.log(process.env);
+require("dotenv").config({ path: path.resolve("../.env") });
+
 // Initializing our express app
 const app = express();
 // Accepting JSON data
@@ -19,12 +19,12 @@ app.use("/api/message", messageRoutes);
 
 /* -----------------------------------DEPLOYMENT-------------------------------------------- */
 const __dirname1 = path.resolve();
-console.log(process.env.NODE_ENV);
+console.log(path.join(__dirname1, "../client/build"));
 if (process.env.NODE_ENV === "production") {
 	app.use(express.static(path.join(__dirname1, "../client/build")));
 	app.get("*", (req, res) => res.sendFile(path.resolve(__dirname1, "../client", "build", "index.html")));
 } else {
-	app.get("/", (req, res) => res.send("API is Run"));
+	app.get("/", (req, res) => res.send("API is Running"));
 }
 /* ----------------------------------------------------------------------------------------- */
 

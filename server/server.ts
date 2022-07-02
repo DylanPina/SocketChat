@@ -1,9 +1,10 @@
+import path from "path";
 import app from "./app";
 import { connectDB } from "./services/db";
-require("dotenv").config();
+require("dotenv").config({ path: path.resolve("../.env") });
 
 // Using PORT from .env
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000;
 // Connecting to MongoDB
 connectDB();
 
