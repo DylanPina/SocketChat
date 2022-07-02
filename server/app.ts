@@ -1,5 +1,6 @@
 import path from "path";
 import express from "express";
+import cors from "cors";
 import userRoutes from "./routes/user.routes";
 import chatRoutes from "./routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
@@ -8,6 +9,8 @@ require("dotenv").config({ path: path.resolve("../.env") });
 
 // Initializing our express app
 const app = express();
+// Preventing CORS errors
+app.use(cors());
 // Accepting JSON data
 app.use(express.json());
 
