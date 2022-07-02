@@ -11,8 +11,7 @@
 		"server-watch": "npm run watch --prefix server",
 		"client": "npm run start --prefix client",
 		"dev": "npm run server & npm run client",
-		"build": "npm run build --prefix client && npm start --prefix server",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+		"build": "npm run build --prefix client && npm start --prefix server"
 	},
 	"engines": {
 		"node": "16.3.0",
