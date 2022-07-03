@@ -10,7 +10,7 @@
 		"server": "npm run start --prefix server",
 		"server-watch": "npm run watch --prefix server",
 		"client": "npm run start --prefix client",
-		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client",
+		"heroku-postbuild": "npm install --prefix client",
 		"dev": "npm run server & npm run client",
 		"build": "npm run build --prefix client && npm start --prefix server"
 	},
