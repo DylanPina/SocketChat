@@ -4,6 +4,7 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
+		"start": "ts-node server/server.ts",
 		"install-server": "npm install --save --legacy-peer-deps --prefix server",
 		"install-client": "npm install --save --legacy-peer-deps --prefix client",
 		"server": "npm run start --prefix server",
