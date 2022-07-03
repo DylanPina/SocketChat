@@ -15,6 +15,7 @@
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"socketchat": "file:.."
+		"socketchat": "file:..",
+		"ts-node": "^10.8.2"
 	}
 }
