@@ -32,9 +32,9 @@ const GroupChat = () => {
 	const [typing, setTyping] = useState(false);
 	const [isTyping, setIsTyping] = useState(false);
 
-	const user = useAppSelector((state) => state.userInfo);
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 
 	// For Lottie animations

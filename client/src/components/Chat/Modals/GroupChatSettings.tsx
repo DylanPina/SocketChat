@@ -35,8 +35,8 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 	const [showSearchResults, setShowSearchResults] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const user = useAppSelector((state) => state.userInfo);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const user = useAppSelector((state: any) => state.userInfo);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {

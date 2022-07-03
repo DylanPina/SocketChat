@@ -26,7 +26,7 @@ interface IUser {
 toast.configure();
 
 const UserProfile: React.FC<IProps> = ({ user }) => {
-	const chats = useAppSelector((state) => state.chats.chats);
+	const chats = useAppSelector((state: any) => state.chats.chats);
 	const userInfo = localStorage.getItem("userInfo");
 	const { token } = JSON.parse(userInfo || "");
 

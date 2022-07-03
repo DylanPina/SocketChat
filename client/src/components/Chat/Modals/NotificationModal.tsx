@@ -10,9 +10,9 @@ import { HiUserGroup } from "react-icons/hi";
 import styles from "../../../styles/ChatPage/Modals/NotificationModal.module.css";
 
 const NotificationModal = () => {
-	const user = useAppSelector((state) => state.userInfo);
-	const { notifications } = useAppSelector((state) => state.notifications);
-	const { selectedChat } = useAppSelector((state) => state.chats);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const { notifications } = useAppSelector((state: any) => state.notifications);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const dispatch = useAppDispatch();
 
 	const handleNotiClick = async (noti: Message) => {

@@ -28,10 +28,10 @@ const NavBar = () => {
 
 	const dispatch = useAppDispatch();
 
-	const user = useAppSelector((state) => state.userInfo);
-	const userSettingsModal = useAppSelector((state) => state.modals.userSettings);
-	const { searchDrawer } = useAppSelector((state) => state.modals);
-	const { notifications } = useAppSelector((state) => state.notifications);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const userSettingsModal = useAppSelector((state: any) => state.modals.userSettings);
+	const { searchDrawer } = useAppSelector((state: any) => state.modals);
+	const { notifications } = useAppSelector((state: any) => state.notifications);
 
 	// FOR MOBILE SCREENS
 	const { height, width } = useWindowDimensions();

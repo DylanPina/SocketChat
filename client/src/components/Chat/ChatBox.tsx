@@ -6,9 +6,9 @@ import GroupChat from "./GroupChat";
 import styles from "../../styles/ChatPage/ChatBox.module.css";
 
 const ChatBox = () => {
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
-	const { myChats } = useAppSelector((state) => state.modals);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
+	const { myChats } = useAppSelector((state: any) => state.modals);
 
 	return (
 		<React.Fragment>

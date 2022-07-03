@@ -21,12 +21,12 @@ const MyChats = () => {
 	const [smallScreenView, setSmallScreenView] = useState(false);
 	const [largeScreenView, setLargeScreenView] = useState(false);
 
-	const user = useAppSelector((state) => state.userInfo);
-	const chats = useAppSelector((state) => state.chats.chats);
-	const selectedChat = useAppSelector((state) => state.chats.selectedChat);
-	const fetchChatsAgain = useAppSelector((state) => state.chats.fetchChatsAgain);
-	const { myChats } = useAppSelector((state) => state.modals);
-	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const chats = useAppSelector((state: any) => state.chats.chats);
+	const selectedChat = useAppSelector((state: any) => state.chats.selectedChat);
+	const fetchChatsAgain = useAppSelector((state: any) => state.chats.fetchChatsAgain);
+	const { myChats } = useAppSelector((state: any) => state.modals);
+	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 
 	const userInfo = localStorage.getItem("userInfo");
