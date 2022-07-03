@@ -1,6 +1,7 @@
-require("dotenv").config();
-import { connectDB } from "../src/services/db";
 import app from "./app";
+import { connectDB } from "../src/services/db";
+import path from "path";
+require("dotenv").config({ path: path.resolve("../.env") });
 
 // Using PORT from .env
 const PORT = process.env.PORT;
