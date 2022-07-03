@@ -8,8 +8,6 @@ import path from "path";
 import cors from "cors";
 require("dotenv").config({ path: path.resolve("../.env") });
 
-// Using PORT from .env
-const PORT = process.env.PORT || 5000;
 // Connecting to MongoDB
 connectDB();
 
@@ -20,24 +18,31 @@ app.use(cors());
 // Accepting JSON data
 app.use(express.json());
 
-app.get("/", (req, res) => res.send("API is Running"));
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+/* -----------------------------------DEPLOYMENT-------------------------------------------- */
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+	app.use(express.static(path.join(__dirname1, "/client/build")));
+	app.get("*", (req, res) => res.sendFile(path.resolve(__dirname1, "client", "build", "index.html")));
+} else {
+	app.get("/", (req, res) => {
+		res.send("API is running..");
+	});
+}
+/* ----------------------------------------------------------------------------------------- */
 
 // Error handling for API
 app.use(notFound);
 app.use(errorHandler);
 
+// Using PORT from .env
+const PORT = process.env.PORT || 5000;
+
 // Listening on port
 const server = app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
-
-/* -----------------------------------DEPLOYMENT-------------------------------------------- */
-const __dirname1 = path.resolve();
-console.log(path.join(__dirname1, "../client/build"));
-app.use(express.static(path.join(__dirname1, "../client/build")));
-app.get("*", (req, res) => res.sendFile(path.resolve(__dirname1, "../client/build", "index.html")));
-/* ----------------------------------------------------------------------------------------- */
 
 // This is where the magic happens
 const io = require("socket.io")(server, {
