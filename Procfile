@@ -1,1 +1,1 @@
-web: npm run server
+web: ts-node server/server.ts
