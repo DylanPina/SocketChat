@@ -289,18 +289,6 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 							{showSearchResults ? <VscTriangleUp /> : <VscTriangleDown />}
 						</div>
 					</div>
-					{selectedChat.users.length !== 0 && (
-						<div className={styles.selected_user_container}>
-							{selectedChat.users.map((user: IUser) => (
-								<div className={styles.selected_user} key={user._id}>
-									<h3 className={styles.user_name_selected}>{user.username}</h3>
-									<button className={styles.close_button_selected} onClick={() => handleRemove(user)}>
-										<CgClose size={"100%"} />
-									</button>
-								</div>
-							))}
-						</div>
-					)}
 					{showSearchResults && (
 						<div className={styles.search_drawer}>
 							{loading ? (
@@ -320,6 +308,18 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 									</div>
 								))
 							)}
+						</div>
+					)}
+					{selectedChat.users.length !== 0 && (
+						<div className={styles.selected_user_container}>
+							{selectedChat.users.map((user: IUser) => (
+								<div className={styles.selected_user} key={user._id}>
+									<h3 className={styles.user_name_selected}>{user.username}</h3>
+									<button className={styles.close_button_selected} onClick={() => handleRemove(user)}>
+										<CgClose size={"100%"} />
+									</button>
+								</div>
+							))}
 						</div>
 					)}
 				</div>

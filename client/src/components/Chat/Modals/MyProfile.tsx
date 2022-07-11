@@ -19,7 +19,7 @@ const MyProfile = () => {
 	const fileInput = useRef<any>(null);
 
 	const dispatch = useAppDispatch();
-	const user = useAppSelector((state) => state.userInfo);
+	const user = useAppSelector((state: any) => state.userInfo);
 	const [username, setUsername] = useState<string>(user.username);
 
 	useEffect(() => {
