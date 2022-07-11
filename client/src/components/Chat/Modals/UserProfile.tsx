@@ -83,10 +83,13 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 						<h2 className={styles.email}>{user.email}</h2>
 					</div>
 				</div>
-				<button className={styles.start_chatting} onClick={() => accessChat(user._id)}>
-					Start chatting
-				</button>
-				<button className={styles.add_friend}>Add friend</button>
+				<div className={styles.buttons_container}>
+					<button className={styles.add_friend}>Add friend</button>
+					<button className={styles.start_chatting} onClick={() => accessChat(user._id)}>
+						Start chatting
+					</button>
+					<button className={styles.mute_user}>Mute user</button>
+				</div>
 			</div>
 		</div>
 	);

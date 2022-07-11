@@ -11,6 +11,8 @@ const userSchema = new mongoose.Schema(
 			default: "https://static.thenounproject.com/png/363633-200.png",
 		},
 		notifications: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }] },
+		mutedChats: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }] },
+		mutedUsers: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] },
 	},
 	{ timestamps: true }
 );
