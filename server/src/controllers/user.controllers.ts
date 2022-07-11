@@ -119,4 +119,66 @@ const changeProfilePicture = asyncHandler(async (req, res) => {
 	}
 });
 
-export { registerUser, authUser, allUsers, changeProfilePicture, changeUsername };
+// Adds a user to the list of muted users on the user model
+const muteUser = asyncHandler(async (req, res) => {
+	const { userToMuteId } = req.body;
+
+	if (userToMuteId == req.user._id) {
+		res.status(400).json({ error: "Cannot mute yourself" });
+		throw new Error("Cannot mute yourself");
+	}
+
+	try {
+		await User.findById(userToMuteId);
+	} catch (error: any) {
+		res.status(404).json({ error: "Cannot find user to mute" });
+		throw new Error("Cannot find user to mute");
+	}
+
+	try {
+		const user = await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
+			"mutedUsers",
+			"username email"
+		);
+		res.status(200).json(user);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Retrieves the list of muted users from the user model
+const getMutedUsers = asyncHandler(async (req, res) => {
+	try {
+		const user = await User.findById(req.user._id).populate("mutedUsers", "username email");
+		res.status(200).json(user.mutedUsers);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Removes a user from the list of muted users on the user model
+const unmuteUser = asyncHandler(async (req, res) => {
+	const { userToUnmuteId } = req.body;
+
+	try {
+		await User.findById(userToUnmuteId);
+	} catch (error: any) {
+		res.status(404).json({ error: "Cannot find user to unmute" });
+		throw new Error("Cannot find user to unmute");
+	}
+
+	try {
+		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { mutedUsers: userToUnmuteId } }, { returnOriginal: false }).populate(
+			"mutedUsers",
+			"username email"
+		);
+		res.status(200).json(user);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+export { registerUser, authUser, allUsers, changeProfilePicture, changeUsername, muteUser, getMutedUsers, unmuteUser };
