@@ -11,6 +11,9 @@ const initialState: User = {
 	createdAt: "",
 	updatedAt: "",
 	__v: 0,
+	notifications: [],
+	mutedChats: [],
+	mutedUsers: [],
 };
 
 export const userInfoSlice = createSlice({

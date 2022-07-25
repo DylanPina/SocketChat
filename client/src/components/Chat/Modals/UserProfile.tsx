@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setSelectedUser } from "../../../redux/user/selected-user.slice";
@@ -26,11 +27,39 @@ interface IUser {
 toast.configure();
 
 const UserProfile: React.FC<IProps> = ({ user }) => {
+	const [userMuted, setUserMuted] = useState<boolean>(false);
 	const chats = useAppSelector((state: any) => state.chats.chats);
 	const userInfo = localStorage.getItem("userInfo");
 	const { token } = JSON.parse(userInfo || "");
 
 	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		const fetchMutedUsers = async () => {
+			try {
+				const config = {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
+				console.log(data);
+				data.forEach((mutedUser: any) => {
+					if (mutedUser._id === user._id) setUserMuted(true);
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		};
+		fetchMutedUsers();
+	}, []);
 
 	const accessChat = async (userId: string) => {
 		try {
@@ -64,6 +93,68 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 		}
 	};
 
+	const handleMute = async () => {
+		if (userMuted) {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const userId = user._id;
+				await axios.post("/api/user/unmuteUser", { userId }, config);
+				setUserMuted(false);
+				toast.success(`${user.username} has been unmuted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		} else {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const userId = user._id;
+				await axios.post("/api/user/muteUser", { userId }, config);
+				setUserMuted(true);
+				toast.success(`${user.username} has been muted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		}
+	};
+
 	return (
 		<div className={styles.modal}>
 			<div className={styles.user_profile}>
@@ -88,7 +179,9 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 					<button className={styles.start_chatting} onClick={() => accessChat(user._id)}>
 						Start chatting
 					</button>
-					<button className={styles.mute_user}>Mute user</button>
+					<button className={userMuted ? styles.unmute_user : styles.mute_user} onClick={() => handleMute()}>
+						{userMuted ? "Unmute user" : "Mute user"}
+					</button>
 				</div>
 			</div>
 		</div>
