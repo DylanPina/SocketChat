@@ -69,14 +69,28 @@ const sendNotification = asyncHandler(async (req, res) => {
 		chat.users.forEach(async (user) => {
 			// We obviously don't want to send the notification to the sender
 			if (user.toString() !== req.user._id.toString()) {
-				// Pushing the notification to the user
-				await User.findByIdAndUpdate(user, {
-					$push: { notifications: message },
+				// Checking to see if any of the users we're trying to send this notification to have the sender listed as a muted user
+				let senderMuted = false;
+				const test = await User.findById(user);
+				test.mutedUsers.forEach((mutedUser) => {
+					if (mutedUser.toString() === req.user._id.toString()) {
+						senderMuted = true;
+					}
 				});
+				// If the sender is not muted we will push the notification to the user in the chat
+				if (!senderMuted) {
+					// Pushing the notification to the user
+					await User.findByIdAndUpdate(user, {
+						$push: { notifications: message },
+					});
+					// Return the notification
+					res.status(200).json(notification);
+				} else if (senderMuted) {
+					// Send back a generic 200 response
+					res.status(200);
+				}
 			}
 		});
-		// Return the notification
-		res.status(200).json(notification);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 		throw new Error(error.message);
