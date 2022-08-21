@@ -7,12 +7,11 @@ import { setSelectedUser } from "../../redux/user/selected-user.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";
-import OneToOneChatSettings from "./Modals/OneToOneChatSettings";
 import Chat from "./Chat";
 
 import { toast } from "react-toastify";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
-import { MdSettingsApplications } from "react-icons/md";
+import { FaArrowAltCircleLeft, FaSkullCrossbones } from "react-icons/fa";
+import { MdNotifications, MdNotificationsOff } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
@@ -25,19 +24,20 @@ const ENDPOINT = "http://localhost:5000";
 var socket: any, selectedChatCompare: any;
 
 const OneToOneChat = () => {
-	const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 	const [messages, setMessages] = useState<any>([]);
 	const [loading, setLoading] = useState(true);
 	const [newMessage, setNewMessage] = useState<string>();
+	const [userMuted, setUserMuted] = useState<boolean>(false);
 	const [socketConnected, setSocketConnected] = useState(false);
 	const [typing, setTyping] = useState(false);
 	const [isTyping, setIsTyping] = useState(false);
 
 	const user = useAppSelector((state: any) => state.userInfo);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
-	const { notifications } = useAppSelector((state: any) => state.notifications);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
+	const userInfo = localStorage.getItem("userInfo");
+	const { token } = JSON.parse(userInfo || "");
 
 	// For Lottie animations
 	const defaultOptions = {
@@ -68,6 +68,33 @@ const OneToOneChat = () => {
 			dispatch(setFetchChatsAgain(false));
 		});
 	}, [selectedChat]);
+
+	useEffect(() => {
+		const fetchMutedUsers = async () => {
+			try {
+				const config = {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
+				console.log(data);
+				data.forEach((mutedUser: any) => {
+					if (mutedUser._id === user._id) setUserMuted(true);
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		};
+		fetchMutedUsers();
+	});
 
 	useEffect(() => {
 		socket.on("message recieved", (newMessageRecieved: Message) => {
@@ -209,6 +236,68 @@ const OneToOneChat = () => {
 		}
 	};
 
+	const handleMute = async () => {
+		if (userMuted) {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const userId = user._id;
+				await axios.post("/api/user/unmuteUser", { userId }, config);
+				setUserMuted(false);
+				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		} else {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const userId = user._id;
+				await axios.post("/api/user/muteUser", { userId }, config);
+				setUserMuted(true);
+				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		}
+	};
+
 	return (
 		<>
 			{selectedChat ? (
@@ -228,13 +317,20 @@ const OneToOneChat = () => {
 							/>
 							<h1 className={styles.chat_title}>{getSender(user, selectedChat.users).username}</h1>
 						</div>
-						<Tooltip title="Chat settings" arrow>
-							<button className={styles.chat_settings} onClick={() => setSettingsOpen(true)}>
-								<MdSettingsApplications size={"100%"} />
-							</button>
-						</Tooltip>
+
+						<div className={styles.mute_leave_container}>
+							<Tooltip title={`${userMuted ? "Unmute" : "Mute"} ${getSender(user, selectedChat.users).username}`} arrow>
+								<button className={styles.mute} onClick={() => handleMute()}>
+									{userMuted ? <MdNotificationsOff size={"50%"} color={"white"} /> : <MdNotifications size={"50%"} color={"white"} />}
+								</button>
+							</Tooltip>
+							<Tooltip title="Leave chat" arrow>
+								<button className={styles.leave}>
+									<FaSkullCrossbones size={"50%"} color={"white"} />
+								</button>
+							</Tooltip>
+						</div>
 					</div>
-					{settingsOpen && <OneToOneChatSettings setSettingsOpen={setSettingsOpen} />}
 					<div className={styles.chat_section}>
 						{loading ? (
 							<div className={styles.loading_container}>

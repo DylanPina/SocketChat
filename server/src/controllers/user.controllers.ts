@@ -59,6 +59,7 @@ const authUser = asyncHandler(async (req, res) => {
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
 			notifications: user.notifications,
+			mutedUsers: user.mutedUsers,
 		});
 	} else {
 		res.status(401).json({
@@ -123,7 +124,7 @@ const changeProfilePicture = asyncHandler(async (req, res) => {
 const muteUser = asyncHandler(async (req, res) => {
 	const { userToMuteId } = req.body;
 
-	if (userToMuteId == req.user._id) {
+	if (userToMuteId === req.user._id) {
 		res.status(400).json({ error: "Cannot mute yourself" });
 		throw new Error("Cannot mute yourself");
 	}
@@ -136,11 +137,21 @@ const muteUser = asyncHandler(async (req, res) => {
 	}
 
 	try {
-		const user = await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
-			"mutedUsers",
-			"username email"
-		);
-		res.status(200).json(user);
+		const { username, mutedUsers } = await User.findById(req.user._id);
+		let userAlreadyMuted = false;
+		mutedUsers.forEach((mutedUser) => {
+			if (mutedUser.toString() === userToMuteId) userAlreadyMuted = true;
+		});
+
+		if (userAlreadyMuted) {
+			res.status(400).json({ error: `${username} is already muted` });
+		} else {
+			const user = await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
+				"mutedUsers",
+				"username email"
+			);
+			res.status(200).json(user);
+		}
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 		throw new Error(error.message);

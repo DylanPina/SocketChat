@@ -103,7 +103,7 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 					},
 				};
 				const userId = user._id;
-				await axios.post("/api/user/unmuteUser", { userId }, config);
+				await axios.post("/api/user/unmuteUser", { userToUnmuteId: userId }, config);
 				setUserMuted(false);
 				toast.success(`${user.username} has been unmuted`, {
 					position: toast.POSITION.TOP_CENTER,
@@ -132,7 +132,7 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 					},
 				};
 				const userId = user._id;
-				await axios.post("/api/user/muteUser", { userId }, config);
+				await axios.post("/api/user/muteUser", { userToMuteId: userId }, config);
 				setUserMuted(true);
 				toast.success(`${user.username} has been muted`, {
 					position: toast.POSITION.TOP_CENTER,
