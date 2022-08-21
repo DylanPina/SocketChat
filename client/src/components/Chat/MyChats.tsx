@@ -30,6 +30,7 @@ const MyChats = () => {
 	const dispatch = useAppDispatch();
 
 	const userInfo = localStorage.getItem("userInfo");
+	const { token } = JSON.parse(userInfo || "");
 
 	useEffect(() => {
 		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) {
@@ -46,7 +47,6 @@ const MyChats = () => {
 	}, [mediumScreen, mobileScreen, []]);
 
 	useEffect(() => {
-		const { token } = JSON.parse(userInfo || "");
 		const fetchChats = async () => {
 			setChatsLoading(true);
 			try {
@@ -135,9 +135,9 @@ const MyChats = () => {
 										</>
 									) : (
 										<>
-											<img className={styles.chat_pic} src={chat.latestMessage.sender.profilePic} alt={chat.users[0].username} />
+											<img className={styles.chat_pic} src={getSender(user, chat.users).profilePic} alt={chat.users[0].username} />
 											<div className={styles.chat_info_container}>
-												<h1 className={styles.chat_sender_username}>{getSender(user._id, chat.users).username}</h1>
+												<h1 className={styles.chat_sender_username}>{getSender(user, chat.users).username}</h1>
 												{chat.latestMessage && (
 													<p className={styles.chat_latest_msg_sender}>
 														{`${chat.latestMessage.sender.username}: `}
