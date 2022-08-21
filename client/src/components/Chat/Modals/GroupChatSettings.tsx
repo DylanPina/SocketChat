@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain, setSelectedChat } from "../../../redux/chats/chats.slice";
 import axios from "axios";

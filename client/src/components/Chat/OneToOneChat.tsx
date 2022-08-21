@@ -18,6 +18,7 @@ import animationData from "../../animations/typing.json";
 import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
+import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
 
 toast.configure();
 
@@ -26,12 +27,13 @@ var socket: any, selectedChatCompare: any;
 
 const OneToOneChat = () => {
 	const [messages, setMessages] = useState<any>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [newMessage, setNewMessage] = useState<string>();
 	const [userMuted, setUserMuted] = useState<boolean>(false);
-	const [socketConnected, setSocketConnected] = useState(false);
-	const [typing, setTyping] = useState(false);
-	const [isTyping, setIsTyping] = useState(false);
+	const [socketConnected, setSocketConnected] = useState<boolean>(false);
+	const [typing, setTyping] = useState<boolean>(false);
+	const [isTyping, setIsTyping] = useState<boolean>(false);
+	const [deleteChatModalOpen, setDeleteChatModalOpen] = useState<boolean>(false);
 
 	const user = useAppSelector((state: any) => state.userInfo);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
@@ -304,11 +306,12 @@ const OneToOneChat = () => {
 								</button>
 							</Tooltip>
 							<Tooltip title="Leave chat" arrow>
-								<button className={styles.leave}>
+								<button className={styles.leave} onClick={() => setDeleteChatModalOpen(true)}>
 									<FaSkullCrossbones size={"50%"} color={"white"} />
 								</button>
 							</Tooltip>
 						</div>
+						{deleteChatModalOpen && <DeleteOneOnOneChatModal setDeleteChatModalOpen={setDeleteChatModalOpen}></DeleteOneOnOneChatModal>}
 					</div>
 					<div className={styles.chat_section}>
 						{loading ? (

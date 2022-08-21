@@ -1,0 +1,103 @@
+.modal {
+	position: fixed;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	top: 0;
+	right: 0;
+	width: 100vw;
+	height: 100vh;
+	background-color: var(--modal-background);
+	z-index: 10;
+}
+
+.card {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 10px;
+	background-color: var(--primary-white);
+	padding: 30px;
+	border-radius: 15px;
+	box-shadow: 0px 0px 15px var(--primary-grey-dark);
+}
+
+.btn_container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 20px;
+}
+
+.you_sure {
+	font-family: "Montserrat";
+	font-size: 24px;
+	text-align: center;
+}
+
+.yes {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--primary-white);
+	background-color: var(--primary-black);
+	border-radius: 20px;
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 16px;
+	text-align: center;
+	margin: 50px auto 0px auto;
+	height: 40px;
+	width: 150px;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+	box-shadow: 0px 0px 15px var(--primary-grey-dark);
+}
+
+.yes:hover {
+	background-color: var(--primary-orange);
+	color: var(--primary-black);
+	box-shadow: 0px 0px 15px var(--primary-orange);
+}
+
+.no {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: var(--primary-white);
+	background-color: var(--primary-black);
+	border-radius: 20px;
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 16px;
+	text-align: center;
+	margin: 50px auto 0px auto;
+	height: 40px;
+	width: 150px;
+	border: none;
+	padding: 10px;
+	cursor: pointer;
+	transition-duration: 0.5s;
+	box-shadow: 0px 0px 15px var(--primary-grey-dark);
+}
+
+.no:hover {
+	background-color: var(--primary-orange);
+	color: var(--primary-black);
+	box-shadow: 0px 0px 15px var(--primary-orange);
+}
+
+@media screen and (max-width: 675px) {
+	.card {
+		max-width: 75vw;
+		gap: none;
+	}
+
+	.yes,
+	.no {
+		width: 100px;
+	}
+}
