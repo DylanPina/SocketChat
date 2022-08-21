@@ -82,9 +82,9 @@ const OneToOneChat = () => {
 				setTimeout(() => {
 					dispatch(setFetchChatsAgain(false));
 				});
-				clearNotifications();
 			} else {
 				setMessages([...messages, newMessageRecieved]);
+				clearNotifications();
 			}
 		});
 	});
