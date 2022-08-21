@@ -32,7 +32,6 @@ const MyChats = () => {
 	const userInfo = localStorage.getItem("userInfo");
 
 	useEffect(() => {
-		console.log(chats);
 		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) {
 			setSmallScreenView(true);
 		} else {

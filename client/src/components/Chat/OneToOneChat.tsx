@@ -17,6 +17,7 @@ import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
 import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
+import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
 
 toast.configure();
 
@@ -35,6 +36,7 @@ const OneToOneChat = () => {
 	const user = useAppSelector((state: any) => state.userInfo);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
+	const { mutedUsers } = useAppSelector((state: any) => state.notifications);
 	const dispatch = useAppDispatch();
 	const userInfo = localStorage.getItem("userInfo");
 	const { token } = JSON.parse(userInfo || "");
@@ -61,6 +63,9 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
+		mutedUsers.forEach((mutedUser: any) => {
+			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
+		});
 		clearNotifications();
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
@@ -68,32 +73,6 @@ const OneToOneChat = () => {
 			dispatch(setFetchChatsAgain(false));
 		});
 	}, [selectedChat]);
-
-	useEffect(() => {
-		const fetchMutedUsers = async () => {
-			try {
-				const config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
-				data.forEach((mutedUser: any) => {
-					if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
-				});
-			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-			}
-		};
-		fetchMutedUsers();
-	});
 
 	useEffect(() => {
 		socket.on("message recieved", (newMessageRecieved: Message) => {
@@ -245,7 +224,8 @@ const OneToOneChat = () => {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-				await axios.post("/api/user/unmuteUser", { userToUnmuteId: getSender(user, selectedChat.users)._id }, config);
+				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: getSender(user, selectedChat.users)._id }, config);
+				dispatch(unmuteUser(data));
 				setUserMuted(false);
 				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, {
 					position: toast.POSITION.TOP_CENTER,
@@ -273,7 +253,8 @@ const OneToOneChat = () => {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-				await axios.post("/api/user/muteUser", { userToMuteId: getSender(user, selectedChat.users)._id }, config);
+				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: getSender(user, selectedChat.users)._id }, config);
+				dispatch(muteUser(data));
 				setUserMuted(true);
 				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, {
 					position: toast.POSITION.TOP_CENTER,

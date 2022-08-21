@@ -25,7 +25,6 @@ const NotificationModal = () => {
 				};
 				const { data } = await axios.get(`/api/chat/${noti.chat._id}`, config);
 				dispatch(setSelectedChat(data[0]));
-				console.log(data);
 			} catch (error: any) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,

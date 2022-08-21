@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setSelectedUser } from "../../../redux/user/selected-user.slice";
 import { setSelectedChat, setFetchChatsAgain, setChats } from "../../../redux/chats/chats.slice";
+import { muteUser, unmuteUser } from "../../../redux/notifications/notifications.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
 import { toast } from "react-toastify";
@@ -28,37 +29,17 @@ toast.configure();
 
 const UserProfile: React.FC<IProps> = ({ user }) => {
 	const [userMuted, setUserMuted] = useState<boolean>(false);
-	const chats = useAppSelector((state: any) => state.chats.chats);
+	const { chats } = useAppSelector((state: any) => state.chats);
+	const { mutedUsers } = useAppSelector((state: any) => state.notifications);
 	const userInfo = localStorage.getItem("userInfo");
 	const { token } = JSON.parse(userInfo || "");
 
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
-		const fetchMutedUsers = async () => {
-			try {
-				const config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
-				console.log(data);
-				data.forEach((mutedUser: any) => {
-					if (mutedUser._id === user._id) setUserMuted(true);
-				});
-			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-			}
-		};
-		fetchMutedUsers();
+		mutedUsers.forEach((mutedUser: any) => {
+			if (mutedUser._id === user._id) setUserMuted(true);
+		});
 	}, []);
 
 	const accessChat = async (userId: string) => {
@@ -103,7 +84,8 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 					},
 				};
 				const userId = user._id;
-				await axios.post("/api/user/unmuteUser", { userToUnmuteId: userId }, config);
+				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: userId }, config);
+				dispatch(unmuteUser(data));
 				setUserMuted(false);
 				toast.success(`${user.username} has been unmuted`, {
 					position: toast.POSITION.TOP_CENTER,
@@ -132,8 +114,9 @@ const UserProfile: React.FC<IProps> = ({ user }) => {
 					},
 				};
 				const userId = user._id;
-				await axios.post("/api/user/muteUser", { userToMuteId: userId }, config);
+				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: userId }, config);
 				setUserMuted(true);
+				dispatch(muteUser(data));
 				toast.success(`${user.username} has been muted`, {
 					position: toast.POSITION.TOP_CENTER,
 					autoClose: 3000,

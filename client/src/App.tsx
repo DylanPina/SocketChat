@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "./redux/redux-hooks";
 import { setScreenWidth, setScreenHeight, setMediumScreen, setMobileScreen } from "./redux/screen/screen.slice";
+import { setMutedUsers } from "./redux/notifications/notifications.slice";
 import { setUserInfo } from "./redux/user/user.slice";
 
 import ChatPage from "./pages/ChatPage";
@@ -9,14 +10,17 @@ import HomePage from "./pages/HomePage";
 
 import styles from "./styles/App.module.css";
 import useWindowDimensions from "./config/hooks/useWindowDimensions";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 function App() {
 	const dispatch = useAppDispatch();
 	const navigate = useNavigate();
 	const { height, width } = useWindowDimensions();
+	const userInfo = localStorage.getItem("userInfo");
+	const { token } = JSON.parse(userInfo || "");
 
 	useEffect(() => {
-		const userInfo = localStorage.getItem("userInfo");
 		if (userInfo) {
 			dispatch(setUserInfo(JSON.parse(userInfo)));
 		}
@@ -43,6 +47,30 @@ function App() {
 			dispatch(setMobileScreen(false));
 		}
 	}, [width, []]);
+
+	useEffect(() => {
+		const fetchMutedUsers = async () => {
+			try {
+				const config = {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
+				dispatch(setMutedUsers(data));
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		};
+		fetchMutedUsers();
+	}, []);
 
 	return (
 		<div className={styles.app}>

@@ -130,13 +130,6 @@ const muteUser = asyncHandler(async (req, res) => {
 	}
 
 	try {
-		await User.findById(userToMuteId);
-	} catch (error: any) {
-		res.status(404).json({ error: "Cannot find user to mute" });
-		throw new Error("Cannot find user to mute");
-	}
-
-	try {
 		const { username, mutedUsers } = await User.findById(req.user._id);
 		let userAlreadyMuted = false;
 		mutedUsers.forEach((mutedUser) => {
@@ -146,11 +139,12 @@ const muteUser = asyncHandler(async (req, res) => {
 		if (userAlreadyMuted) {
 			res.status(400).json({ error: `${username} is already muted` });
 		} else {
-			const user = await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
+			const userToMute = await User.findById(userToMuteId);
+			await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
 				"mutedUsers",
 				"username email"
 			);
-			res.status(200).json(user);
+			res.status(200).json(userToMute);
 		}
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -174,18 +168,12 @@ const unmuteUser = asyncHandler(async (req, res) => {
 	const { userToUnmuteId } = req.body;
 
 	try {
-		await User.findById(userToUnmuteId);
-	} catch (error: any) {
-		res.status(404).json({ error: "Cannot find user to unmute" });
-		throw new Error("Cannot find user to unmute");
-	}
-
-	try {
-		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { mutedUsers: userToUnmuteId } }, { returnOriginal: false }).populate(
+		const userToUnmute = await User.findById(userToUnmuteId);
+		await User.findByIdAndUpdate(req.user._id, { $pull: { mutedUsers: userToUnmuteId } }, { returnOriginal: false }).populate(
 			"mutedUsers",
 			"username email"
 		);
-		res.status(200).json(user);
+		res.status(200).json(userToUnmute);
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
 		throw new Error(error.message);

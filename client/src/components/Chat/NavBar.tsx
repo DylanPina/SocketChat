@@ -60,8 +60,6 @@ const NavBar = () => {
 			};
 
 			const { data } = await axios.get(`/api/user?search=${searchQuery}`, config);
-			console.log(data);
-
 			setLoadingResults(false);
 			setSearchResult(data);
 		} catch (error) {

@@ -2,10 +2,10 @@ export interface User {
 	_id: string;
 	createdAt: string;
 	email: string;
-	profilePic: string;
+	profilePic?: string;
 	updatedAt: string;
 	username: string;
-	token: string;
+	token?: string;
 	__v: number;
 	notifications?: any[];
 	mutedUsers?: any[];

@@ -53,10 +53,8 @@ const CreateGroupChat = () => {
 			};
 
 			const { data } = await axios.get(`/api/user?search=${search}`, config);
-			console.log(data);
 			setLoading(false);
 			setSearchResults(data);
-			console.log(searchResults.length);
 		} catch (error) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -91,8 +89,6 @@ const CreateGroupChat = () => {
 	};
 
 	const handleCreateGroupChat = async () => {
-		console.log("Selected Users: ", selectedUsers);
-		console.log("Group Chat Name: ", groupChatName);
 		if (groupChatName === "" && selectedUsers.length === 0) {
 			toast.warn("Please fill out all fields", {
 				position: toast.POSITION.TOP_CENTER,

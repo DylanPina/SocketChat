@@ -38,11 +38,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const user = useAppSelector((state: any) => state.userInfo);
 	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		console.log("Chat updated");
-	}, [selectedChat]);
-
+	
 	const toggleSearchResultsShown = () => {
 		setShowSearchResults(!showSearchResults);
 	};
@@ -253,7 +249,6 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			const { data } = await axios.get(`/api/user?search=${search}`, config);
 			setLoading(false);
 			setSearchResults(data);
-			console.log(searchResults.length);
 		} catch (error) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
