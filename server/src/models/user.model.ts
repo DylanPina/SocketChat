@@ -13,6 +13,9 @@ const userSchema = new mongoose.Schema(
 		notifications: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Message" }] },
 		mutedChats: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "Chat" }] },
 		mutedUsers: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] },
+		friends: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] },
+		incomingFriendRequests: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] },
+		outgoingFriendRequests: { type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }] },
 	},
 	{ timestamps: true }
 );

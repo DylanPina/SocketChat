@@ -1,9 +1,9 @@
 import React, { Dispatch, SetStateAction } from "react";
 import axios from "axios";
+import { useAppSelector } from "../../../redux/redux-hooks";
 
 import { toast } from "react-toastify";
 import styles from "../../../styles/ChatPage/Modals/DeleteOneToOneChatModal.module.css";
-import { useAppSelector } from "../../../redux/redux-hooks";
 
 interface IProps {
 	setDeleteChatModalOpen: Dispatch<SetStateAction<boolean>>;

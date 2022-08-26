@@ -14,16 +14,18 @@ import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import styles from "../../styles/ChatPage/NavBar.module.css";
+import FriendsModal from "./Modals/FriendsModal";
 
 toast.configure();
 
 const NavBar = () => {
 	const [search, setSearch] = useState("");
-	const [searchResult, setSearchResult] = useState([]);
-	const [loadingResults, setLoadingResults] = useState(false);
-	const [notificationModal, setNotificationModal] = useState(false);
-	const [isMobile, setIsMobile] = useState(false);
-	const [mobileSearch, setMobileSearch] = useState(false);
+	const [searchResult, setSearchResult] = useState<any[]>([]);
+	const [loadingResults, setLoadingResults] = useState<boolean>(false);
+	const [notificationModal, setNotificationModal] = useState<boolean>(false);
+	const [friendsModal, setFriendsModal] = useState<boolean>(false);
+	const [isMobile, setIsMobile] = useState<boolean>(false);
+	const [mobileSearch, setMobileSearch] = useState<boolean>(false);
 	const mobileSearchFocus = useRef<HTMLInputElement>(null);
 
 	const dispatch = useAppDispatch();
@@ -119,7 +121,7 @@ const NavBar = () => {
 						)}
 						<>
 							<Tooltip title="Friends" arrow>
-								<button className={styles.friends_icon}>
+								<button className={styles.friends_icon} onClick={() => setFriendsModal(!friendsModal)}>
 									<FaUserFriends size={"100%"} />
 								</button>
 							</Tooltip>
@@ -144,6 +146,7 @@ const NavBar = () => {
 				{searchDrawer && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
 			</div>
 			{notificationModal && <NotificationModal />}
+			{friendsModal && <FriendsModal />}
 			{userSettingsModal && <UserSettings />}
 		</React.Fragment>
 	);
