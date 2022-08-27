@@ -10,4 +10,7 @@ export interface User {
 	notifications?: any[];
 	mutedUsers?: any[];
 	mutedChats?: any[];
+	friends: any[];
+	incomingFriendRequests: any[];
+	outgoingFriendRequests: any[];
 }

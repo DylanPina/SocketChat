@@ -14,7 +14,7 @@ import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import styles from "../../styles/ChatPage/NavBar.module.css";
-import FriendsModal from "./Modals/FriendsModal";
+import FriendsModal from "./Modals/Friends/FriendsModal";
 
 toast.configure();
 

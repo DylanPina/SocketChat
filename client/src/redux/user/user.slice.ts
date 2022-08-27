@@ -14,6 +14,9 @@ const initialState: User = {
 	notifications: [],
 	mutedChats: [],
 	mutedUsers: [],
+	friends: [],
+	incomingFriendRequests: [],
+	outgoingFriendRequests: [],
 };
 
 export const userInfoSlice = createSlice({
@@ -26,11 +29,20 @@ export const userInfoSlice = createSlice({
 		setUserProfilePic: (state: User, action: PayloadAction<string>) => {
 			state.profilePic = action.payload;
 		},
+		setFriends: (state: User, action: PayloadAction<Array<User>>) => {
+			state.friends = action.payload;
+		},
+		setIncomingFriendRequests: (state: User, action: PayloadAction<Array<User>>) => {
+			state.incomingFriendRequests = action.payload;
+		},
+		setOutgoingFriendRequests: (state: User, action: PayloadAction<Array<User>>) => {
+			state.incomingFriendRequests = action.payload;
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { setUserInfo, setUserProfilePic } = userInfoSlice.actions;
+export const { setUserInfo, setUserProfilePic, setFriends, setIncomingFriendRequests, setOutgoingFriendRequests } = userInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectAuthModal = (state: RootState) => state.userInfo;

@@ -18,7 +18,6 @@ function App() {
 	const navigate = useNavigate();
 	const { height, width } = useWindowDimensions();
 	const userInfo = localStorage.getItem("userInfo");
-	const { token } = JSON.parse(userInfo || "");
 
 	useEffect(() => {
 		if (userInfo) {
@@ -50,6 +49,7 @@ function App() {
 
 	useEffect(() => {
 		const fetchMutedUsers = async () => {
+			const { token } = JSON.parse(userInfo || " ");
 			try {
 				const config = {
 					headers: {
