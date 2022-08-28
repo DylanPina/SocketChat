@@ -59,6 +59,7 @@ const OneToOneChat = () => {
 		socket.on("connected", () => setSocketConnected(true));
 		socket.on("typing", () => setIsTyping(true));
 		socket.on("stop typing", () => setIsTyping(false));
+		clearNotifications();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -68,7 +69,6 @@ const OneToOneChat = () => {
 		mutedUsers.forEach((mutedUser: any) => {
 			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
 		});
-		clearNotifications();
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
 		setTimeout(() => {
@@ -84,9 +84,9 @@ const OneToOneChat = () => {
 				setTimeout(() => {
 					dispatch(setFetchChatsAgain(false));
 				});
+				console.log("message recieved from sc");
 			} else {
 				setMessages([...messages, newMessageRecieved]);
-				clearNotifications();
 			}
 		});
 	});
