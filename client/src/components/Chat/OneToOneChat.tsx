@@ -18,6 +18,7 @@ import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
 import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
+import Lottie from "react-lottie";
 
 toast.configure();
 
@@ -322,13 +323,13 @@ const OneToOneChat = () => {
 								<Chat messages={messages} />
 							</div>
 						)}
-						{/* {isTyping ? (
+						{isTyping ? (
 							<div>
 								<Lottie options={defaultOptions} width={"100px"} height={"50px"} style={{ marginBottom: 0, marginLeft: 0 }} />
 							</div>
 						) : (
 							<></>
-						)} */}
+						)}
 						<input
 							type="text"
 							placeholder="Enter a message.."

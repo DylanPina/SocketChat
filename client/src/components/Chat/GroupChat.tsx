@@ -14,8 +14,9 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { MdSettingsApplications } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import LoadingSpinner from "../Utils/LoadingSpinner";
-import animationData from "../../animations/typing.json";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
+import Lottie from "react-lottie";
+import animationData from "../../animations/typing.json";
 
 toast.configure();
 
@@ -35,6 +36,16 @@ const GroupChat = () => {
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
+
+	// For Lottie animations
+	const defaultOptions = {
+		loop: true,
+		autoplay: true,
+		animationData: animationData,
+		rendererSettings: {
+			preserveAspectRatio: "xMidYMid slice",
+		},
+	};
 
 	useEffect(() => {
 		socket = io(ENDPOINT);
@@ -225,13 +236,13 @@ const GroupChat = () => {
 						<Chat messages={messages} />
 					</div>
 				)}
-				{/* {isTyping ? (
+				{isTyping ? (
 					<div>
 						<Lottie options={defaultOptions} width={"100px"} height={"50px"} style={{ marginBottom: 0, marginLeft: 0 }} />
 					</div>
 				) : (
 					<></>
-				)} */}
+				)}
 				<input
 					type="text"
 					placeholder="Enter a message.."
