@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useAppSelector } from "../redux/redux-hooks";
 import Navbar from "../components/Chat/NavBar";
 import MyChats from "../components/Chat/MyChats";
@@ -17,7 +16,7 @@ const ChatPage = () => {
 	return (
 		<div className={styles.chat_page}>
 			<Navbar />
-			{selectedUser && <UserProfile user={selectedUser} />}
+			{selectedUser && <UserProfile selectedUser={selectedUser} />}
 			{myProfile && <MyProfile />}
 			{createGroupChat && <CreateGroupChat />}
 			<div className={styles.chat_container}>

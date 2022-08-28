@@ -36,7 +36,7 @@ export const userInfoSlice = createSlice({
 			state.incomingFriendRequests = action.payload;
 		},
 		setOutgoingFriendRequests: (state: User, action: PayloadAction<Array<User>>) => {
-			state.incomingFriendRequests = action.payload;
+			state.outgoingFriendRequests = action.payload;
 		},
 	},
 });
