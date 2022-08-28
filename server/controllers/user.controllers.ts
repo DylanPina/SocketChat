@@ -48,7 +48,7 @@ const authUser = asyncHandler(async (req, res) => {
 	// Assigning values based off body
 	const { email, password } = req.body;
 	// Find user with that email
-	const user = await User.findOne({ email });
+	const user = await User.findOne({ email }).populate("friends incomingFriendRequests outgoingFriendRequests");
 	// If the user exists and the password matches
 	if (user && (await user.matchPassword(password))) {
 		// Send back the user JSON
@@ -59,6 +59,10 @@ const authUser = asyncHandler(async (req, res) => {
 			profilePic: user.profilePic,
 			token: generateToken(user._id),
 			notifications: user.notifications,
+			mutedUsers: user.mutedUsers,
+			friends: user.friends,
+			outgoingFriendRequests: user.outgoingFriendRequests,
+			incomingFriendRequests: user.incomingFriendRequests,
 		});
 	} else {
 		res.status(401).json({
@@ -119,4 +123,266 @@ const changeProfilePicture = asyncHandler(async (req, res) => {
 	}
 });
 
-export { registerUser, authUser, allUsers, changeProfilePicture, changeUsername };
+// Adds a user to the list of muted users on the user model
+const muteUser = asyncHandler(async (req, res) => {
+	const { userToMuteId } = req.body;
+
+	if (userToMuteId === req.user._id) {
+		res.status(400).json({ error: "Cannot mute yourself" });
+		throw new Error("Cannot mute yourself");
+	}
+
+	try {
+		const { username, mutedUsers } = await User.findById(req.user._id);
+		let userAlreadyMuted = false;
+		mutedUsers.forEach((mutedUser) => {
+			if (mutedUser.toString() === userToMuteId) userAlreadyMuted = true;
+		});
+
+		if (userAlreadyMuted) {
+			res.status(400).json({ error: `${username} is already muted` });
+		} else {
+			const userToMute = await User.findById(userToMuteId);
+			await User.findByIdAndUpdate(req.user._id, { $push: { mutedUsers: userToMuteId } }, { returnOriginal: false }).populate(
+				"mutedUsers",
+				"username email"
+			);
+			res.status(200).json(userToMute);
+		}
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Retrieves the list of muted users from the user model
+const getMutedUsers = asyncHandler(async (req, res) => {
+	try {
+		const user = await User.findById(req.user._id).populate("mutedUsers", "username email");
+		res.status(200).json(user.mutedUsers);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Removes a user from the list of muted users on the user model
+const unmuteUser = asyncHandler(async (req, res) => {
+	const { userToUnmuteId } = req.body;
+
+	try {
+		const userToUnmute = await User.findById(userToUnmuteId);
+		await User.findByIdAndUpdate(req.user._id, { $pull: { mutedUsers: userToUnmuteId } }, { returnOriginal: false }).populate(
+			"mutedUsers",
+			"username email"
+		);
+		res.status(200).json(userToUnmute);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Returns an array of all the user's friends
+const fetchFriends = asyncHandler(async (req, res) => {
+	try {
+		const { friends } = await User.findById(req.user._id).populate("friends");
+		res.status(200).json(friends);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Sends a friend request to a specificed user
+const sendFriendRequest = asyncHandler(async (req, res) => {
+	const { recipientId } = req.body;
+
+	try {
+		// Checking to see if this user is already a friend
+		let alreadyFriended = false;
+		const { friends, outgoingFriendRequests } = await User.findById(req.user._id);
+		friends.forEach((userId) => {
+			if (userId.toString() === recipientId.toString()) alreadyFriended = true;
+		});
+		if (alreadyFriended) {
+			res.status(400).json({ error: "You are already friends with this user" });
+			return;
+		}
+		// Checking to see if a friend request was already sent to the user
+		let alreadySent = false;
+		outgoingFriendRequests.forEach((userId: any) => {
+			if (userId.toString() === recipientId) alreadySent = true;
+		});
+		// Throwing an error if a friend request has already been sent to user
+		if (alreadySent) {
+			res.status(400).json({ error: "A friend request was already sent to this user" });
+			return;
+		}
+		// Append the recipient to the outgoingFriendRequests of the sender
+		const sender = await User.findByIdAndUpdate(req.user._id, { $push: { outgoingFriendRequests: recipientId } }, { returnOriginal: false }).populate(
+			"outgoingFriendRequests"
+		);
+		// Append the sender to the incomingFriendRequests of the recipient
+		const recipient = await User.findByIdAndUpdate(recipientId, { $push: { incomingFriendRequests: req.user._id } }, { returnOriginal: false });
+		// Return the updated outgoing friend requests
+		res.status(200).json({ outgoingFriendRequests: sender.outgoingFriendRequests });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Unsends a friend request
+const unsendFriendRequest = asyncHandler(async (req, res) => {
+	const { friendId } = req.body;
+
+	try {
+		// Remove the outgoing friend request from the user
+		const sender = await User.findByIdAndUpdate(req.user._id, { $pull: { outgoingFriendRequests: friendId } }, { returnOriginal: false }).populate(
+			"outgoingFriendRequests"
+		);
+		// Remove the incoming friend request from the sender
+		const recipient = await User.findByIdAndUpdate(friendId, { $pull: { incomingFriendRequests: req.user._id } }, { returnOriginal: false });
+		// Return the updated outgoing friend requests from the sender
+		res.status(200).json({ outgoingFriendRequests: sender.outgoingFriendRequests });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Accepts an incoming friend request from a specified user
+const acceptFriendRequest = asyncHandler(async (req, res) => {
+	const { friendId } = req.body;
+
+	try {
+		// Checking to see if the incoming friend request exists
+		let friendRequestExists = false;
+		const { incomingFriendRequests } = await User.findById(req.user._id);
+		incomingFriendRequests.forEach((userId) => {
+			if (userId.toString() === friendId.toString()) friendRequestExists = true;
+		});
+		// Throwing an error if the incoming friend request doesn't exist
+		if (!friendRequestExists) {
+			res.status(400).json({ error: "Friend request does not exist" });
+			return;
+		}
+		// Remove the incoming friend request from incomingFriendRequests and add to friends
+		const user = await User.findByIdAndUpdate(
+			req.user._id,
+			{ $pull: { incomingFriendRequests: friendId }, $push: { friends: friendId } },
+			{ returnOriginal: false }
+		).populate("friends incomingFriendRequests");
+		// Remove the outgoing friend request from outgoingFriendRequests of sender and add to friends
+		const sender = await User.findByIdAndUpdate(
+			friendId,
+			{ $pull: { outgoingFriendRequests: req.user._id }, $push: { friends: req.user._id } },
+			{ returnOriginal: false }
+		);
+		// Return the updated friends list and incoming friend requests
+		res.status(200).json({ friends: user.friends, incomingFriendRequests: user.incomingFriendRequests });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Declines an incoming friend request from a specified user
+const declineFriendRequest = asyncHandler(async (req, res) => {
+	const { friendId } = req.body;
+
+	try {
+		// Checking to see if the incoming friend request exists
+		let friendRequestExists = false;
+		const { incomingFriendRequests } = await User.findById(req.user._id);
+		incomingFriendRequests.forEach((userId) => {
+			if (userId.toString() === friendId.toString()) friendRequestExists = true;
+		});
+		// Throwing an error if the incoming friend request doesn't exist
+		if (!friendRequestExists) {
+			res.status(400).json({ error: "Friend request does not exist" });
+			return;
+		}
+		// Remove the incoming friend request from incomingFriendRequests and add to friends
+		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { incomingFriendRequests: friendId } }, { returnOriginal: false }).populate(
+			"incomingFriendRequests"
+		);
+		// Remove the outgoing friend request from outgoingFriendRequests of sender and add to friends
+		const sender = await User.findByIdAndUpdate(friendId, { $pull: { outgoingFriendRequests: req.user._id } }, { returnOriginal: false });
+		// Return the updating incoming friend requests
+		res.status(200).json({ incomingFriendRequests: user.incomingFriendRequests });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Removes a friend
+const removeFriend = asyncHandler(async (req, res) => {
+	const { friendId } = req.body;
+
+	try {
+		// Checking to see if the friend exists
+		let friendExists = false;
+		const { friends } = await User.findById(req.user._id);
+		friends.forEach((userId) => {
+			if (userId.toString() === friendId.toString()) friendExists = true;
+		});
+		// Throwing an error if the friend does not exist
+		if (!friendExists) {
+			res.status(400).json({ error: "Friend not found" });
+			return;
+		}
+		// Remove the friend from the user sending the request
+		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { friends: friendId } }, { returnOriginal: false }).populate("friends");
+		// Remove the user who sent the request from the friend's friend
+		const sender = await User.findByIdAndUpdate(friendId, { $pull: { friends: req.user._id } }, { returnOriginal: false });
+		// Return the update friends list
+		res.status(200).json({ friends: user.friends });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Returns an array of user's incoming friend requests
+const fetchIncomingFriendRequests = asyncHandler(async (req, res) => {
+	try {
+		const { incomingFriendRequests } = await User.findById(req.user._id).populate("incomingFriendRequests");
+		res.status(200).json(incomingFriendRequests);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Returns an array of user's outgoing friend requests
+const fetchOutgoingFriendRequests = asyncHandler(async (req, res) => {
+	try {
+		const { outgoingFriendRequests } = await User.findById(req.user._id).populate("outgoingFriendRequests");
+		res.status(200).json(outgoingFriendRequests);
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+export {
+	registerUser,
+	authUser,
+	allUsers,
+	changeProfilePicture,
+	changeUsername,
+	muteUser,
+	getMutedUsers,
+	unmuteUser,
+	fetchFriends,
+	sendFriendRequest,
+	unsendFriendRequest,
+	acceptFriendRequest,
+	declineFriendRequest,
+	removeFriend,
+	fetchIncomingFriendRequests,
+	fetchOutgoingFriendRequests,
+};

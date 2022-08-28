@@ -63,7 +63,6 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 				.post("https://api.cloudinary.com/v1_1/dsp7595/image/upload", data)
 				.then((data) => {
 					setProfilePic(data.data.secure_url);
-					console.log(`Profile pic cloud URL: [${data.data.secure_url}]`);
 				})
 				.catch((err) => {
 					toast.error(err.message, {

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain, setSelectedChat } from "../../../redux/chats/chats.slice";
 import axios from "axios";
@@ -35,14 +35,10 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 	const [showSearchResults, setShowSearchResults] = useState(false);
 	const [loading, setLoading] = useState(false);
 
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const user = useAppSelector((state) => state.userInfo);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const user = useAppSelector((state: any) => state.userInfo);
 	const dispatch = useAppDispatch();
-
-	useEffect(() => {
-		console.log("Chat updated");
-	}, [selectedChat]);
-
+	
 	const toggleSearchResultsShown = () => {
 		setShowSearchResults(!showSearchResults);
 	};
@@ -253,7 +249,6 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			const { data } = await axios.get(`/api/user?search=${search}`, config);
 			setLoading(false);
 			setSearchResults(data);
-			console.log(searchResults.length);
 		} catch (error) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -289,18 +284,6 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 							{showSearchResults ? <VscTriangleUp /> : <VscTriangleDown />}
 						</div>
 					</div>
-					{selectedChat.users.length !== 0 && (
-						<div className={styles.selected_user_container}>
-							{selectedChat.users.map((user: IUser) => (
-								<div className={styles.selected_user} key={user._id}>
-									<h3 className={styles.user_name_selected}>{user.username}</h3>
-									<button className={styles.close_button_selected} onClick={() => handleRemove(user)}>
-										<CgClose size={"100%"} />
-									</button>
-								</div>
-							))}
-						</div>
-					)}
 					{showSearchResults && (
 						<div className={styles.search_drawer}>
 							{loading ? (
@@ -320,6 +303,18 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 									</div>
 								))
 							)}
+						</div>
+					)}
+					{selectedChat.users.length !== 0 && (
+						<div className={styles.selected_user_container}>
+							{selectedChat.users.map((user: IUser) => (
+								<div className={styles.selected_user} key={user._id}>
+									<h3 className={styles.user_name_selected}>{user.username}</h3>
+									<button className={styles.close_button_selected} onClick={() => handleRemove(user)}>
+										<CgClose size={"100%"} />
+									</button>
+								</div>
+							))}
 						</div>
 					)}
 				</div>

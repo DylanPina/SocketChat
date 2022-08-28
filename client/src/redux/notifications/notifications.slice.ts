@@ -2,13 +2,18 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { Message } from "../../types/message.types";
 import { User } from "../../types/user.types";
+import { Chat } from "../../types/chat.types";
 
 interface notificationState {
 	notifications: Message[];
+	mutedUsers: User[];
+	mutedChats: Chat[];
 }
 
 const initialState: notificationState = {
 	notifications: [],
+	mutedUsers: [],
+	mutedChats: [],
 };
 
 export const notificationsSlice = createSlice({
@@ -38,11 +43,20 @@ export const notificationsSlice = createSlice({
 		removeAllNotifications: (state: any) => {
 			state.notifications = [];
 		},
+		setMutedUsers: (state: any, action: PayloadAction<User[]>) => {
+			state.mutedUsers = action.payload;
+		},
+		muteUser: (state: any, action: PayloadAction<User>) => {
+			state.mutedUsers.push(action.payload);
+		},
+		unmuteUser: (state: any, action: PayloadAction<any>) => {
+			state.mutedUsers = state.mutedUsers.filter((mutedUser: User) => mutedUser._id !== action.payload._id);
+		},
 	},
 });
 
 // Action creators are generated for each case reducer function
-export const { setNotifications, pushNotification, removeNotification, removeNotificationsByUser, removeAllNotifications } =
+export const { setNotifications, pushNotification, removeNotification, removeNotificationsByUser, removeAllNotifications, setMutedUsers, muteUser, unmuteUser } =
 	notificationsSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

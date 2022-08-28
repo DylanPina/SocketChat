@@ -7,16 +7,17 @@ import { setSelectedUser } from "../../redux/user/selected-user.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";
-import OneToOneChatSettings from "./Modals/OneToOneChatSettings";
 import Chat from "./Chat";
 
 import { toast } from "react-toastify";
-import { FaArrowAltCircleLeft } from "react-icons/fa";
-import { MdSettingsApplications } from "react-icons/md";
+import { FaArrowAltCircleLeft, FaSkullCrossbones } from "react-icons/fa";
+import { MdNotifications, MdNotificationsOff } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import animationData from "../../animations/typing.json";
 import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
+import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
+import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
 
 toast.configure();
 
@@ -24,18 +25,32 @@ const ENDPOINT = "https://socket-chat-dsp.herokuapp.com/";
 var socket: any, selectedChatCompare: any;
 
 const OneToOneChat = () => {
-	const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 	const [messages, setMessages] = useState<any>([]);
-	const [loading, setLoading] = useState(true);
+	const [loading, setLoading] = useState<boolean>(true);
 	const [newMessage, setNewMessage] = useState<string>();
-	const [socketConnected, setSocketConnected] = useState(false);
-	const [typing, setTyping] = useState(false);
-	const [isTyping, setIsTyping] = useState(false);
+	const [userMuted, setUserMuted] = useState<boolean>(false);
+	const [socketConnected, setSocketConnected] = useState<boolean>(false);
+	const [typing, setTyping] = useState<boolean>(false);
+	const [isTyping, setIsTyping] = useState<boolean>(false);
+	const [deleteChatModalOpen, setDeleteChatModalOpen] = useState<boolean>(false);
 
-	const user = useAppSelector((state) => state.userInfo);
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
+	const { mutedUsers } = useAppSelector((state: any) => state.notifications);
 	const dispatch = useAppDispatch();
+	const userInfo = localStorage.getItem("userInfo");
+	const { token } = JSON.parse(userInfo || "");
+
+	// For Lottie animations
+	const defaultOptions = {
+		loop: true,
+		autoplay: true,
+		animationData: animationData,
+		rendererSettings: {
+			preserveAspectRatio: "xMidYMid slice",
+		},
+	};
 
 	useEffect(() => {
 		socket = io(ENDPOINT);
@@ -43,13 +58,16 @@ const OneToOneChat = () => {
 		socket.on("connected", () => setSocketConnected(true));
 		socket.on("typing", () => setIsTyping(true));
 		socket.on("stop typing", () => setIsTyping(false));
+		clearNotifications();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
-		clearNotifications();
+		mutedUsers.forEach((mutedUser: any) => {
+			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
+		});
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
 		setTimeout(() => {
@@ -65,6 +83,7 @@ const OneToOneChat = () => {
 				setTimeout(() => {
 					dispatch(setFetchChatsAgain(false));
 				});
+				console.log("message recieved from sc");
 			} else {
 				setMessages([...messages, newMessageRecieved]);
 			}
@@ -197,6 +216,68 @@ const OneToOneChat = () => {
 		}
 	};
 
+	const handleMute = async () => {
+		if (userMuted) {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: getSender(user, selectedChat.users)._id }, config);
+				dispatch(unmuteUser(data));
+				setUserMuted(false);
+				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		} else {
+			try {
+				const config = {
+					headers: {
+						"Content-type": "application/json",
+						Authorization: `Bearer ${token}`,
+					},
+				};
+				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: getSender(user, selectedChat.users)._id }, config);
+				dispatch(muteUser(data));
+				setUserMuted(true);
+				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			} catch (error) {
+				toast.error(error, {
+					position: toast.POSITION.TOP_CENTER,
+					autoClose: 3000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+				});
+			}
+		}
+	};
+
 	return (
 		<>
 			{selectedChat ? (
@@ -216,13 +297,21 @@ const OneToOneChat = () => {
 							/>
 							<h1 className={styles.chat_title}>{getSender(user, selectedChat.users).username}</h1>
 						</div>
-						<Tooltip title="Chat settings" arrow>
-							<button className={styles.chat_settings} onClick={() => setSettingsOpen(true)}>
-								<MdSettingsApplications size={"100%"} />
-							</button>
-						</Tooltip>
+
+						<div className={styles.mute_leave_container}>
+							<Tooltip title={`${userMuted ? "Unmute" : "Mute"} ${getSender(user, selectedChat.users).username}`} arrow>
+								<button className={styles.mute} onClick={() => handleMute()}>
+									{userMuted ? <MdNotificationsOff size={"50%"} color={"white"} /> : <MdNotifications size={"50%"} color={"white"} />}
+								</button>
+							</Tooltip>
+							<Tooltip title="Leave chat" arrow>
+								<button className={styles.leave} onClick={() => setDeleteChatModalOpen(true)}>
+									<FaSkullCrossbones size={"50%"} color={"white"} />
+								</button>
+							</Tooltip>
+						</div>
+						{deleteChatModalOpen && <DeleteOneOnOneChatModal setDeleteChatModalOpen={setDeleteChatModalOpen}></DeleteOneOnOneChatModal>}
 					</div>
-					{settingsOpen && <OneToOneChatSettings setSettingsOpen={setSettingsOpen} />}
 					<div className={styles.chat_section}>
 						{loading ? (
 							<div className={styles.loading_container}>

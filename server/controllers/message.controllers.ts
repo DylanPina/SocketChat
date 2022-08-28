@@ -8,10 +8,10 @@ const sendMessage = asyncHandler(async (req, res) => {
 	// Extracting content and ChatID from request body
 	const { content, chatId } = req.body;
 	// Return an error if there is no content or chatID
-	if (!content || !chatId) {
-		console.error("Invalid data passed into request");
-		return res.sendStatus(400).json({ error: "Invalid data passed into request" });
-	}
+	// if (!content || !chatId) {
+	// 	console.error("Invalid data passed into request");
+	// 	return res.status(400).json({ error: "Invalid data passed into request" });
+	// }
 
 	var newMessage = {
 		sender: req.user._id, // Logged in user's ID
@@ -32,10 +32,9 @@ const sendMessage = asyncHandler(async (req, res) => {
 		// Updating the most latest message
 		await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
 		// Return the message
-		res.status(200).json(message);
+		return res.json(message);
 	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-		throw new Error(error.message);
+		// return res.status(400).json({ error: error.message });
 	}
 });
 
@@ -69,17 +68,27 @@ const sendNotification = asyncHandler(async (req, res) => {
 		chat.users.forEach(async (user) => {
 			// We obviously don't want to send the notification to the sender
 			if (user.toString() !== req.user._id.toString()) {
-				// Pushing the notification to the user
-				await User.findByIdAndUpdate(user, {
-					$push: { notifications: message },
+				// Checking to see if any of the users we're trying to send this notification to have the sender listed as a muted user
+				let senderMuted = false;
+				const test = await User.findById(user);
+				test.mutedUsers.forEach((mutedUser) => {
+					if (mutedUser.toString() === req.user._id.toString()) {
+						senderMuted = true;
+					}
 				});
+				// If the sender is not muted we will push the notification to the user in the chat
+				if (!senderMuted) {
+					// Pushing the notification to the user
+					await User.findByIdAndUpdate(user, {
+						$push: { notifications: message },
+					});
+				}
 			}
 		});
 		// Return the notification
-		res.status(200).json(notification);
+		return res.status(200).json(notification);
 	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-		throw new Error(error.message);
+		return res.status(400).json({ error: error.message });
 	}
 });
 
@@ -88,10 +97,9 @@ const fetchNotifications = asyncHandler(async (req, res) => {
 	try {
 		// Retrieve user by userID, populate and return user's notifications
 		const user = await User.findById(req.user._id).populate({ path: "notifications", populate: { path: "sender chat" } });
-		res.status(200).json(user.notifications);
+		return res.status(200).json(user.notifications);
 	} catch (error: any) {
-		res.status(400).json({ error: error.message });
-		throw new Error(error.message);
+		return res.status(400).json({ error: error.message });
 	}
 });
 
@@ -104,10 +112,9 @@ const removeNotification = asyncHandler(async (req, res) => {
 
 	// Check if the notification was removed
 	if (!removed) {
-		res.status(400).json({ error: "Failed to remove notification" });
-		throw new Error("Failed to remove notification");
+		return res.status(400).json({ error: "Failed to remove notification" });
 	} else {
-		res.status(200).json(removed.notifications);
+		return res.status(200).json(removed.notifications);
 	}
 });
 

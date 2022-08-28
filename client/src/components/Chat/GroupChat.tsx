@@ -31,9 +31,9 @@ const GroupChat = () => {
 	const [typing, setTyping] = useState(false);
 	const [isTyping, setIsTyping] = useState(false);
 
-	const user = useAppSelector((state) => state.userInfo);
-	const { selectedChat } = useAppSelector((state) => state.chats);
-	const { mediumScreen, mobileScreen } = useAppSelector((state) => state.screenDimensions);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const { selectedChat } = useAppSelector((state: any) => state.chats);
+	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
 
 	useEffect(() => {
@@ -42,14 +42,13 @@ const GroupChat = () => {
 		socket.on("connected", () => setSocketConnected(true));
 		socket.on("typing", () => setIsTyping(true));
 		socket.on("stop typing", () => setIsTyping(false));
+		clearNotifications();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		fetchMessages();
 		selectedChatCompare = selectedChat;
-		clearNotifications();
-		dispatch(fetchMessages);
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
 		setTimeout(() => {
@@ -65,6 +64,7 @@ const GroupChat = () => {
 				setTimeout(() => {
 					dispatch(setFetchChatsAgain(false));
 				});
+				console.log("message recieved from gc");
 			} else {
 				setMessages([...messages, newMessageRecieved]);
 			}
@@ -166,7 +166,7 @@ const GroupChat = () => {
 				setNewMessage("");
 				setMessages([...messages, data]);
 
-				await axios.post(
+				const notification = await axios.post(
 					"/api/message/notifications/send",
 					{
 						messageId: data._id,
@@ -174,6 +174,7 @@ const GroupChat = () => {
 					},
 					config
 				);
+				console.log(notification);
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,

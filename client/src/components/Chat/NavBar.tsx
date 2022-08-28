@@ -14,24 +14,26 @@ import { MdNotifications } from "react-icons/md";
 import { FaSearchengin } from "react-icons/fa";
 import Tooltip from "@mui/material/Tooltip";
 import styles from "../../styles/ChatPage/NavBar.module.css";
+import FriendsModal from "./Modals/Friends/FriendsModal";
 
 toast.configure();
 
 const NavBar = () => {
 	const [search, setSearch] = useState("");
-	const [searchResult, setSearchResult] = useState([]);
-	const [loadingResults, setLoadingResults] = useState(false);
-	const [notificationModal, setNotificationModal] = useState(false);
-	const [isMobile, setIsMobile] = useState(false);
-	const [mobileSearch, setMobileSearch] = useState(false);
+	const [searchResult, setSearchResult] = useState<any[]>([]);
+	const [loadingResults, setLoadingResults] = useState<boolean>(false);
+	const [notificationModal, setNotificationModal] = useState<boolean>(false);
+	const [friendsModal, setFriendsModal] = useState<boolean>(false);
+	const [isMobile, setIsMobile] = useState<boolean>(false);
+	const [mobileSearch, setMobileSearch] = useState<boolean>(false);
 	const mobileSearchFocus = useRef<HTMLInputElement>(null);
 
 	const dispatch = useAppDispatch();
 
-	const user = useAppSelector((state) => state.userInfo);
-	const userSettingsModal = useAppSelector((state) => state.modals.userSettings);
-	const { searchDrawer } = useAppSelector((state) => state.modals);
-	const { notifications } = useAppSelector((state) => state.notifications);
+	const user = useAppSelector((state: any) => state.userInfo);
+	const userSettingsModal = useAppSelector((state: any) => state.modals.userSettings);
+	const { searchDrawer } = useAppSelector((state: any) => state.modals);
+	const { notifications } = useAppSelector((state: any) => state.notifications);
 
 	// FOR MOBILE SCREENS
 	const { height, width } = useWindowDimensions();
@@ -60,8 +62,6 @@ const NavBar = () => {
 			};
 
 			const { data } = await axios.get(`/api/user?search=${searchQuery}`, config);
-			console.log(data);
-
 			setLoadingResults(false);
 			setSearchResult(data);
 		} catch (error) {
@@ -121,18 +121,23 @@ const NavBar = () => {
 						)}
 						<>
 							<Tooltip title="Friends" arrow>
-								<button className={styles.friends_icon}>
+								<button className={styles.friends_icon} onClick={() => setFriendsModal(!friendsModal)}>
 									<FaUserFriends size={"100%"} />
 								</button>
 							</Tooltip>
+							{user.incomingFriendRequests?.length > 0 && (
+								<div className={styles.friends_alert}>
+									<span className={styles.friends_alert_number}>{user.incomingFriendRequests ? user.incomingFriendRequests?.length : 0}</span>
+								</div>
+							)}
 							<Tooltip title="Notifications" arrow>
 								<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
 									<MdNotifications size={"100%"} />
 								</button>
 							</Tooltip>
-							{notifications.length > 0 && (
-								<div className={styles.notifications_badge}>
-									<h1 className={styles.notifications_badge_number}>!</h1>
+							{notifications?.length > 0 && (
+								<div className={styles.notifications_alert}>
+									<span className={styles.notifications_alert_number}>{notifications.length}</span>
 								</div>
 							)}
 							<Tooltip title="Profile" arrow>
@@ -146,6 +151,7 @@ const NavBar = () => {
 				{searchDrawer && <SearchDrawer searchResults={searchResult} loadingResults={loadingResults} />}
 			</div>
 			{notificationModal && <NotificationModal />}
+			{friendsModal && <FriendsModal />}
 			{userSettingsModal && <UserSettings />}
 		</React.Fragment>
 	);

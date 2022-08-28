@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 import Chat from "../models/chat.model";
+import Message from "../models/message.model";
 import User from "../models/user.model";
+import { allMessages } from "./message.controllers";
 
 const accessChat = asyncHandler(async (req, res) => {
 	// Extract userID from request body
@@ -197,4 +199,28 @@ const removeFromGroup = asyncHandler(async (req, res) => {
 	}
 });
 
-export { accessChat, fetchChats, fetchChatById, createGroupChat, renameGroup, addToGroup, removeFromGroup };
+const deleteOneOnOneChat = asyncHandler(async (req, res) => {
+	const { chatId } = req.body;
+	// Remove all messages associated with chat
+	const messages = await Message.deleteMany({ chat: chatId });
+	// Remove the chat
+	const chat = await Chat.findByIdAndRemove(chatId);
+	res.status(200).json({ deletedChat: chat, deletedMessages: messages });
+});
+
+const deleteGroupChat = asyncHandler(async (req, res) => {
+	const { chatId } = req.body;
+	// Make sure the user sending the request is the group admin
+	const chatToDelete = await Chat.findById(chatId);
+	if (chatToDelete.groupAdmin.toString() === req.user._id.toString()) {
+		// Remove all messages associated with chat
+		const messages = await Message.deleteMany({ chat: chatId });
+		// Remove the chat
+		const chat = await Chat.findByIdAndRemove(chatId);
+		res.status(200).json({ deletedChat: chat, deletedMessages: messages });
+	} else {
+		res.status(400).json({ error: "User sending request is not group admin" });
+	}
+});
+
+export { accessChat, fetchChats, fetchChatById, createGroupChat, renameGroup, addToGroup, removeFromGroup, deleteOneOnOneChat, deleteGroupChat };

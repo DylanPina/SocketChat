@@ -20,7 +20,7 @@ const OneToOneChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				<div className={styles.line} />
 				<div className={styles.btn_container}>
 					<button className={styles.mute}>
-						Mute chat <MdNotificationsOff size={"20px"} />
+						Mute user <MdNotificationsOff size={"20px"} />
 					</button>
 					<button className={styles.mute}>
 						Leave chat <ImExit size={"17.5px"} />
