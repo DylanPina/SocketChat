@@ -78,6 +78,7 @@ const GroupChat = () => {
 				});
 			} else {
 				setMessages([...messages, newMessageRecieved]);
+				clearNotifications();
 			}
 		});
 	});
