@@ -220,10 +220,31 @@ const sendFriendRequest = asyncHandler(async (req, res) => {
 			return;
 		}
 		// Append the recipient to the outgoingFriendRequests of the sender
-		const sender = await User.findByIdAndUpdate(req.user._id, { $push: { outgoingFriendRequests: recipientId } }, { returnOriginal: false }).populate("outgoingFriendRequests");
+		const sender = await User.findByIdAndUpdate(req.user._id, { $push: { outgoingFriendRequests: recipientId } }, { returnOriginal: false }).populate(
+			"outgoingFriendRequests"
+		);
 		// Append the sender to the incomingFriendRequests of the recipient
 		const recipient = await User.findByIdAndUpdate(recipientId, { $push: { incomingFriendRequests: req.user._id } }, { returnOriginal: false });
 		// Return the updated outgoing friend requests
+		res.status(200).json({ outgoingFriendRequests: sender.outgoingFriendRequests });
+	} catch (error: any) {
+		res.status(400).json({ error: error.message });
+		throw new Error(error.message);
+	}
+});
+
+// Unsends a friend request
+const unsendFriendRequest = asyncHandler(async (req, res) => {
+	const { friendId } = req.body;
+
+	try {
+		// Remove the outgoing friend request from the user
+		const sender = await User.findByIdAndUpdate(req.user._id, { $pull: { outgoingFriendRequests: friendId } }, { returnOriginal: false }).populate(
+			"outgoingFriendRequests"
+		);
+		// Remove the incoming friend request from the sender
+		const recipient = await User.findByIdAndUpdate(friendId, { $pull: { incomingFriendRequests: req.user._id } }, { returnOriginal: false });
+		// Return the updated outgoing friend requests from the sender
 		res.status(200).json({ outgoingFriendRequests: sender.outgoingFriendRequests });
 	} catch (error: any) {
 		res.status(400).json({ error: error.message });
@@ -284,7 +305,9 @@ const declineFriendRequest = asyncHandler(async (req, res) => {
 			return;
 		}
 		// Remove the incoming friend request from incomingFriendRequests and add to friends
-		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { incomingFriendRequests: friendId } }, { returnOriginal: false }).populate("incomingFriendRequests");
+		const user = await User.findByIdAndUpdate(req.user._id, { $pull: { incomingFriendRequests: friendId } }, { returnOriginal: false }).populate(
+			"incomingFriendRequests"
+		);
 		// Remove the outgoing friend request from outgoingFriendRequests of sender and add to friends
 		const sender = await User.findByIdAndUpdate(friendId, { $pull: { outgoingFriendRequests: req.user._id } }, { returnOriginal: false });
 		// Return the updating incoming friend requests
@@ -356,6 +379,7 @@ export {
 	unmuteUser,
 	fetchFriends,
 	sendFriendRequest,
+	unsendFriendRequest,
 	acceptFriendRequest,
 	declineFriendRequest,
 	removeFriend,

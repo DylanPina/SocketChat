@@ -14,7 +14,8 @@ import {
 	removeFriend,
 	fetchFriends,
 	fetchOutgoingFriendRequests,
-	fetchIncomingFriendRequests
+	fetchIncomingFriendRequests,
+	unsendFriendRequest,
 } from "../controllers/user.controllers";
 import { protect } from "../middlewares/authMiddleware";
 
@@ -29,6 +30,7 @@ router.route("/fetchMutedUsers").get(protect, getMutedUsers);
 router.route("/unmuteUser").post(protect, unmuteUser);
 router.route("/fetchFriends").get(protect, fetchFriends);
 router.route("/sendFriendRequest").post(protect, sendFriendRequest);
+router.route("/unsendFriendRequest").post(protect, unsendFriendRequest);
 router.route("/acceptFriendRequest").post(protect, acceptFriendRequest);
 router.route("/declineFriendRequest").post(protect, declineFriendRequest);
 router.route("/removeFriend").post(protect, removeFriend);
