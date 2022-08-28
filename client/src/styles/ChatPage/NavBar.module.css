@@ -75,6 +75,26 @@
 	cursor: pointer;
 }
 
+.friends_alert {
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 12.5px;
+	height: 12.5px;
+	background-color: var(--primary-orange);
+	border-radius: 50%;
+	top: 19.5%;
+	right: 74.85%;
+}
+
+.friends_alert_number {
+	font-family: "Montserrat";
+	font-weight: 600;
+	font-size: 8px;
+	color: var(--primary-white);
+}
+
 .notifications_icon {
 	border: none;
 	outline: none;
@@ -84,7 +104,7 @@
 	cursor: pointer;
 }
 
-.notifications_badge {
+.notifications_alert {
 	position: absolute;
 	display: flex;
 	align-items: center;
@@ -93,14 +113,14 @@
 	height: 12.5px;
 	background-color: var(--primary-orange);
 	border-radius: 50%;
-	top: 21.5%;
-	right: 44%;
+	top: 19.5%;
+	right: 43.5%;
 }
 
-.notifications_badge_number {
+.notifications_alert_number  {
 	font-family: "Montserrat";
 	font-weight: 600;
-	font-size: 10px;
+	font-size: 8px;
 	color: var(--primary-white);
 }
 

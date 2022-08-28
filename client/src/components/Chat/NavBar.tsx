@@ -125,14 +125,19 @@ const NavBar = () => {
 									<FaUserFriends size={"100%"} />
 								</button>
 							</Tooltip>
+							{user.incomingFriendRequests?.length > 0 && (
+								<div className={styles.friends_alert}>
+									<span className={styles.friends_alert_number}>{user.incomingFriendRequests ? user.incomingFriendRequests?.length : 0}</span>
+								</div>
+							)}
 							<Tooltip title="Notifications" arrow>
 								<button className={styles.notifications_icon} onClick={() => setNotificationModal(!notificationModal)}>
 									<MdNotifications size={"100%"} />
 								</button>
 							</Tooltip>
-							{notifications.length > 0 && (
-								<div className={styles.notifications_badge}>
-									<h1 className={styles.notifications_badge_number}>!</h1>
+							{notifications?.length > 0 && (
+								<div className={styles.notifications_alert}>
+									<span className={styles.notifications_alert_number}>{notifications.length}</span>
 								</div>
 							)}
 							<Tooltip title="Profile" arrow>
