@@ -12,6 +12,12 @@
 - Mute users / groupchats
 - Mobile friendly
 
+## Upcoming features
+- Sending photos
+- Sending videos
+- Online / offline / away / do not disturb status
+- Google signin with OAuth
+
 ## Tech stack
 - [[ReactJS](https://reactjs.org/)] - Free and open-source front-end JavaScript library developed by Facebook for building user interfaces based on UI components.
 - [[Typescript](https://www.typescriptlang.org/)] - Strongly typed programming language that builds on JavaScript, giving you better tooling at any scale. Adds additional syntax to JavaScript to support a tighter integration with your editor. Catch errors early in your editor.
@@ -20,6 +26,7 @@
 - [[Express](https://expressjs.com/)] -  Minimal and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 - [[Node.js](https://nodejs.org/en/)] - Back-end JavaScript runtime environment that runs on a JavaScript Engine and executes JavaScript code outside a web browser, which was designed to build scalable network applications.
 - [[Socket.io](https://socket.io/)] - Library that enables low-latency, bidirectional and event-based communication between a client and a server.
+- [[JSON Web Tokens]](https://jwt.io/) - Proposed internet standard for creating data with optional signature and/or optional encryption whose payload holds JSON that asserts some number of claims.
 - [[Redux](https://redux.js.org/)]- JavaScript library for managing and centralizing application state.
 - [[CSS](https://developer.mozilla.org/en-US/docs/Web/CSS)] - Style sheet language used for describing the presentation of a document written in a markup language such as HTML or XML.
 - [[Postman](https://www.postman.com/)] - API platform for developers to design, build, test, and iterate their APIs.
