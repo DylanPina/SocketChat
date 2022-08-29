@@ -16,7 +16,7 @@
 - Sending photos
 - Sending videos
 - Online / offline / away / do not disturb status
-- Google signin with OAuth
+- Google sign in with OAuth
 
 ## Tech stack
 - [[ReactJS](https://reactjs.org/)] - Free and open-source front-end JavaScript library developed by Facebook for building user interfaces based on UI components.
