@@ -14,7 +14,6 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { MdSettingsApplications } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import LoadingSpinner from "../Utils/LoadingSpinner";
-import Lottie from "react-lottie";
 import animationData from "../../animations/typing.json";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
 
@@ -238,7 +237,7 @@ const GroupChat = () => {
 				)}
 				{isTyping ? (
 					<div>
-						<Lottie options={defaultOptions} width={"100px"} height={"50px"} style={{ marginBottom: 0, marginLeft: 0 }} />
+						typing...
 					</div>
 				) : (
 					<></>
