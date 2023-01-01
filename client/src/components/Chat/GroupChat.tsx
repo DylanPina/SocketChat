@@ -14,7 +14,6 @@ import { FaArrowAltCircleLeft } from "react-icons/fa";
 import { MdSettingsApplications } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import LoadingSpinner from "../Utils/LoadingSpinner";
-import animationData from "../../animations/typing.json";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
 
 toast.configure();
@@ -26,25 +25,16 @@ const GroupChat = () => {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [messages, setMessages] = useState<any>([]);
 	const [loading, setLoading] = useState(true);
-	const [newMessage, setNewMessage] = useState<string>();
+	const [newMessage, setNewMessage] = useState<string>('');
 	const [socketConnected, setSocketConnected] = useState(false);
 	const [typing, setTyping] = useState(false);
 	const [isTyping, setIsTyping] = useState(false);
 
-	const user = useAppSelector((state: any) => state.userInfo);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
-
-	// For Lottie animations
-	const defaultOptions = {
-		loop: true,
-		autoplay: true,
-		animationData: animationData,
-		rendererSettings: {
-			preserveAspectRatio: "xMidYMid slice",
-		},
-	};
+	const user = JSON.parse(localStorage.getItem("userInfo") || "");
+	const { token } = user;
 
 	useEffect(() => {
 		socket = io(ENDPOINT);
@@ -61,9 +51,7 @@ const GroupChat = () => {
 		selectedChatCompare = selectedChat;
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
-		setTimeout(() => {
-			dispatch(setFetchChatsAgain(false));
-		});
+		setTimeout(() => dispatch(setFetchChatsAgain(false)));
 	}, [selectedChat]);
 
 	useEffect(() => {
@@ -74,7 +62,6 @@ const GroupChat = () => {
 				setTimeout(() => {
 					dispatch(setFetchChatsAgain(false));
 				});
-				console.log("message recieved from gc");
 			} else {
 				setMessages([...messages, newMessageRecieved]);
 			}
@@ -87,7 +74,7 @@ const GroupChat = () => {
 		try {
 			const config = {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			};
 
@@ -113,7 +100,7 @@ const GroupChat = () => {
 		try {
 			const config = {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			};
 			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
@@ -159,7 +146,7 @@ const GroupChat = () => {
 				const config = {
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: `Bearer ${user.token}`,
+						Authorization: `Bearer ${token}`,
 					},
 				};
 
@@ -175,8 +162,8 @@ const GroupChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
-
-				const notification = await axios.post(
+				
+				await axios.post(
 					"/api/message/notifications/send",
 					{
 						messageId: data._id,
@@ -184,7 +171,6 @@ const GroupChat = () => {
 					},
 					config
 				);
-				console.log(notification);
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,

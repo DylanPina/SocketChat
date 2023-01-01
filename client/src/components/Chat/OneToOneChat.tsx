@@ -13,7 +13,6 @@ import { toast } from "react-toastify";
 import { FaArrowAltCircleLeft, FaSkullCrossbones } from "react-icons/fa";
 import { MdNotifications, MdNotificationsOff } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
-import animationData from "../../animations/typing.json";
 import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
@@ -22,81 +21,69 @@ import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
 toast.configure();
 
 const ENDPOINT = "http://localhost:5000";
-var socket: any, selectedChatCompare: any;
+const socket = io(ENDPOINT);
+let selectedChatCompare: any;
 
 const OneToOneChat = () => {
 	const [messages, setMessages] = useState<any>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [newMessage, setNewMessage] = useState<string>();
+	const [newMessage, setNewMessage] = useState<string>("");
 	const [userMuted, setUserMuted] = useState<boolean>(false);
 	const [socketConnected, setSocketConnected] = useState<boolean>(false);
 	const [typing, setTyping] = useState<boolean>(false);
 	const [isTyping, setIsTyping] = useState<boolean>(false);
 	const [deleteChatModalOpen, setDeleteChatModalOpen] = useState<boolean>(false);
 
-	const user = useAppSelector((state: any) => state.userInfo);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const { mutedUsers } = useAppSelector((state: any) => state.notifications);
 	const dispatch = useAppDispatch();
-	const userInfo = localStorage.getItem("userInfo");
-	const { token } = JSON.parse(userInfo || "");
-
-	// For Lottie animations
-	const defaultOptions = {
-		loop: true,
-		autoplay: true,
-		animationData: animationData,
-		rendererSettings: {
-			preserveAspectRatio: "xMidYMid slice",
-		},
-	};
+	const user = JSON.parse(localStorage.getItem("userInfo") || "");
+	const { token } = user;
 
 	useEffect(() => {
-		socket = io(ENDPOINT);
 		socket.emit("setup", user);
 		socket.on("connected", () => setSocketConnected(true));
 		socket.on("typing", () => setIsTyping(true));
 		socket.on("stop typing", () => setIsTyping(false));
-		clearNotifications();
+		socket.on("message recieved", (newMessageRecieved: Message) => {
+			// We're checking to see if the newly recieved message is in the current chat
+			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
+				setMessages((oldMessages: Array<Message>) => [...oldMessages, newMessageRecieved]);
+			}
+			dispatch(setFetchChatsAgain(true));
+			setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		});
+
+		return () => {
+			socket.off("connected");
+			socket.off("typing");
+			socket.off("stop typing");
+			socket.off("message recieved");
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		fetchMessages();
 		selectedChatCompare = selectedChat;
+		fetchMessages();
+		clearChatNotifications();
 		mutedUsers.forEach((mutedUser: any) => {
 			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
 		});
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
-		setTimeout(() => {
-			dispatch(setFetchChatsAgain(false));
-		});
+		setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedChat]);
 
-	useEffect(() => {
-		socket.on("message recieved", (newMessageRecieved: Message) => {
-			// We're checking to see if the newly recieved message is in the current chat
-			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-				dispatch(setFetchChatsAgain(true));
-				setTimeout(() => {
-					dispatch(setFetchChatsAgain(false));
-				});
-				console.log("message recieved from sc");
-			} else {
-				setMessages([...messages, newMessageRecieved]);
-			}
-		});
-	});
-
 	const fetchMessages = async () => {
-		if (!selectedChat) return;
+		if (!selectedChat || !token) return;
 
 		try {
 			const config = {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			};
 
@@ -105,9 +92,9 @@ const OneToOneChat = () => {
 			setMessages(data);
 			setLoading(false);
 
-			socket.emit("join chat", selectedChat._id);
+			socket.emit("join chat", user, selectedChat._id);
 		} catch (error) {
-			toast.error(error, {
+			toast.error("Failed to fetch messages", {
 				position: toast.POSITION.TOP_CENTER,
 				autoClose: 3000,
 				hideProgressBar: false,
@@ -118,11 +105,13 @@ const OneToOneChat = () => {
 		}
 	};
 
-	const clearNotifications = async () => {
+	const clearChatNotifications = async () => {
+		if (!selectedChat) return;
+
 		try {
 			const config = {
 				headers: {
-					Authorization: `Bearer ${user.token}`,
+					Authorization: `Bearer ${token}`,
 				},
 			};
 			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
@@ -168,7 +157,7 @@ const OneToOneChat = () => {
 				const config = {
 					headers: {
 						"Content-Type": "application/json",
-						Authorization: `Bearer ${user.token}`,
+						Authorization: `Bearer ${token}`,
 					},
 				};
 
@@ -184,7 +173,7 @@ const OneToOneChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages([...messages, data]);
-
+				
 				await axios.post(
 					"/api/message/notifications/send",
 					{
