@@ -19,11 +19,12 @@ import styles from "../../styles/ChatPage/GroupChat.module.css";
 toast.configure();
 
 const ENDPOINT = "http://localhost:5000";
-var socket: any, selectedChatCompare: any;
+const socket = io(ENDPOINT);
+let selectedChatCompare: any;
 
 const GroupChat = () => {
 	const [settingsOpen, setSettingsOpen] = useState(false);
-	const [messages, setMessages] = useState<any>([]);
+	const [messages, setMessages] = useState<Array<Message>>([]);
 	const [loading, setLoading] = useState(true);
 	const [newMessage, setNewMessage] = useState<string>('');
 	const [socketConnected, setSocketConnected] = useState(false);
@@ -37,36 +38,37 @@ const GroupChat = () => {
 	const { token } = user;
 
 	useEffect(() => {
-		socket = io(ENDPOINT);
 		socket.emit("setup", user);
 		socket.on("connected", () => setSocketConnected(true));
 		socket.on("typing", () => setIsTyping(true));
 		socket.on("stop typing", () => setIsTyping(false));
-		clearNotifications();
+		socket.on("message recieved", (newMessageRecieved: Message) => {
+			// We're checking to see if the newly recieved message is in the current chat
+			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
+				setMessages((oldMessages: Array<Message>) => [...oldMessages, newMessageRecieved]);
+			}
+			dispatch(setFetchChatsAgain(true));
+			setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		});
+
+		return () => {
+			socket.off("connected");
+			socket.off("typing");
+			socket.off("stop typing");
+			socket.off("message recieved");
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
-		fetchMessages();
 		selectedChatCompare = selectedChat;
+		fetchMessages();
+		clearGroupChatNotifications();
 		// Re-render the myChats component
 		dispatch(setFetchChatsAgain(true));
 		setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedChat]);
-
-	useEffect(() => {
-		socket.on("message recieved", (newMessageRecieved: Message) => {
-			// We're checking to see if the newly recieved message is in the current chat
-			if (!selectedChatCompare || selectedChatCompare._id !== newMessageRecieved.chat._id) {
-				dispatch(setFetchChatsAgain(true));
-				setTimeout(() => {
-					dispatch(setFetchChatsAgain(false));
-				});
-			} else {
-				setMessages([...messages, newMessageRecieved]);
-			}
-		});
-	});
 
 	const fetchMessages = async () => {
 		if (!selectedChat) return;
@@ -96,7 +98,7 @@ const GroupChat = () => {
 		}
 	};
 
-	const clearNotifications = async () => {
+	const clearGroupChatNotifications = async () => {
 		try {
 			const config = {
 				headers: {
@@ -161,7 +163,7 @@ const GroupChat = () => {
 
 				socket.emit("new message", data);
 				setNewMessage("");
-				setMessages([...messages, data]);
+				setMessages((oldMessages: Array<Message>) => [...oldMessages, data]);
 				
 				await axios.post(
 					"/api/message/notifications/send",

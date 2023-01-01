@@ -25,7 +25,7 @@ const socket = io(ENDPOINT);
 let selectedChatCompare: any;
 
 const OneToOneChat = () => {
-	const [messages, setMessages] = useState<any>([]);
+	const [messages, setMessages] = useState<Array<Message>>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [newMessage, setNewMessage] = useState<string>("");
 	const [userMuted, setUserMuted] = useState<boolean>(false);
@@ -172,7 +172,7 @@ const OneToOneChat = () => {
 
 				socket.emit("new message", data);
 				setNewMessage("");
-				setMessages([...messages, data]);
+				setMessages((oldMessages: Array<Message>) => [...oldMessages, data]);
 				
 				await axios.post(
 					"/api/message/notifications/send",
