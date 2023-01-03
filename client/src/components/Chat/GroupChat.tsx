@@ -15,6 +15,8 @@ import { MdSettingsApplications } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
+import useFetchChats from "../../config/hooks/useFetchChats";
+import useFetchNotifications from "../../config/hooks/useFetchNotifications";
 
 toast.configure();
 
@@ -30,6 +32,8 @@ const GroupChat = () => {
 	const [socketConnected, setSocketConnected] = useState(false);
 	const [typing, setTyping] = useState(false);
 	const [isTyping, setIsTyping] = useState(false);
+	const fetchChats = useFetchChats();
+	const fetchNotifications = useFetchNotifications();
 
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
@@ -47,15 +51,22 @@ const GroupChat = () => {
 			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
 				setMessages((oldMessages: Array<Message>) => [...oldMessages, newMessageRecieved]);
 			}
-			dispatch(setFetchChatsAgain(true));
-			setTimeout(() => dispatch(setFetchChatsAgain(false)));
+			fetchChats();
 		});
-
+		socket.on("notification recieved", (newNotificationRecieved: Message) => {
+			// We're checking to see if the newly recieved notification is in the current chat
+			if (selectedChatCompare && selectedChatCompare._id === newNotificationRecieved.chat._id) {
+				clearGroupChatNotifications();
+			} else {
+				fetchNotifications();
+			}
+		});
 		return () => {
 			socket.off("connected");
 			socket.off("typing");
 			socket.off("stop typing");
 			socket.off("message recieved");
+			socket.off("notification recieved");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);

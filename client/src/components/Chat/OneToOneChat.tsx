@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setFetchChatsAgain, setSelectedChat } from "../../redux/chats/chats.slice";
+import { setSelectedChat } from "../../redux/chats/chats.slice";
 import { setSelectedUser } from "../../redux/user/selected-user.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
@@ -17,6 +17,8 @@ import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
 import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
+import useFetchNotifications from "../../config/hooks/useFetchNotifications";
+import useFetchChats from "../../config/hooks/useFetchChats";
 
 toast.configure();
 
@@ -33,6 +35,8 @@ const OneToOneChat = () => {
 	const [typing, setTyping] = useState<boolean>(false);
 	const [isTyping, setIsTyping] = useState<boolean>(false);
 	const [deleteChatModalOpen, setDeleteChatModalOpen] = useState<boolean>(false);
+	const fetchChats = useFetchChats();
+	const fetchNotifications = useFetchNotifications();
 
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
@@ -50,9 +54,18 @@ const OneToOneChat = () => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
 				setMessages((oldMessages: Array<Message>) => [...oldMessages, newMessageRecieved]);
+				console.log("WHYYYYY");
 			}
-			dispatch(setFetchChatsAgain(true));
-			setTimeout(() => dispatch(setFetchChatsAgain(false)));
+			fetchChats();
+		});
+		socket.on("notification recieved", async (newNotificationRecieved: Message) => {
+			// We're checking to see if the newly recieved notification is in the current chat
+			if (selectedChatCompare && selectedChatCompare._id === newNotificationRecieved.chat._id) {
+				await clearChatNotifications();
+			} else {
+				fetchNotifications();
+				console.log('noti fetched');
+			}
 		});
 
 		return () => {
@@ -60,6 +73,7 @@ const OneToOneChat = () => {
 			socket.off("typing");
 			socket.off("stop typing");
 			socket.off("message recieved");
+			socket.off("notification recieved");
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
@@ -67,13 +81,11 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		selectedChatCompare = selectedChat;
 		fetchMessages();
-		clearChatNotifications();
+		clearChatNotifications().then(() => { fetchNotifications() });
 		mutedUsers.forEach((mutedUser: any) => {
 			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
 		});
-		// Re-render the myChats component
-		dispatch(setFetchChatsAgain(true));
-		setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		fetchChats();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedChat]);
 
@@ -181,7 +193,7 @@ const OneToOneChat = () => {
 						chatId: selectedChat._id,
 					},
 					config
-				);
+				).then(() => socket.emit("new notification", data));
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,

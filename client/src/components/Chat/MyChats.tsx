@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setSelectedChat, setChats } from "../../redux/chats/chats.slice";
-import { setNotifications } from "../../redux/notifications/notifications.slice";
+import { setSelectedChat } from "../../redux/chats/chats.slice";
 import { toggleCreateGroupChat } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 
@@ -13,6 +11,8 @@ import { HiUserGroup } from "react-icons/hi";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/MyChats.module.css";
+import useFetchNotifications from "../../config/hooks/useFetchNotifications";
+import useFetchChats from "../../config/hooks/useFetchChats";
 
 toast.configure();
 
@@ -24,74 +24,25 @@ const MyChats = () => {
 	const user = useAppSelector((state: any) => state.userInfo);
 	const chats = useAppSelector((state: any) => state.chats.chats);
 	const selectedChat = useAppSelector((state: any) => state.chats.selectedChat);
-	const fetchChatsAgain = useAppSelector((state: any) => state.chats.fetchChatsAgain);
 	const { myChats } = useAppSelector((state: any) => state.modals);
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const dispatch = useAppDispatch();
-
-	const userInfo = localStorage.getItem("userInfo");
-	const { token } = JSON.parse(userInfo || "");
-
-	useEffect(() => {
-		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) {
-			setSmallScreenView(true);
-		} else {
-			setSmallScreenView(false);
-		}
-
-		if (!mediumScreen && !mobileScreen) {
-			setLargeScreenView(true);
-		} else {
-			setLargeScreenView(false);
-		}
-	}, [mediumScreen, mobileScreen, []]);
+	const fetchNotifications = useFetchNotifications();
+	const fetchChats = useFetchChats();
 
 	useEffect(() => {
-		const fetchChats = async () => {
-			setChatsLoading(true);
-			try {
-				const config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				const { data } = await axios.get("/api/chat", config);
-				dispatch(setChats(data));
-			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-			}
-			setChatsLoading(false);
-		};
-		const fetchNotifications = async () => {
-			try {
-				const config = {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				};
-				const { data } = await axios.get("/api/message/notifications/fetch", config);
-				dispatch(setNotifications(data));
-			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
-			}
-		};
 		fetchChats();
 		fetchNotifications();
-	}, [fetchChatsAgain]);
+	}, []);
+
+	useEffect(() => {
+		if ((!selectedChat && mediumScreen) || (!selectedChat && mobileScreen)) setSmallScreenView(true);
+		else setSmallScreenView(false);
+
+		if (!mediumScreen && !mobileScreen) setLargeScreenView(true);
+		else setLargeScreenView(false);
+
+	}, [mediumScreen, mobileScreen, []]);
 
 	return (
 		<React.Fragment>

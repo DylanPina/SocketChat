@@ -49,6 +49,18 @@ io.on("connection", (socket) => {
 		});
 	});
 
+	socket.on("new notification", (newNotificationRecieved) => {
+		const chat = newNotificationRecieved.chat;
+
+		if (!chat.users) return console.error("chat.users not defined");
+
+		chat.users.forEach((user) => {
+			if (user._id !== newNotificationRecieved.sender._id) {
+				socket.in(user._id).emit("notification recieved", newNotificationRecieved);
+			}
+		});
+	});
+
 	socket.off("setup", (userData) => {
 		socket.leave(userData._id);
 		console.log(`${userData.username} has disconnected`)

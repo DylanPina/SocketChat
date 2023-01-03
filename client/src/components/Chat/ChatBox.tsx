@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAppSelector } from "../../redux/redux-hooks";
 import OneToOneChat from "./OneToOneChat";
 import GroupChat from "./GroupChat";
