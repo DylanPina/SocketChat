@@ -19,6 +19,7 @@ import { muteUser, unmuteUser } from "../../redux/notifications/notifications.sl
 import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
 import useFetchNotifications from "../../config/hooks/useFetchNotifications";
 import useFetchChats from "../../config/hooks/useFetchChats";
+import useRemoveNotification from "../../config/hooks/useRemoveNotifications";
 
 toast.configure();
 
@@ -42,6 +43,7 @@ const OneToOneChat = () => {
 	const { mediumScreen, mobileScreen } = useAppSelector((state: any) => state.screenDimensions);
 	const { mutedUsers } = useAppSelector((state: any) => state.notifications);
 	const dispatch = useAppDispatch();
+	const removeNotification = useRemoveNotification();
 	const user = JSON.parse(localStorage.getItem("userInfo") || "");
 	const { token } = user;
 
@@ -54,17 +56,15 @@ const OneToOneChat = () => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
 				setMessages((oldMessages: Array<Message>) => [...oldMessages, newMessageRecieved]);
-				console.log("WHYYYYY");
 			}
 			fetchChats();
 		});
 		socket.on("notification recieved", async (newNotificationRecieved: Message) => {
 			// We're checking to see if the newly recieved notification is in the current chat
 			if (selectedChatCompare && selectedChatCompare._id === newNotificationRecieved.chat._id) {
-				await clearChatNotifications();
+				removeNotification(token, newNotificationRecieved);
 			} else {
 				fetchNotifications();
-				console.log('noti fetched');
 			}
 		});
 
@@ -81,10 +81,8 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		selectedChatCompare = selectedChat;
 		fetchMessages();
-		clearChatNotifications().then(() => { fetchNotifications() });
-		mutedUsers.forEach((mutedUser: any) => {
-			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
-		});
+		clearChatNotifications().then(() => fetchNotifications()); 
+		getUserIsMuted();
 		fetchChats();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedChat]);
@@ -278,6 +276,12 @@ const OneToOneChat = () => {
 			}
 		}
 	};
+
+	const getUserIsMuted = () => {
+		mutedUsers.forEach((mutedUser: any) => {
+			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true); 
+		})
+	}
 
 	return (
 		<>

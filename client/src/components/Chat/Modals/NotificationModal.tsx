@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
-import { removeNotification, removeAllNotifications } from "../../../redux/notifications/notifications.slice";
+import { removeAllNotifications } from "../../../redux/notifications/notifications.slice";
 import { setSelectedChat } from "../../../redux/chats/chats.slice";
 import { Message } from "../../../types/message.types";
 
@@ -8,12 +8,14 @@ import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
 import { HiUserGroup } from "react-icons/hi";
 import styles from "../../../styles/ChatPage/Modals/NotificationModal.module.css";
+import useRemoveNotification from "../../../config/hooks/useRemoveNotifications";
 
 const NotificationModal = () => {
 	const user = useAppSelector((state: any) => state.userInfo);
 	const { notifications } = useAppSelector((state: any) => state.notifications);
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const dispatch = useAppDispatch();
+	const removeNotification = useRemoveNotification();
 
 	const handleNotiClick = async (noti: Message) => {
 		if (!selectedChat || selectedChat._id.toString() !== noti.chat._id.toString()) {
@@ -36,24 +38,7 @@ const NotificationModal = () => {
 				});
 			}
 		}
-		try {
-			const config = {
-				headers: {
-					Authorization: `Bearer ${user.token}`,
-				},
-			};
-			await axios.post("/api/message/notifications/removeOne", { notificationId: noti._id }, config);
-		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
-		}
-		dispatch(removeNotification(noti));
+		removeNotification(user.token, noti);
 	};
 
 	const clearNotifications = async () => {
