@@ -30,7 +30,7 @@ io.on("connection", (socket) => {
 
 	socket.on("join chat", (userData, room) => {
 		socket.join(room);
-		console.log(`${userData.username} joined room: ${room}` );
+		console.log(`${userData.username} joined room: ${room}`);
 	});
 
 	socket.on("typing", (data) => {

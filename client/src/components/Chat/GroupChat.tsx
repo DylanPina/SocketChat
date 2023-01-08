@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { setFetchChatsAgain, setSelectedChat } from "../../redux/chats/chats.slice";
+import { setSelectedChat } from "../../redux/chats/chats.slice";
 import { toggleMyChats } from "../../redux/modals/modals.slice";
 import Chat from "./Chat";
 import GroupChatSettings from "./Modals/GroupChatSettings";
@@ -17,6 +17,7 @@ import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
 import useFetchChats from "../../config/hooks/useFetchChats";
 import useFetchNotifications from "../../config/hooks/useFetchNotifications";
+import { User } from "../../types/user.types";
 
 toast.configure();
 
@@ -28,10 +29,11 @@ const GroupChat = () => {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [messages, setMessages] = useState<Array<Message>>([]);
 	const [loading, setLoading] = useState(true);
-	const [newMessage, setNewMessage] = useState<string>('');
+	const [newMessage, setNewMessage] = useState<string>("");
 	const [socketConnected, setSocketConnected] = useState(false);
 	const [typing, setTyping] = useState(false);
-	const [isTyping, setIsTyping] = useState(false);
+	const [isTyping, setIsTyping] = useState<User | null>(null);
+	const [typingTimeout, setTypingTimeout] = useState<any | undefined>(undefined);
 	const fetchChats = useFetchChats();
 	const fetchNotifications = useFetchNotifications();
 
@@ -43,9 +45,11 @@ const GroupChat = () => {
 
 	useEffect(() => {
 		socket.emit("setup", user);
-		socket.on("connected", () => setSocketConnected(true));
-		socket.on("typing", () => setIsTyping(true));
-		socket.on("stop typing", () => setIsTyping(false));
+		socket.on("connected", () => {
+			setSocketConnected(true);
+		});
+		socket.on("typing", (userTyping) => setIsTyping(userTyping));
+		socket.on("stop typing", () => setIsTyping(null));
 		socket.on("message recieved", (newMessageRecieved: Message) => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
@@ -61,23 +65,22 @@ const GroupChat = () => {
 				fetchNotifications();
 			}
 		});
+
 		return () => {
 			socket.off("connected");
 			socket.off("typing");
 			socket.off("stop typing");
 			socket.off("message recieved");
 			socket.off("notification recieved");
-		}
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		selectedChatCompare = selectedChat;
 		fetchMessages();
-		clearGroupChatNotifications();
-		// Re-render the myChats component
-		dispatch(setFetchChatsAgain(true));
-		setTimeout(() => dispatch(setFetchChatsAgain(false)));
+		clearGroupChatNotifications().then(() => fetchNotifications());
+		fetchChats();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [selectedChat]);
 
@@ -96,7 +99,7 @@ const GroupChat = () => {
 			setMessages(data);
 			setLoading(false);
 
-			socket.emit("join chat", selectedChat._id);
+			socket.emit("join chat", user, selectedChat._id);
 		} catch (error) {
 			toast.error(error, {
 				position: toast.POSITION.TOP_CENTER,
@@ -131,25 +134,20 @@ const GroupChat = () => {
 
 	const typingHandler = (e: any) => {
 		setNewMessage(e.target.value);
-		// If the user is typing but no socket connection
-		if (!socketConnected) return;
-		// If the user is typing and the typing state is false
+
 		if (!typing) {
 			setTyping(true);
-			socket.emit("typing", selectedChat._id);
+			socket.emit("typing", { room: selectedChat._id, userTyping: user });
+			setTypingTimeout(setTimeout(typingTimeoutFunction, 3000));
+		} else {
+			clearTimeout(typingTimeout);
+			setTypingTimeout(setTimeout(typingTimeoutFunction, 3000));
 		}
-		// Debounce the typing time by 3 seconds
-		let lastTypingTime: number = new Date().getTime();
-		var timerLength = 3000;
-		setTimeout(() => {
-			var timeNow: number = new Date().getTime();
-			var timeDifference = timeNow - lastTypingTime;
+	};
 
-			if (timeDifference >= timerLength && typing) {
-				socket.emit("stop typing", selectedChat._id);
-				setTyping(false);
-			}
-		}, timerLength);
+	const typingTimeoutFunction = () => {
+		setTyping(false);
+		socket.emit("stop typing", selectedChat._id);
 	};
 
 	const sendMessage = async (e: any) => {
@@ -175,15 +173,17 @@ const GroupChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages((oldMessages: Array<Message>) => [...oldMessages, data]);
-				
-				await axios.post(
-					"/api/message/notifications/send",
-					{
-						messageId: data._id,
-						chatId: selectedChat._id,
-					},
-					config
-				);
+
+				await axios
+					.post(
+						"/api/message/notifications/send",
+						{
+							messageId: data._id,
+							chatId: selectedChat._id,
+						},
+						config
+					)
+					.then(() => socket.emit("new notification", data));
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,
@@ -231,15 +231,8 @@ const GroupChat = () => {
 					</div>
 				) : (
 					<div className={styles.messages_section}>
-						{/* <Chat messages={messages} isTyping={isTyping}/> */}
+						<Chat messages={messages} isTyping={isTyping} />
 					</div>
-				)}
-				{isTyping ? (
-					<div>
-						typing...
-					</div>
-				) : (
-					<></>
 				)}
 				<input
 					type="text"

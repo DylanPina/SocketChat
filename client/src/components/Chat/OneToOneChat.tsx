@@ -52,9 +52,7 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		socket.emit("setup", user);
 		socket.on("connected", () => setSocketConnected(true));
-		socket.on("typing", (userTyping) => {
-			setIsTyping(userTyping);
-		});
+		socket.on("typing", (userTyping) => setIsTyping(userTyping));
 		socket.on("stop typing", () => setIsTyping(null));
 		socket.on("message recieved", (newMessageRecieved: Message) => {
 			// We're checking to see if the newly recieved message is in the current chat
