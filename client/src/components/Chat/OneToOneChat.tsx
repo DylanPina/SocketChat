@@ -20,6 +20,7 @@ import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
 import useFetchNotifications from "../../config/hooks/useFetchNotifications";
 import useFetchChats from "../../config/hooks/useFetchChats";
 import useRemoveNotification from "../../config/hooks/useRemoveNotifications";
+import { User } from "../../types/user.types";
 
 toast.configure();
 
@@ -34,7 +35,8 @@ const OneToOneChat = () => {
 	const [userMuted, setUserMuted] = useState<boolean>(false);
 	const [socketConnected, setSocketConnected] = useState<boolean>(false);
 	const [typing, setTyping] = useState<boolean>(false);
-	const [isTyping, setIsTyping] = useState<boolean>(false);
+	const [isTyping, setIsTyping] = useState<User | null>(null);
+	const [typingTimeout, setTypingTimeout] = useState<any | undefined>(undefined);
 	const [deleteChatModalOpen, setDeleteChatModalOpen] = useState<boolean>(false);
 	const fetchChats = useFetchChats();
 	const fetchNotifications = useFetchNotifications();
@@ -50,8 +52,10 @@ const OneToOneChat = () => {
 	useEffect(() => {
 		socket.emit("setup", user);
 		socket.on("connected", () => setSocketConnected(true));
-		socket.on("typing", () => setIsTyping(true));
-		socket.on("stop typing", () => setIsTyping(false));
+		socket.on("typing", (userTyping) => {
+			setIsTyping(userTyping);
+		});
+		socket.on("stop typing", () => setIsTyping(null));
 		socket.on("message recieved", (newMessageRecieved: Message) => {
 			// We're checking to see if the newly recieved message is in the current chat
 			if (selectedChatCompare && selectedChatCompare._id === newMessageRecieved.chat._id) {
@@ -74,14 +78,14 @@ const OneToOneChat = () => {
 			socket.off("stop typing");
 			socket.off("message recieved");
 			socket.off("notification recieved");
-		}
+		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
 		selectedChatCompare = selectedChat;
 		fetchMessages();
-		clearChatNotifications().then(() => fetchNotifications()); 
+		clearChatNotifications().then(() => fetchNotifications());
 		getUserIsMuted();
 		fetchChats();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,25 +143,20 @@ const OneToOneChat = () => {
 
 	const typingHandler = (e: any) => {
 		setNewMessage(e.target.value);
-		// If the user is typing but no socket connection
-		if (!socketConnected) return;
-		// If the user is typing and the typing state is false
+
 		if (!typing) {
 			setTyping(true);
-			socket.emit("typing", selectedChat._id);
+			socket.emit("typing", { room: selectedChat._id, userTyping: user });
+			setTypingTimeout(setTimeout(typingTimeoutFunction, 3000));
+		} else {
+			clearTimeout(typingTimeout);
+			setTypingTimeout(setTimeout(typingTimeoutFunction, 3000));
 		}
-		// Debounce the typing time by 3 seconds
-		let lastTypingTime: number = new Date().getTime();
-		var timerLength = 3000;
-		setTimeout(() => {
-			var timeNow: number = new Date().getTime();
-			var timeDifference = timeNow - lastTypingTime;
+	};
 
-			if (timeDifference >= timerLength && typing) {
-				socket.emit("stop typing", selectedChat._id);
-				setTyping(false);
-			}
-		}, timerLength);
+	const typingTimeoutFunction = () => {
+		setTyping(false);
+		socket.emit("stop typing", selectedChat._id);
 	};
 
 	const sendMessage = async (e: any) => {
@@ -183,15 +182,17 @@ const OneToOneChat = () => {
 				socket.emit("new message", data);
 				setNewMessage("");
 				setMessages((oldMessages: Array<Message>) => [...oldMessages, data]);
-				
-				await axios.post(
-					"/api/message/notifications/send",
-					{
-						messageId: data._id,
-						chatId: selectedChat._id,
-					},
-					config
-				).then(() => socket.emit("new notification", data));
+
+				await axios
+					.post(
+						"/api/message/notifications/send",
+						{
+							messageId: data._id,
+							chatId: selectedChat._id,
+						},
+						config
+					)
+					.then(() => socket.emit("new notification", data));
 			} catch (error) {
 				toast.error(error, {
 					position: toast.POSITION.TOP_CENTER,
@@ -279,9 +280,9 @@ const OneToOneChat = () => {
 
 	const getUserIsMuted = () => {
 		mutedUsers.forEach((mutedUser: any) => {
-			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true); 
-		})
-	}
+			if (mutedUser._id === getSender(user, selectedChat.users)._id) setUserMuted(true);
+		});
+	};
 
 	return (
 		<>
@@ -324,15 +325,8 @@ const OneToOneChat = () => {
 							</div>
 						) : (
 							<div className={styles.messages_section}>
-								<Chat messages={messages} />
+								<Chat messages={messages} isTyping={isTyping} />
 							</div>
-						)}
-						{isTyping ? (
-							<div>
-								typing...
-							</div>
-						) : (
-							<></>
 						)}
 						<input
 							type="text"

@@ -231,7 +231,7 @@ const GroupChat = () => {
 					</div>
 				) : (
 					<div className={styles.messages_section}>
-						<Chat messages={messages} />
+						{/* <Chat messages={messages} isTyping={isTyping}/> */}
 					</div>
 				)}
 				{isTyping ? (

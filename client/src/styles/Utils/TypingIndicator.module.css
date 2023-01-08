@@ -1,0 +1,47 @@
+.typing_indicator {
+    display: flex;
+    align-items: center;
+    background-color: #E6E7ED;
+    height: 39px;
+    margin-right: 5px;
+    margin-top: 7.5px;
+    padding: 0px 15px;
+    border-radius: 50px;
+}
+
+.typing_indicator span {
+    height: 15px;
+    width: 15px;
+    margin: 0 1px;
+    background-color: #9E9EA1;
+    display: block;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+.typing_indicator span:nth-of-type(1) {
+    -webkit-animation: 1s blink infinite 0.3333s;
+            animation: 1s blink infinite 0.3333s;
+}
+
+.typing_indicator span:nth-of-type(2) {
+    -webkit-animation: 1s blink infinite 0.6666s;
+            animation: 1s blink infinite 0.6666s;
+}
+
+.typing_indicator span:nth-of-type(3) {
+    -webkit-animation: 1s blink infinite 0.9999s;
+            animation: 1s blink infinite 0.9999s;
+}
+
+@-webkit-keyframes blink {
+    50% {
+        opacity: 1;
+    }
+}
+
+@keyframes blink {
+    50% {
+        opacity: 1;
+    }
+}

@@ -33,7 +33,9 @@ io.on("connection", (socket) => {
 		console.log(`${userData.username} joined room: ${room}` );
 	});
 
-	socket.on("typing", (room) => socket.in(room).emit("typing"));
+	socket.on("typing", (data) => {
+		socket.in(data.room).emit("typing", data.userTyping);
+	});
 
 	socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 

@@ -5,12 +5,15 @@ import ScrollableFeed from "react-scrollable-feed";
 
 import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/Chat.module.css";
+import { User } from "../../types/user.types";
+import TypingIndicator from "../Utils/TypingIndicator";
 
 interface IProps {
 	messages: any;
+	isTyping: User | null;
 }
 
-const Chat: React.FC<IProps> = ({ messages }) => {
+const Chat: React.FC<IProps> = ({ messages, isTyping }) => {
 	const user = useAppSelector((state) => state.userInfo);
 
 	return (
@@ -35,6 +38,14 @@ const Chat: React.FC<IProps> = ({ messages }) => {
 						</span>
 					</div>
 				))}
+			{isTyping && (
+				<div className={styles.is_typing_container}>
+					<Tooltip title={`${isTyping.username}`} arrow>
+						<img className={styles.profile_pic} src={isTyping.profilePic} alt={isTyping.username} />
+					</Tooltip>
+					<TypingIndicator />
+				</div>
+			)}
 		</ScrollableFeed>
 	);
 };
