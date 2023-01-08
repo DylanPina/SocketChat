@@ -1,8 +1,9 @@
 import React, { SetStateAction, Dispatch, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import axios from "axios";
 import { toast } from "react-toastify";
+import toastConfig from "../../config/ToastConfig";
 
 import LoadingSpinner from "../Utils/LoadingSpinner";
 
@@ -43,40 +44,19 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 		setLoading(true);
 
 		if (!email && !password) {
-			toast.error("Please enter email and password", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please enter email and password", toastConfig);
 			setLoading(false);
 			return;
 		}
 
 		if (!email) {
-			toast.error("Please enter your email address", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please enter your email address", toastConfig);
 			setLoading(false);
 			return;
 		}
 
 		if (!password) {
-			toast.error("Please enter your password", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please enter your password", toastConfig);
 			setLoading(false);
 			return;
 		}
@@ -96,14 +76,7 @@ const LoginHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			navigate("/chats");
 			window.location.reload();
 		} catch (error: any) {
-			toast.error(error.response.data.error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error.response.data.error, toastConfig);
 			setLoading(false);
 		}
 	};

@@ -7,6 +7,7 @@ import LoadingSpinner from "../Utils/LoadingSpinner";
 
 import styles from "../../styles/HomePage/SignupHomePage.module.css";
 import "react-toastify/dist/ReactToastify.css";
+import toastConfig from "../../config/ToastConfig";
 
 toast.configure();
 
@@ -43,14 +44,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 		setLoading(true);
 
 		if (image === undefined) {
-			toast.error("Please select an image", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please select an image", toastConfig);
 			return;
 		}
 
@@ -65,25 +59,11 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 					setProfilePic(data.data.secure_url);
 				})
 				.catch((err) => {
-					toast.error(err.message, {
-						position: toast.POSITION.TOP_CENTER,
-						autoClose: 3000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-					});
+					toast.error(err.message, toastConfig);
 				});
 			setLoading(false);
 		} else {
-			toast.error("File must be .jpeg or .png", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("File must be .jpeg or .png", toastConfig);
 			setLoading(false);
 		}
 	};
@@ -96,27 +76,13 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 		setLoading(true);
 
 		if (!username || !email || !password || !confirmPassword) {
-			toast.error("Please enter all required fields", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please enter all required fields", toastConfig);
 			setLoading(false);
 			return;
 		}
 
 		if (password !== confirmPassword) {
-			toast.error("Passwords do not match", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Passwords do not match", toastConfig);
 			setLoading(false);
 			return;
 		}
@@ -130,28 +96,14 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 
 			const { data } = await axios.post("/api/user", { username, email, password, profilePic }, config);
 
-			toast.success("Registration successful", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success("Registration successful", toastConfig);
 
 			localStorage.setItem("userInfo", JSON.stringify(data));
 			setLoading(false);
 			navigate("/chats");
 			window.location.reload();
 		} catch (err) {
-			toast.error(err, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(err, toastConfig);
 		}
 	};
 

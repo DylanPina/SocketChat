@@ -8,7 +8,8 @@ import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
 import { HiUserGroup } from "react-icons/hi";
 import styles from "../../../styles/ChatPage/Modals/NotificationModal.module.css";
-import useRemoveNotification from "../../../config/hooks/useRemoveNotifications";
+import useRemoveNotification from "../../../hooks/useRemoveNotifications";
+import toastConfig from "../../../config/ToastConfig";
 
 const NotificationModal = () => {
 	const user = useAppSelector((state: any) => state.userInfo);
@@ -28,14 +29,7 @@ const NotificationModal = () => {
 				const { data } = await axios.get(`/api/chat/${noti.chat._id}`, config);
 				dispatch(setSelectedChat(data[0]));
 			} catch (error: any) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		}
 		removeNotification(user.token, noti);
@@ -51,14 +45,7 @@ const NotificationModal = () => {
 			await axios.delete("/api/message/notifications/removeAll", config);
 			dispatch(removeAllNotifications());
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 

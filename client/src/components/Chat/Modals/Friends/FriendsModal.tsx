@@ -4,6 +4,7 @@ import { User } from "../../../../types/user.types";
 import { useAppDispatch, useAppSelector } from "../../../../redux/redux-hooks";
 import Friend from "./Friend";
 import { setFriends, setIncomingFriendRequests } from "../../../../redux/user/user.slice";
+import toastConfig from "../../../../config/ToastConfig";
 
 import styles from "../../../../styles/ChatPage/Modals/FriendsModal.module.css";
 import FriendRequest from "./FriendRequest";
@@ -19,7 +20,7 @@ const FriendsModal = () => {
 	useEffect(() => {
 		fetchFriends();
 		fetchIncomingFriendRequests();
-	}, [])
+	}, []);
 
 	const fetchFriends = async () => {
 		try {
@@ -31,14 +32,7 @@ const FriendsModal = () => {
 			const { data } = await axios.get("/api/user/fetchFriends", config);
 			dispatch(setFriends(data));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -52,16 +46,9 @@ const FriendsModal = () => {
 			const { data } = await axios.get("/api/user/fetchIncomingFriendRequests", config);
 			dispatch(setIncomingFriendRequests(data));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
-	}
+	};
 
 	return (
 		<div className={styles.friends_modal}>

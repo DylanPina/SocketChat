@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction } from "react";
 import axios from "axios";
 import { useAppSelector } from "../../../redux/redux-hooks";
+import toastConfig from "../../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import styles from "../../../styles/ChatPage/Modals/DeleteOneToOneChatModal.module.css";
@@ -27,14 +28,7 @@ const DeleteOneToOneChatModal: React.FC<IProps> = ({ setDeleteChatModalOpen }) =
 			await axios.post("/api/chat/deleteOneOnOneChat", { chatId: selectedChat._id }, config);
 			window.location.reload();
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 

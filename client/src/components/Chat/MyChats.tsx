@@ -11,8 +11,8 @@ import { HiUserGroup } from "react-icons/hi";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/MyChats.module.css";
-import useFetchNotifications from "../../config/hooks/useFetchNotifications";
-import useFetchChats from "../../config/hooks/useFetchChats";
+import useFetchNotifications from "../../hooks/useFetchNotifications";
+import useFetchChats from "../../hooks/useFetchChats";
 
 toast.configure();
 
@@ -41,7 +41,6 @@ const MyChats = () => {
 
 		if (!mediumScreen && !mobileScreen) setLargeScreenView(true);
 		else setLargeScreenView(false);
-
 	}, [mediumScreen, mobileScreen, []]);
 
 	return (

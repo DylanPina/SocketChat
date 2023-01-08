@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
+import axios from "axios";
 import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain, setSelectedChat } from "../../../redux/chats/chats.slice";
-import axios from "axios";
+import toastConfig from "../../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
@@ -38,7 +39,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 	const { selectedChat } = useAppSelector((state: any) => state.chats);
 	const user = useAppSelector((state: any) => state.userInfo);
 	const dispatch = useAppDispatch();
-	
+
 	const toggleSearchResultsShown = () => {
 		setShowSearchResults(!showSearchResults);
 	};
@@ -61,23 +62,9 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			setTimeout(() => {
 				dispatch(setFetchChatsAgain(false));
 			});
-			toast.success("Group chat renamed", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success("Group chat renamed", toastConfig);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 			setGroupChatName("");
 		}
 	};
@@ -85,26 +72,12 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 	const handleAddUser = async (userToAdd: IUser) => {
 		// Check if user is already in group
 		if (selectedChat.users.find((u: IUser) => u._id === userToAdd._id)) {
-			toast.error(`${user.username} is already in group`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(`${user.username} is already in group`, toastConfig);
 			return;
 		}
 		// Check if user is an admin
 		if (selectedChat.groupAdmin._id !== user._id) {
-			toast.error(`Only the group admin can add users to the group`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(`Only the group admin can add users to the group`, toastConfig);
 			return;
 		}
 
@@ -134,28 +107,14 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			});
 			setLoading(false);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
 	const handleRemove = async (userToRemove: IUser) => {
 		// Check if user is an admin and user isn't trying to remove himself
 		if (selectedChat.groupAdmin._id !== user._id && userToRemove._id !== user._id) {
-			toast.error(`Only the group admin can add users to the group`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(`Only the group admin can add users to the group`, toastConfig);
 			return;
 		}
 
@@ -183,14 +142,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			});
 			setLoading(false);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -219,14 +171,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			});
 			setLoading(false);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -250,14 +195,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			setLoading(false);
 			setSearchResults(data);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 

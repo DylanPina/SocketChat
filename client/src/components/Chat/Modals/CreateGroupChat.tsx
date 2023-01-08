@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../../../redux/redux-hooks";
 import { setFetchChatsAgain } from "../../../redux/chats/chats.slice";
 import { toggleCreateGroupChat } from "../../../redux/modals/modals.slice";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
+import toastConfig from "../../../config/ToastConfig";
 
 import { IconContext } from "react-icons";
 import { toast } from "react-toastify";
@@ -56,14 +57,7 @@ const CreateGroupChat = () => {
 			setLoading(false);
 			setSearchResults(data);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -90,48 +84,19 @@ const CreateGroupChat = () => {
 
 	const handleCreateGroupChat = async () => {
 		if (groupChatName === "" && selectedUsers.length === 0) {
-			toast.warn("Please fill out all fields", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn("Please fill out all fields", toastConfig);
 			return;
 		}
 		if (groupChatName === "") {
-			toast.warn("Please enter a group chat name", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn("Please enter a group chat name", toastConfig);
 			return;
 		}
 		if (selectedUsers.length === 0) {
-			toast.warn("Select users for group chat", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn("Select users for group chat", toastConfig);
 			return;
 		}
-
 		if (selectedUsers.length === 1) {
-			toast.warn("2 users minimum are required for a groupchat", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn("2 users minimum are required for a groupchat", toastConfig);
 			return;
 		}
 
@@ -142,7 +107,7 @@ const CreateGroupChat = () => {
 				},
 			};
 
-			const { data } = await axios.post(
+			await axios.post(
 				"/api/chat/group",
 				{
 					name: groupChatName,
@@ -157,24 +122,9 @@ const CreateGroupChat = () => {
 				dispatch(setFetchChatsAgain(false));
 			});
 			closeCreateGroupChatModal();
-			toast.success("New Group Chat Created!", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success("New Group Chat Created!", toastConfig);
 		} catch (error) {
-			console.error(error);
-			toast.warn(error.message, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn(error.message, toastConfig);
 		}
 	};
 

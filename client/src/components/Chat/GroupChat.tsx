@@ -7,6 +7,7 @@ import { toggleMyChats } from "../../redux/modals/modals.slice";
 import Chat from "./Chat";
 import GroupChatSettings from "./Modals/GroupChatSettings";
 import { Message } from "../../types/message.types";
+import toastConfig from "../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import { IconContext } from "react-icons/lib";
@@ -15,8 +16,8 @@ import { MdSettingsApplications } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
 import LoadingSpinner from "../Utils/LoadingSpinner";
 import styles from "../../styles/ChatPage/GroupChat.module.css";
-import useFetchChats from "../../config/hooks/useFetchChats";
-import useFetchNotifications from "../../config/hooks/useFetchNotifications";
+import useFetchChats from "../../hooks/useFetchChats";
+import useFetchNotifications from "../../hooks/useFetchNotifications";
 import { User } from "../../types/user.types";
 
 toast.configure();
@@ -101,14 +102,7 @@ const GroupChat = () => {
 
 			socket.emit("join chat", user, selectedChat._id);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -121,14 +115,7 @@ const GroupChat = () => {
 			};
 			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
 		} catch (error: any) {
-			toast.error(error.response.data.error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error.response.data.error, toastConfig);
 		}
 	};
 
@@ -185,14 +172,7 @@ const GroupChat = () => {
 					)
 					.then(() => socket.emit("new notification", data));
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		}
 	};

@@ -8,6 +8,7 @@ import { FaUserPlus, FaUserTimes } from "react-icons/fa";
 import { toast } from "react-toastify";
 import styles from "../../../../styles/ChatPage/Modals/FriendsModal.module.css";
 import { setFriends, setIncomingFriendRequests } from "../../../../redux/user/user.slice";
+import toastConfig from "../../../../config/ToastConfig";
 
 interface IProps {
 	friendReq: User;
@@ -26,25 +27,11 @@ const FriendRequest: React.FC<IProps> = ({ friendReq }) => {
 				},
 			};
 			const { data } = await axios.post("/api/user/acceptFriendRequest", { friendId: friendReq._id }, config);
-			toast.success(`${friendReq.username} has been added as a friend!`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success(`${friendReq.username} has been added as a friend!`, toastConfig);
 			dispatch(setFriends(data.friends));
 			dispatch(setIncomingFriendRequests(data.setIncomingFriendRequests));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -57,23 +44,9 @@ const FriendRequest: React.FC<IProps> = ({ friendReq }) => {
 			};
 			const { data } = await axios.post("/api/user/declineFriendRequest", { friendId: friendReq._id }, config);
 			dispatch(setIncomingFriendRequests(data.setIncomingFriendRequests));
-			toast.info(`Declined ${friendReq.username}'s friend request`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.info(`Declined ${friendReq.username}'s friend request`, toastConfig);
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 

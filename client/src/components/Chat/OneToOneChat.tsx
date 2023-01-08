@@ -8,6 +8,7 @@ import { toggleMyChats } from "../../redux/modals/modals.slice";
 import { getSender } from "../../config/ChatLogic";
 import { Message } from "../../types/message.types";
 import Chat from "./Chat";
+import toastConfig from "../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import { FaArrowAltCircleLeft, FaSkullCrossbones } from "react-icons/fa";
@@ -17,9 +18,9 @@ import { Tooltip } from "@mui/material";
 import styles from "../../styles/ChatPage/OneToOneChat.module.css";
 import { muteUser, unmuteUser } from "../../redux/notifications/notifications.slice";
 import DeleteOneOnOneChatModal from "./Modals/DeleteOneToOneChatModal";
-import useFetchNotifications from "../../config/hooks/useFetchNotifications";
-import useFetchChats from "../../config/hooks/useFetchChats";
-import useRemoveNotification from "../../config/hooks/useRemoveNotifications";
+import useFetchNotifications from "../../hooks/useFetchNotifications";
+import useFetchChats from "../../hooks/useFetchChats";
+import useRemoveNotification from "../../hooks/useRemoveNotifications";
 import { User } from "../../types/user.types";
 
 toast.configure();
@@ -106,14 +107,7 @@ const OneToOneChat = () => {
 
 			socket.emit("join chat", user, selectedChat._id);
 		} catch (error) {
-			toast.error("Failed to fetch messages", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Failed to fetch messages", toastConfig);
 		}
 	};
 
@@ -128,14 +122,7 @@ const OneToOneChat = () => {
 			};
 			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
 		} catch (error: any) {
-			toast.error(error.response.data.error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error.response.data.error, toastConfig);
 		}
 	};
 
@@ -192,14 +179,7 @@ const OneToOneChat = () => {
 					)
 					.then(() => socket.emit("new notification", data));
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		}
 	};
@@ -226,23 +206,9 @@ const OneToOneChat = () => {
 				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: getSender(user, selectedChat.users)._id }, config);
 				dispatch(unmuteUser(data));
 				setUserMuted(false);
-				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, toastConfig);
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		} else {
 			try {
@@ -255,23 +221,9 @@ const OneToOneChat = () => {
 				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: getSender(user, selectedChat.users)._id }, config);
 				dispatch(muteUser(data));
 				setUserMuted(true);
-				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, toastConfig);
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		}
 	};

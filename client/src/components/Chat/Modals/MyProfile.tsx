@@ -5,6 +5,7 @@ import { toggleMyProfile } from "../../../redux/modals/modals.slice";
 import { setUserInfo, setUserProfilePic } from "../../../redux/user/user.slice";
 import { IconContext } from "react-icons";
 import { CgClose } from "react-icons/cg";
+import toastConfig from "../../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import LoadingSpinner from "../../Utils/LoadingSpinner";
@@ -33,14 +34,7 @@ const MyProfile = () => {
 	const handleProfilePicChange = async (image: File) => {
 		setProfilePicLoading(true);
 		if (image === undefined) {
-			toast.error("Please select an image", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("Please select an image", toastConfig);
 			return;
 		}
 		if (image.type === "image/jpeg" || image.type === "image/png") {
@@ -56,24 +50,10 @@ const MyProfile = () => {
 					setDisableUpdate(false);
 				})
 				.catch((error: any) => {
-					toast.error(error.message, {
-						position: toast.POSITION.TOP_CENTER,
-						autoClose: 3000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-					});
+					toast.error(error.message, toastConfig);
 				});
 		} else {
-			toast.error("File must be .jpeg or .png", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error("File must be .jpeg or .png", toastConfig);
 		}
 	};
 
@@ -87,23 +67,9 @@ const MyProfile = () => {
 			};
 			await axios.post("/api/user/changePic", { userId: user._id, newProfilePic }, config);
 			dispatch(setUserProfilePic(newProfilePic));
-			toast.success("Profile picture has been updated", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success("Profile picture has been updated", toastConfig);
 		} catch (error: any) {
-			toast.error(error.message, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error.message, toastConfig);
 		}
 		// Update local storage with new user information
 		const userInfo: any = localStorage.getItem("userInfo");
@@ -121,14 +87,7 @@ const MyProfile = () => {
 			setDisableUpdate(true);
 		}
 		if (newUsername.length < 3) {
-			toast.warn("Username must contain atleast 3 characters", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.warn("Username must contain atleast 3 characters", toastConfig);
 			return;
 		}
 		setUsername(newUsername);
@@ -143,23 +102,9 @@ const MyProfile = () => {
 				},
 			};
 			await axios.post("/api/user/changeUsername", { newUsername: username }, config);
-			toast.success("Username has been updated", {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success("Username has been updated", toastConfig);
 		} catch (error: any) {
-			toast.error(error.message, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error.message, toastConfig);
 		}
 		// Update local storage with new user information
 		const userInfo: any = localStorage.getItem("userInfo");

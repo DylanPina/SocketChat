@@ -6,6 +6,7 @@ import { setSelectedChat, setFetchChatsAgain, setChats } from "../../../redux/ch
 import { muteUser, unmuteUser } from "../../../redux/notifications/notifications.slice";
 import { setFriends, setIncomingFriendRequests, setOutgoingFriendRequests } from "../../../redux/user/user.slice";
 import { User } from "../../../types/user.types";
+import toastConfig from "../../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import { IconContext } from "react-icons";
@@ -85,23 +86,9 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.post("/api/user/sendFriendRequest", { recipientId: selectedUser._id }, config);
 			dispatch(setOutgoingFriendRequests(data.outgoingFriendRequests));
 			setFriendRequestSent(true);
-			toast.success(`Friend request sent to ${selectedUser.username}. They will be added to your friends list if they accept.`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success(`Friend request sent to ${selectedUser.username}. They will be added to your friends list if they accept.`, toastConfig);
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -115,23 +102,9 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.post("/api/user/unsendFriendRequest", { friendId: selectedUser._id }, config);
 			dispatch(setOutgoingFriendRequests(data.outgoingFriendRequests));
 			setFriendRequestSent(false);
-			toast.success(`Friend request unsent to ${selectedUser.username}`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success(`Friend request unsent to ${selectedUser.username}`, toastConfig);
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -144,25 +117,11 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			};
 			const { data } = await axios.post("/api/user/acceptFriendRequest", { friendId: selectedUser._id }, config);
 			setIsFriend(true);
-			toast.success(`${selectedUser.username} has been added as a friend!`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success(`${selectedUser.username} has been added as a friend!`, toastConfig);
 			dispatch(setFriends(data.friends));
 			dispatch(setIncomingFriendRequests(data.setIncomingFriendRequests));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -177,23 +136,9 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.post("/api/user/removeFriend", { friendId: selectedUser._id }, config);
 			dispatch(setFriends(data.friends));
 			setIsFriend(false);
-			toast.success(`${selectedUser.username} has been unadded as a friend`, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.success(`${selectedUser.username} has been unadded as a friend`, toastConfig);
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -217,14 +162,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 				dispatch(setFetchChatsAgain(false));
 			});
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -241,23 +179,9 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: userId }, config);
 				dispatch(unmuteUser(data));
 
-				toast.success(`${selectedUser.username} has been unmuted`, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.success(`${selectedUser.username} has been unmuted`, toastConfig);
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		} else {
 			try {
@@ -271,23 +195,9 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: userId }, config);
 				dispatch(muteUser(data));
 
-				toast.success(`${selectedUser.username} has been muted`, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.success(`${selectedUser.username} has been muted`, toastConfig);
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		}
 	};
@@ -302,14 +212,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.get("/api/user/fetchFriends", config);
 			dispatch(setFriends(data));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -323,14 +226,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.get("/api/user/fetchIncomingFriendRequests", config);
 			dispatch(setIncomingFriendRequests(data));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 
@@ -344,14 +240,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			const { data } = await axios.get("/api/user/fetchOutgoingFriendRequests", config);
 			dispatch(setOutgoingFriendRequests(data));
 		} catch (error: any) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_CENTER,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 		}
 	};
 

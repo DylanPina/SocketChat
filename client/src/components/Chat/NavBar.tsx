@@ -6,7 +6,8 @@ import { toggleUserSettings } from "../../redux/modals/modals.slice";
 import SearchDrawer from "./Modals/SearchDrawer";
 import UserSettings from "./Modals/UserSettings";
 import NotificationModal from "./Modals/NotificationModal";
-import useWindowDimensions from "../../config/hooks/useWindowDimensions";
+import useWindowDimensions from "../../hooks/useWindowDimensions";
+import toastConfig from "../../config/ToastConfig";
 
 import { toast } from "react-toastify";
 import { FaUserFriends } from "react-icons/fa";
@@ -65,14 +66,7 @@ const NavBar = () => {
 			setLoadingResults(false);
 			setSearchResult(data);
 		} catch (error) {
-			toast.error(error, {
-				position: toast.POSITION.TOP_LEFT,
-				autoClose: 3000,
-				hideProgressBar: false,
-				closeOnClick: true,
-				pauseOnHover: true,
-				draggable: true,
-			});
+			toast.error(error, toastConfig);
 			setLoadingResults(false);
 		}
 	};

@@ -1,16 +1,17 @@
 import { useEffect } from "react";
+import axios from "axios";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useAppDispatch } from "./redux/redux-hooks";
 import { setScreenWidth, setScreenHeight, setMediumScreen, setMobileScreen } from "./redux/screen/screen.slice";
 import { setMutedUsers } from "./redux/notifications/notifications.slice";
 import { setUserInfo } from "./redux/user/user.slice";
+import toastConfig from "./config/ToastConfig";
 
 import ChatPage from "./pages/ChatPage";
 import HomePage from "./pages/HomePage";
 
 import styles from "./styles/App.module.css";
-import useWindowDimensions from "./config/hooks/useWindowDimensions";
-import axios from "axios";
+import useWindowDimensions from "./hooks/useWindowDimensions";
 import { toast } from "react-toastify";
 
 function App() {
@@ -59,14 +60,7 @@ function App() {
 				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
 				dispatch(setMutedUsers(data));
 			} catch (error) {
-				toast.error(error, {
-					position: toast.POSITION.TOP_CENTER,
-					autoClose: 3000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-				});
+				toast.error(error, toastConfig);
 			}
 		};
 		fetchMutedUsers();
