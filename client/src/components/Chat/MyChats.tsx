@@ -64,7 +64,7 @@ const MyChats = () => {
 							chats &&
 							chats.map((chat: any) => (
 								<div
-									className={chat === selectedChat ? styles.chat_selected : styles.chat}
+									className={chat?._id === selectedChat?._id ? styles.chat_selected : styles.chat}
 									key={chat._id}
 									onClick={() => dispatch(setSelectedChat(chat))}
 								>
