@@ -101,7 +101,7 @@ const GroupChat = () => {
 			setLoading(false);
 
 			socket.emit("join chat", user, selectedChat._id);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -171,7 +171,7 @@ const GroupChat = () => {
 						config
 					)
 					.then(() => socket.emit("new notification", data));
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		}

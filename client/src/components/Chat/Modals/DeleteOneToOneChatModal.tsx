@@ -27,7 +27,7 @@ const DeleteOneToOneChatModal: React.FC<IProps> = ({ setDeleteChatModalOpen }) =
 
 			await axios.post("/api/chat/deleteOneOnOneChat", { chatId: selectedChat._id }, config);
 			window.location.reload();
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};

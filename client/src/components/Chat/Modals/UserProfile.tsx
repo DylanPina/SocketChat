@@ -161,7 +161,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 			setTimeout(() => {
 				dispatch(setFetchChatsAgain(false));
 			});
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -180,7 +180,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 				dispatch(unmuteUser(data));
 
 				toast.success(`${selectedUser.username} has been unmuted`, toastConfig);
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		} else {
@@ -196,7 +196,7 @@ const UserProfile: React.FC<IProps> = ({ selectedUser }) => {
 				dispatch(muteUser(data));
 
 				toast.success(`${selectedUser.username} has been muted`, toastConfig);
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		}

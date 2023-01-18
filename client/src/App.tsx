@@ -59,7 +59,7 @@ function App() {
 				};
 				const { data } = await axios.get("/api/user/fetchMutedUsers", config);
 				dispatch(setMutedUsers(data));
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		};

@@ -63,7 +63,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				dispatch(setFetchChatsAgain(false));
 			});
 			toast.success("Group chat renamed", toastConfig);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 			setGroupChatName("");
 		}
@@ -106,7 +106,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				dispatch(setFetchChatsAgain(false));
 			});
 			setLoading(false);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -141,7 +141,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				dispatch(setFetchChatsAgain(false));
 			});
 			setLoading(false);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -170,7 +170,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 				dispatch(setFetchChatsAgain(false));
 			});
 			setLoading(false);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -194,7 +194,7 @@ const GroupChatSettings: React.FC<IProps> = ({ setSettingsOpen }) => {
 			const { data } = await axios.get(`/api/user?search=${search}`, config);
 			setLoading(false);
 			setSearchResults(data);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};

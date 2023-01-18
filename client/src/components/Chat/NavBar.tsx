@@ -65,7 +65,7 @@ const NavBar = () => {
 			const { data } = await axios.get(`/api/user?search=${searchQuery}`, config);
 			setLoadingResults(false);
 			setSearchResult(data);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 			setLoadingResults(false);
 		}

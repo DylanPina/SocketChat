@@ -102,7 +102,7 @@ const SignupHomePage: React.FC<IProps> = ({ setAuthModal }) => {
 			setLoading(false);
 			navigate("/chats");
 			window.location.reload();
-		} catch (err) {
+		} catch (err: any) {
 			toast.error(err, toastConfig);
 		}
 	};

@@ -106,7 +106,7 @@ const OneToOneChat = () => {
 			setLoading(false);
 
 			socket.emit("join chat", user, selectedChat._id);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error("Failed to fetch messages", toastConfig);
 		}
 	};
@@ -178,7 +178,7 @@ const OneToOneChat = () => {
 						config
 					)
 					.then(() => socket.emit("new notification", data));
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		}
@@ -207,7 +207,7 @@ const OneToOneChat = () => {
 				dispatch(unmuteUser(data));
 				setUserMuted(false);
 				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, toastConfig);
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		} else {
@@ -222,7 +222,7 @@ const OneToOneChat = () => {
 				dispatch(muteUser(data));
 				setUserMuted(true);
 				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, toastConfig);
-			} catch (error) {
+			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
 		}

@@ -45,7 +45,7 @@ const accessChat = asyncHandler(async (req, res) => {
 			// Send created chat to user and populate user array
 			const FullChat = await Chat.findOne({ _id: createdChat._id }).populate("users", "-password");
 			res.status(200).send(FullChat);
-		} catch (error) {
+		} catch (error: any) {
 			res.status(400).send({ error: error });
 		}
 	}
@@ -66,7 +66,7 @@ const fetchChats = asyncHandler(async (req, res) => {
 				});
 				res.status(200).send(results);
 			});
-	} catch (error) {
+	} catch (error: any) {
 		res.status(400).send({ error: error });
 	}
 });
@@ -86,7 +86,7 @@ const fetchChatById = asyncHandler(async (req, res) => {
 				});
 				res.status(200).send(results);
 			});
-	} catch (error) {
+	} catch (error: any) {
 		res.status(400).send({ error: error });
 	}
 });
@@ -121,7 +121,7 @@ const createGroupChat = asyncHandler(async (req, res) => {
 		const fullGroupChat = await Chat.findOne({ _id: groupChat._id }).populate("users", "-password").populate("groupAdmin", "-password");
 
 		res.status(200).json(fullGroupChat);
-	} catch (error) {
+	} catch (error: any) {
 		res.status(400).send({ error: error });
 	}
 });

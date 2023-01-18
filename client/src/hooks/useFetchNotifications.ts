@@ -20,7 +20,7 @@ export default function useFetchNotifications() {
 			};
 			const { data } = await axios.get("/api/message/notifications/fetch", config);
 			dispatch(setNotifications(data));
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};

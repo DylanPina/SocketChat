@@ -56,7 +56,7 @@ const CreateGroupChat = () => {
 			const { data } = await axios.get(`/api/user?search=${search}`, config);
 			setLoading(false);
 			setSearchResults(data);
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
@@ -123,7 +123,7 @@ const CreateGroupChat = () => {
 			});
 			closeCreateGroupChatModal();
 			toast.success("New Group Chat Created!", toastConfig);
-		} catch (error) {
+		} catch (error: any) {
 			toast.warn(error.message, toastConfig);
 		}
 	};

@@ -20,7 +20,7 @@ export default function useFetchChats() {
 			};
 			const { data } = await axios.get("/api/chat", config);
 			dispatch(setChats(data));
-		} catch (error) {
+		} catch (error: any) {
 			toast.error(error, toastConfig);
 		}
 	};
