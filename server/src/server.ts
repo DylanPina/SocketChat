@@ -3,15 +3,11 @@ import { connectDB } from "../src/services/db";
 import path from "path";
 require("dotenv").config({ path: path.resolve("../.env") });
 
-// Using PORT from .env
 const PORT = process.env.PORT;
-// Connecting to MongoDB
-connectDB();
-
-// Listening on port
 const server = app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
 
-// This is where the magic happens
+connectDB();
+
 const io = require("socket.io")(server, {
 	pingTimeout: 60000,
 	cors: {
@@ -65,6 +61,6 @@ io.on("connection", (socket) => {
 
 	socket.off("setup", (userData) => {
 		socket.leave(userData._id);
-		console.log(`${userData.username} has disconnected`)
+		console.log(`${userData.username} has disconnected`);
 	});
 });

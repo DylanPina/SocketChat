@@ -4,18 +4,17 @@ import chatRoutes from "../src/routes/chat.routes";
 import messageRoutes from "./routes/message.routes";
 import { notFound, errorHandler } from "./middlewares/errorMiddleware";
 
-// Initializing our express app
 const app = express();
-// Accepting JSON data
-app.use(express.json());
+const path = require("path");
 
-// Routes
+app.use(express.json());
+app.use(express.static(path.join('client/build')));
+
 app.get("/", (req, res) => res.send("API is Running"));
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
 
-// Error handling for API
 app.use(notFound);
 app.use(errorHandler);
 
