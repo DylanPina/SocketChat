@@ -25,8 +25,7 @@ import { User } from "../../types/user.types";
 
 toast.configure();
 
-const ENDPOINT = "http://localhost:5000";
-const socket = io(ENDPOINT);
+const socket = io(process.env.REACT_APP_BACKEND_URL ?? "");
 let selectedChatCompare: any;
 
 const OneToOneChat = () => {
@@ -120,7 +119,11 @@ const OneToOneChat = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			};
-			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
+			await axios.post(
+				"/api/message/notifications/removeByChat",
+				{ chatId: selectedChat._id },
+				config
+			);
 		} catch (error: any) {
 			toast.error(error.response.data.error, toastConfig);
 		}
@@ -203,10 +206,17 @@ const OneToOneChat = () => {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-				const { data } = await axios.post("/api/user/unmuteUser", { userToUnmuteId: getSender(user, selectedChat.users)._id }, config);
+				const { data } = await axios.post(
+					"/api/user/unmuteUser",
+					{ userToUnmuteId: getSender(user, selectedChat.users)._id },
+					config
+				);
 				dispatch(unmuteUser(data));
 				setUserMuted(false);
-				toast.success(`${getSender(user, selectedChat.users).username} has been unmuted`, toastConfig);
+				toast.success(
+					`${getSender(user, selectedChat.users).username} has been unmuted`,
+					toastConfig
+				);
 			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
@@ -218,10 +228,17 @@ const OneToOneChat = () => {
 						Authorization: `Bearer ${token}`,
 					},
 				};
-				const { data } = await axios.post("/api/user/muteUser", { userToMuteId: getSender(user, selectedChat.users)._id }, config);
+				const { data } = await axios.post(
+					"/api/user/muteUser",
+					{ userToMuteId: getSender(user, selectedChat.users)._id },
+					config
+				);
 				dispatch(muteUser(data));
 				setUserMuted(true);
-				toast.success(`${getSender(user, selectedChat.users).username} has been muted`, toastConfig);
+				toast.success(
+					`${getSender(user, selectedChat.users).username} has been muted`,
+					toastConfig
+				);
 			} catch (error: any) {
 				toast.error(error, toastConfig);
 			}
@@ -255,9 +272,18 @@ const OneToOneChat = () => {
 						</div>
 
 						<div className={styles.mute_leave_container}>
-							<Tooltip title={`${userMuted ? "Unmute" : "Mute"} ${getSender(user, selectedChat.users).username}`} arrow>
+							<Tooltip
+								title={`${userMuted ? "Unmute" : "Mute"} ${
+									getSender(user, selectedChat.users).username
+								}`}
+								arrow
+							>
 								<button className={styles.mute} onClick={() => handleMute()}>
-									{userMuted ? <MdNotificationsOff size={"50%"} color={"white"} /> : <MdNotifications size={"50%"} color={"white"} />}
+									{userMuted ? (
+										<MdNotificationsOff size={"50%"} color={"white"} />
+									) : (
+										<MdNotifications size={"50%"} color={"white"} />
+									)}
 								</button>
 							</Tooltip>
 							<Tooltip title="Leave chat" arrow>
@@ -266,7 +292,11 @@ const OneToOneChat = () => {
 								</button>
 							</Tooltip>
 						</div>
-						{deleteChatModalOpen && <DeleteOneOnOneChatModal setDeleteChatModalOpen={setDeleteChatModalOpen}></DeleteOneOnOneChatModal>}
+						{deleteChatModalOpen && (
+							<DeleteOneOnOneChatModal
+								setDeleteChatModalOpen={setDeleteChatModalOpen}
+							></DeleteOneOnOneChatModal>
+						)}
 					</div>
 					<div className={styles.chat_section}>
 						{loading ? (

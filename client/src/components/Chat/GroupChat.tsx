@@ -22,8 +22,7 @@ import { User } from "../../types/user.types";
 
 toast.configure();
 
-const ENDPOINT = "http://localhost:5000";
-const socket = io(ENDPOINT);
+const socket = io(process.env.REACT_APP_BACKEND_URL ?? "");
 let selectedChatCompare: any;
 
 const GroupChat = () => {
@@ -113,7 +112,11 @@ const GroupChat = () => {
 					Authorization: `Bearer ${token}`,
 				},
 			};
-			await axios.post("/api/message/notifications/removeByChat", { chatId: selectedChat._id }, config);
+			await axios.post(
+				"/api/message/notifications/removeByChat",
+				{ chatId: selectedChat._id },
+				config
+			);
 		} catch (error: any) {
 			toast.error(error.response.data.error, toastConfig);
 		}

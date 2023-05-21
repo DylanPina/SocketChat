@@ -1,7 +1,7 @@
 import app from "./app";
 import { connectDB } from "../src/services/db";
 import path from "path";
-require("dotenv").config({ path: path.resolve("../config.env") });
+require("dotenv").config({ path: path.resolve("../.env") });
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
@@ -11,7 +11,7 @@ connectDB();
 const io = require("socket.io")(server, {
 	pingTimeout: 60000,
 	cors: {
-		origin: "http://localhost:3000",
+		origin: process.env.CLIENT_URL,
 	},
 });
 
