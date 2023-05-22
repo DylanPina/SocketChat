@@ -8,7 +8,7 @@ import { store } from "./redux/store";
 
 import "./styles/index.css";
 
-axios.defaults.baseURL = 'http://localhost:5000';
+axios.defaults.baseURL = process.env.REACT_APP_BACKEND_URL ?? "";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 root.render(

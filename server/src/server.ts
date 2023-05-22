@@ -1,7 +1,6 @@
 import app from "./app";
 import { connectDB } from "../src/services/db";
-import path from "path";
-require("dotenv").config({ path: path.resolve("../.env") });
+require("dotenv").config();
 
 const PORT = process.env.PORT;
 const server = app.listen(PORT, () => console.log(`Listening on PORT ${PORT}`));
