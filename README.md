@@ -1,7 +1,7 @@
 ## ⚡Socket Chat ⚡
 #### Socket chat is a web-based encrypted messaging platform that uses web sockets for bidirectional and low-latency communication
 
-#### Live Site: [https://socket-chat-dsp.heroku.app.com](https://socket-chat-dsp.herokuapp.com/)
+#### Live Site: http://54.89.0.125
 ## Features
 - Real-time encrypted messaging using web sockets
 - One-on-one messaging
